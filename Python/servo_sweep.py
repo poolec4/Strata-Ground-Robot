@@ -4,6 +4,7 @@
 # License: Public Domain
 from __future__ import division
 import time
+import math
 import numpy as np
 
 # Import the PCA9685 module.
@@ -43,11 +44,20 @@ for i in range(len(servo_angles)):
     servo_pulse[i] = (servo_angles[i])/270*(servo_max-servo_min) + servo_min
     pwm.set_pwm(i, 0, int(round(servo_pulse[i])))
 
-print(servo_pulse)
 
 ##print('Moving servo on channel 0, press Ctrl-C to quit...')
-##while True:
-##    # Move servo on channel O between extremes.
-##    for num in cw:
-##        pwm.set_pwm(num, 0, servo_min)
+while True:
+    t = int(round(time.time()*1000)) # milliseconds
+    s1 = 135+45*math.sin(2*math.pi*0.25*t/1000)
+    c1 = 135+45*math.sin(2*math.pi*0.25*t/1000)
+    servo_angles = [s1, c1, s1, c1, s1, c1] # in degrees
 
+    for i in ccw:
+        servo_angles[i] = 270-servo_angles[i]
+    
+    for i in [1]: #(len(servo_angles)):
+        servo_pulse[i] = (servo_angles[i])/270*(servo_max-servo_min) + servo_min
+        pwm.set_pwm(i, 0, int(round(servo_pulse[i])))
+
+    print(servo_pulse)
+    time.sleep(0.01)
