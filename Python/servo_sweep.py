@@ -28,7 +28,7 @@ servo_max = 650  # Max pulse length out of 4096
 # Set frequency to 60hz, good for servos.
 pwm.set_pwm_freq(60)
 
-init_angle = 120
+init_angle = 135
 servo_angles = [init_angle, init_angle, init_angle, init_angle, init_angle, init_angle] # in degrees
 # servo_angles = np.deg2rad(servo_angles) # in radians
 
@@ -48,8 +48,8 @@ for i in range(len(servo_angles)):
 ##print('Moving servo on channel 0, press Ctrl-C to quit...')
 while True:
     t = int(round(time.time()*1000)) # milliseconds
-    s1 = 135+45*math.sin(2*math.pi*0.25*t/1000)
-    c1 = 135+45*math.sin(2*math.pi*0.25*t/1000)
+    s1 = 135+45*math.sin(2*math.pi*1*t/1000)
+    c1 = 135+45*math.sin(2*math.pi*0.1*t/1000)
     servo_angles = [s1, c1, s1, c1, s1, c1] # in degrees
 
     for i in ccw:
@@ -59,5 +59,5 @@ while True:
         servo_pulse[i] = (servo_angles[i])/270*(servo_max-servo_min) + servo_min
         pwm.set_pwm(i, 0, int(round(servo_pulse[i])))
 
-    print(servo_pulse)
-    time.sleep(0.01)
+        print(int(round(servo_pulse[i])))
+    time.sleep(0.001)
