@@ -8,7 +8,10 @@ import math
 import numpy as np
 
 # Import the PCA9685 module.
-import Adafruit_PCA9685
+# import Adafruit_PCA9685
+
+# Import our Controller
+from control import controller
 
 
 # Uncomment to enable debug output.
@@ -37,9 +40,13 @@ cw = [1,3,5]
 
 servo_pulse = np.zeros(6)
 
+# Initialize Controller
+controller = controller(init_angle=init_angle)
+
+
 for i in ccw:
     servo_angles[i] = 270-servo_angles[i]
-    
+
 for i in range(len(servo_angles)):
     servo_pulse[i] = (servo_angles[i])/270*(servo_max-servo_min) + servo_min
     pwm.set_pwm(i, 0, int(round(servo_pulse[i])))
@@ -51,10 +58,17 @@ while True:
 ##    s1 = 135+45*math.sin(2*math.pi*1*t/1000)
 ##    c1 = 135+45*math.sin(2*math.pi*0.1*t/1000)
 ##    servo_angles = [s1, c1, s1, c1, s1, c1] # in degrees
-##
+
+##  Controller Usage
+
+##  t = time.time # In Seconds
+##  controller = controller.step(orientation, translation, t)
+##  servo_angles = controller.theta
+
+
 ##    for i in ccw:
 ##        servo_angles[i] = 270-servo_angles[i]
-##    
+##
 ##    for i in range(len(servo_angles)):
 ##        servo_pulse[i] = (servo_angles[i])/270*(servo_max-servo_min) + servo_min
 ##        pwm.set_pwm(i, 0, int(round(servo_pulse[i])))

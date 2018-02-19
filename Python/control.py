@@ -1,5 +1,5 @@
 import numpy as np
-from math import sin # Math's Sin function is faster than Numpy's
+from math import sin
 
 class controller:
     def __init__(self, init_angle=20, version='PI', bounds=(-45, 45)):
@@ -17,15 +17,19 @@ class controller:
         self.error = np.zeros(6)
         # Initial Angles
         self.theta = np.asarray([init_angle, -init_angle, init_angle, -init_angle, init_angle, -init_angle])
+        # Time
+        self.t_old = 0
 
-    def step(self, theta, angles, translation, dt):
+    def step(self, angles, translation, t):
+        dt = t-self.t_old
         if self.version == 'PI':
-            self.theta = self.PI_control(theta, angles, translation, dt)
+            self = self.PI_control(angles, translation, dt)
 
+        self.t_old = t
         return self
 
 
-    def PI_control(self, theta, angles, translation, dt): # Angles Must be in Radians
+    def PI_control(self angles, translation, dt): # Angles Must be in Radians
         # Proportional Control
         d_theta = [[A[1]*sin(angles[1])+B[1]*sin(angles[2])-C[1]*sin(angles[3])+D[1]*translation[1]+E[1]*translation[2]-F[1]*translation[3]]
                 [A[2]*sin(angles[1])-B[2]*sin(angles[2])-C[2]*sin(angles[3])+D[2]*translation[1]+E[2]*translation[2]+F[2]*translation[3]]
@@ -43,3 +47,4 @@ class controller:
             [A[6]*self.error[1]+B[6]*self.error[2]-C[6]*self.error[3]+D[6]*self.error[4]-E[6]*self.error[5]+F[6]*self.error[6]]]
 
         self.theta += d_theta*dt
+        return self
