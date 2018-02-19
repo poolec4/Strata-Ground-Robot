@@ -1,26 +1,33 @@
-// Sweep
-// by BARRAGAN <http://barraganstudio.com> 
-// This example code is in the public domain.
-
+/*
+  Written by Chris Poole - Spring 2018
+  
+  
+  Sets servo angles from serial input in the form:
+       "th1,th2,th3,th4,th5,th6\n"
+  where the angle is in degrees.
+ 
+ thi = 0 corresponds to the ith servo in the down position
+ 
+ for servos [1,3,5], positive rotation is in the CW direction
+ for servos [2,4,6], positive rotation is in the CCW direction
+*/
 
 #include <Servo.h> 
 
 Servo servo1, servo2, servo3, servo4, servo5, servo6;  // create servo object to control a servo 
-// a maximum of eight servo objects can be created 
-float theta[6] = [135.0,135.0,135.0,135.0,135.0,135.0], theta_m[6];
+float theta[6] = {0,0,0,0,0,0};
+float theta_m[6];
 float t;
 
-int pos = 0;    // variable to store the servo position 
-
-char incomming_byte;
-int temp[10];
-int i, val_num, dec_index;
+int incoming_byte = 0;
+int temp[20];
+int x, l, j, i, comma;
+int dec_index = -1;
 float val;
 
 void setup() 
 {   
   Serial.begin(115200);
-  Serial.setTimeout(15);
 
   servo1.attach(2,500,2500);  // attaches the servo on pin 9 to the servo object 
   servo2.attach(3,500,2500);
@@ -28,7 +35,6 @@ void setup()
   servo4.attach(5,500,2500);
   servo5.attach(6,500,2500);
   servo6.attach(7,500,2500);
-
 } 
 
 
@@ -37,57 +43,69 @@ void loop()
   t = millis();
   Serial.flush();
 
-  if(Serial.available())
+  if(Serial.available() > 0)
   { 
-    Serial.println("Beginning to process incomming data...");
-    
-    val_num = 0;
-    incomming_byte = 0;
-    i = 0;
-    
-    while(incomming_byte != '\n')
-    {
-      incomming_byte = Serial.read();
-      Serial.println(incomming_byte);
-      
-      if((incomming_byte >= '0') && (incomming_byte <= '9'))
-        temp(i) = (int)(incomming_byte - '0');
-      
-      if(incomming_byte == '.')
-        dec_index = i;
-      
-      if(incomming_byte == ',')
-      {
-        for(int digit=0; digit<i; digit++)
-          theta(val_num) = theta(val_num) + (float)temp(digit)*pow(10,i-digit)
-        
-        theta(val_num) = theta(val_num)/(10*(i-dec_index));
-        Serial.print(theta(val_num));
-        
-        val_num++;
-        i = 0;
-      }
-      else
-      {
-        i++;
-      }      
-     }
-  }
+    //Serial.println("Beginning to process incoming data...");
+    comma = 0;
 
-    //theta = 135+45*sin(2*PI*0.1*t/1000);
-  for(int servo_num = 0;l servo_num <6; servo_num++)
-  {  
-    theta_m(i) = map(theta,0,270,0,180);
+    do {
+      incoming_byte = Serial.read();
+      //Serial.println(incoming_byte);
+
+      while(incoming_byte != (int)',')
+      {
+        if(incoming_byte == (int)'\n')
+          break;
+
+        if(incoming_byte == (int)'.')
+          dec_index = i;
+
+        if((incoming_byte >= (int)'0') && (incoming_byte <= (int)'9'))
+        {
+          temp[i] = incoming_byte - (int)'0';
+          i++;
+        }
+
+        incoming_byte = Serial.read();
+      }
+
+      j = i;
+      i = 0;
+
+      theta[comma] = 0;
+
+      for(x=0, l=j; x<j; x++,l--)
+      {
+        theta[comma] = theta[comma] + temp[x]*pow(10,l-1);
+      }
+
+      if(dec_index != -1)
+        theta[comma] = theta[comma]*pow(10,dec_index-j);
+        
+      comma++;
+      dec_index = -1;
+    }
+    while(comma < 6); 
   }
   
-  servo1.write(180-theta_m);              
-  servo2.write(theta_m);
-  servo3.write(180-theta_m);
-  servo4.write(theta_m);
-  servo5.write(180-theta_m);
-  servo6.write(theta_m);
+  for(int servo_num = 0; servo_num <6; servo_num++)
+  {  
+    theta_m[servo_num] = map(theta[servo_num],0,270,0,180);
+    //Serial.print(theta[i]);
+    //Serial.print(", ");
+  }
+  Serial.print("\n");
 
+  servo1.write(180-theta_m[0]);              
+  servo2.write(theta_m[1]);
+  servo3.write(180-theta_m[2]);
+  servo4.write(theta_m[3]);
+  servo5.write(180-theta_m[4]);
+  servo6.write(theta_m[5]);
 } 
+
+
+
 
 
 
