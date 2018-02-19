@@ -8,6 +8,7 @@
 Servo servo1, servo2, servo3, servo4, servo5, servo6;  // create servo object to control a servo 
 // a maximum of eight servo objects can be created 
 float theta = 135.0, theta_m;
+float t;
 
 int pos = 0;    // variable to store the servo position 
 
@@ -17,23 +18,27 @@ void setup()
   Serial.setTimeout(15);
 
   servo1.attach(2,500,2500);  // attaches the servo on pin 9 to the servo object 
-  servo2.attach(3,95,565);
-  servo3.attach(4,95,565);
-  servo4.attach(5,95,565);
-  servo5.attach(6,95,565);
-  servo6.attach(7,95,565);
+  servo2.attach(3,500,2500);
+  servo3.attach(4,500,2500);
+  servo4.attach(5,500,2500);
+  servo5.attach(6,500,2500);
+  servo6.attach(7,500,2500);
 
 } 
 
 
 void loop() 
 { 
+  t = millis();
+
   if(Serial.available())
   {
     theta = Serial.parseFloat();
   }
 
-    theta_m = map(theta,0,270,0,180);
+  //theta = 135+45*sin(2*PI*0.1*t/1000);
+
+  theta_m = map(theta,0,270,0,180);
 
   servo1.write(180-theta_m);              
   servo2.write(theta_m);
@@ -43,4 +48,5 @@ void loop()
   servo6.write(theta_m);
 
 } 
+
 
