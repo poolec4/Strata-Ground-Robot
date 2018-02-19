@@ -1,16 +1,10 @@
-// Sweep
-// by BARRAGAN <http://barraganstudio.com> 
-// This example code is in the public domain.
-
-
 #include <Servo.h> 
 
 Servo servo1, servo2, servo3, servo4, servo5, servo6;  // create servo object to control a servo 
 // a maximum of eight servo objects can be created 
-float theta[6], theta_m[6];
+float theta[6] = {0,0,0,0,0,0};
+float theta_m[6];
 float t;
-
-int pos = 0;    // variable to store the servo position 
 
 int incoming_byte = 0;
 int temp[20];
@@ -85,7 +79,7 @@ void loop()
   
   for(int servo_num = 0; servo_num <6; servo_num++)
   {  
-    theta_m[i] = map(theta[i],0,270,0,180);
+    theta_m[servo_num] = map(theta[servo_num],0,270,0,180);
     Serial.print(theta[i]);
     Serial.print(", ");
   }
@@ -97,7 +91,6 @@ void loop()
   servo4.write(theta_m[3]);
   servo5.write(180-theta_m[4]);
   servo6.write(theta_m[5]);
-//  delay(1);
 } 
 
 

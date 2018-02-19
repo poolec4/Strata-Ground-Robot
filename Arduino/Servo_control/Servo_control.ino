@@ -10,8 +10,6 @@ Servo servo1, servo2, servo3, servo4, servo5, servo6;  // create servo object to
 float theta = 135.0, theta_m;
 float t;
 
-int pos = 0;    // variable to store the servo position 
-
 void setup() 
 {   
   Serial.begin(9600);
@@ -46,7 +44,6 @@ void loop()
   servo4.write(theta_m);
   servo5.write(180-theta_m);
   servo6.write(theta_m);
-
 } 
 
 
