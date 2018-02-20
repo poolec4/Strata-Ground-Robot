@@ -31,7 +31,7 @@ servo_max = 650  # Max pulse length out of 4096
 # Set frequency to 60hz, good for servos.
 pwm.set_pwm_freq(60)
 
-init_angle = 20
+init_angle = 20.0 # Must be a float
 servo_angles = [init_angle, init_angle, init_angle, init_angle, init_angle, init_angle] # in degrees
 # servo_angles = np.deg2rad(servo_angles) # in radians
 
