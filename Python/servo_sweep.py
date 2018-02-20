@@ -63,7 +63,7 @@ while True:
 ## NOTE: Angles must be in radians, time must be in seconds
 ##  t = time.time() # In Seconds
 ##  controller = controller.step(orientation, translation, t)
-##  servo_angles = controller.theta
+##  servo_angles = controller.theta # This will be returned in degrees
 
 
 ##    for i in ccw:
