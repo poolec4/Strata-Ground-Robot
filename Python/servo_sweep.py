@@ -41,7 +41,7 @@ cw = [1,3,5]
 servo_pulse = np.zeros(6)
 
 # Initialize Controller
-controller = controller(init_angle=init_angle)
+controller = controller(init_angle=init_angle, version='v1.0', bounds=(-45, 45))
 
 
 for i in ccw:
@@ -60,7 +60,7 @@ while True:
 ##    servo_angles = [s1, c1, s1, c1, s1, c1] # in degrees
 
 ##  Controller Usage
-
+## NOTE: Angles must be in radians, time must be in seconds
 ##  t = time.time # In Seconds
 ##  controller = controller.step(orientation, translation, t)
 ##  servo_angles = controller.theta
