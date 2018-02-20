@@ -2,7 +2,7 @@ import numpy as np
 from math import sin
 
 class controller:
-    def __init__(self, init_angle=20, version='v1.0', bounds=(-45, 45)):
+    def __init__(self, init_angle=135, version='v1.0', bounds=(-45, 45)):
         self.version = version
         self.bounds = bounds
         # Controller Weights
