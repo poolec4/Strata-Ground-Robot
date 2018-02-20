@@ -61,7 +61,7 @@ while True:
 
 ##  Controller Usage
 ## NOTE: Angles must be in radians, time must be in seconds
-##  t = time.time # In Seconds
+##  t = time.time() # In Seconds
 ##  controller = controller.step(orientation, translation, t)
 ##  servo_angles = controller.theta
 
