@@ -29,7 +29,7 @@ ardu_ser = serial.Serial('/dev/ttyACM0', 19200)
 print(ardu_ser)
 
 # Init IMU serial connection
-imu_ser = serial.Serial('/dev/ttyUSB0', 115200)
+imu_ser = serial.Serial('/dev/ttyUSB0', 57600)
 print(imu_ser)
 
 # Axis definition (differs from definition printed on the board!):
@@ -43,18 +43,21 @@ print(imu_ser)
 
 # Transformation order: first yaw then pitch then roll.
 
-time.sleep(2)
+accel = [0,0,0]
+e_angles = [0,0,0]
 
 while run_controller == True:
     t = time.time() # in seconds
     
-    ## Test angle definition
-    servo_angles = 135+np.ones(6)*45*np.sin(2*math.pi*1*t)
-    
     ## Parse IMU values in the form "#A=a1,a2,a3#E=y,p,r\n"
-    while imu_ser.inWaiting():
-        imu_data = ser.readline()
+    
+##    Traceback (most recent call last):
+##  File "main.py", line 62, in <module>
+##    accel = temp.astype(np.float)
+##ValueError: invalid literal for float(): 237.
 
+    imu_data = imu_ser.readline()
+    print(imu_data)
     imu_data = imu_data.rstrip()
     imu_data = filter(None,imu_data.split('#'))
 
@@ -69,18 +72,23 @@ while run_controller == True:
             temp = np.array(temp.split(','))
             e_angles = temp.astype(np.float)
     
+    print("Accel = "+str(accel))
+    print("Eangles = "+str(e_angles))
     ## Lookup translation given current servo angles
 
     ##  Controller 
     # NOTE: Angles must be in radians, time must be in seconds
-    controller = controller.step(orientation, translation, t)
-    servo_angles = controller.theta # This will be returned in degrees
+    #controller = controller.step(orientation, translation, t)
+    #servo_angles = controller.theta # This will be returned in degrees
     
 
     ## Set servos via serial buffer to Arduino    
-    for num in [1,3,5]:
-        servo_angles[num] = servo_angles[num] + 360  # convert all servo angles to positive ([1,3,5]+360)
+    #for num in [1,3,5]:
+    #    servo_angles[num] = servo_angles[num] + 360  # convert all servo angles to positive ([1,3,5]+360)
     
+    ## Test angle definition
+    servo_angles = 135+np.ones(6)*45*np.sin(2*math.pi*1*t)
+
     servo_angles = np.around(servo_angles,2)
     buffer = str(servo_angles[0])+','+str(servo_angles[1])+','+str(servo_angles[2])+','+str(servo_angles[3])+','+str(servo_angles[4])+','+str(servo_angles[5])+'\n'
     ardu_ser.write(buffer)
