@@ -1,8 +1,12 @@
 import numpy as np
-from math import sin
+import math
+import time
+
+def sind(angle):
+    return math.sin(angle*math.pi/180)
 
 class controller:
-    def __init__(self, init_angle=135, version='v1.0', bounds=(-45, 45)):
+    def __init__(self, init_angle=135.0, version='v1.0', bounds=(-45, 45)):
         self.version = version
         self.bounds = bounds
         # Controller Weights
@@ -12,16 +16,18 @@ class controller:
         self.D = 500*np.asarray([1, 1, 0, 0, 0, 0]) # Modify to Improve?
         self.E = 500*np.asarray([0, 0, 1, 1, 1, 1]) # Modify to Improve?
         self.F = 200*np.ones(6)
-        self.G = 0.25
+        self.G = np.asarray([0.25])
         # Error Data
         self.error = np.zeros(6)
         # Initial Angles
-        self.theta = np.asarray([init_angle, -init_angle, init_angle, -init_angle, init_angle, -init_angle])
+        self.theta = np.asarray([init_angle, -init_angle, init_angle, -init_angle, init_angle, -init_angle]).reshape(6, 1)
+        self.d_theta = np.zeros(6)
         # Time
-        self.t_old = 0
+        self.t_old = time.time()
 
     def step(self, angles, translation, t):
-        dt = t-self.t_old
+        dt = np.asarray([t-self.t_old])
+        print(dt)
         if self.version == 'v1.0':
             self = self.PI_control(angles, translation, dt)
         else:
@@ -32,20 +38,21 @@ class controller:
 
     def PI_control(self, angles, translation, dt): # Angles Must be in Radians
         # Proportional Control
-        d_theta = [[self.A[1]*sin(angles[1])+self.B[1]*sin(angles[2])-self.C[1]*sin(angles[3])+self.D[1]*translation[1]+self.E[1]*translation[2]-self.F[1]*translation[3]]
-                [self.A[2]*sin(angles[1])-self.B[2]*sin(angles[2])-self.C[2]*sin(angles[3])+self.D[2]*translation[1]+self.E[2]*translation[2]+self.F[2]*translation[3]]
-                [self.A[3]*sin(angles[1])-self.B[3]*sin(angles[2])-self.C[3]*sin(angles[3])+self.D[3]*translation[1]+self.E[3]*translation[2]-self.F[3]*translation[3]]
-                [-self.A[4]*sin(angles[1])+self.B[4]*sin(angles[2])-self.C[4]*sin(angles[3])+self.D[4]*translation[1]+self.E[4]*translation[2]+self.F[4]*translation[3]]
-                [-self.A[5]*sin(angles[1])-self.B[5]*sin(angles[2])-self.C[5]*sin(angles[3])+self.D[5]*translation[1]-self.E[5]*translation[2]-self.F[5]*translation[3]]
-                [self.A[6]*sin(angles[1])+self.B[6]*sin(angles[2])-self.C[6]*sin(angles[2])+self.D[6]*translation[1]-self.E[6]*translation[2]+self.F[6]*translation[3]]]
+        self.d_theta = [[self.A[0]*sind(angles[0])+self.B[0]*sind(angles[1])-self.C[0]*sind(angles[2])+self.D[0]*translation[0]+self.E[0]*translation[1]-self.F[0]*translation[2]],
+                [self.A[1]*sind(angles[0])-self.B[1]*sind(angles[1])-self.C[1]*sind(angles[2])+self.D[1]*translation[0]+self.E[1]*translation[1]+self.F[1]*translation[2]],
+                [self.A[2]*sind(angles[0])-self.B[2]*sind(angles[1])-self.C[2]*sind(angles[2])+self.D[2]*translation[0]+self.E[2]*translation[1]-self.F[2]*translation[2]],
+                [-self.A[3]*sind(angles[0])+self.B[3]*sind(angles[1])-self.C[3]*sind(angles[2])+self.D[3]*translation[0]+self.E[3]*translation[1]+self.F[3]*translation[2]],
+                [-self.A[4]*sind(angles[0])-self.B[4]*sind(angles[1])-self.C[4]*sind(angles[2])+self.D[4]*translation[0]-self.E[4]*translation[1]-self.F[4]*translation[2]],
+                [self.A[5]*sind(angles[0])+self.B[5]*sind(angles[1])-self.C[5]*sind(angles[1])+self.D[5]*translation[0]-self.E[5]*translation[1]+self.F[5]*translation[2]]]
         # Integral Control
-        self.error = np.asarray([sin(angles[1]), sin(angles[2]), sin(angles[3]), translation[1], translation[2], translation[3]]) + 0.9*self.error
-        d_theta += self.G*[[self.A[1]*self.error[1]+self.B[1]*self.error[2]-self.C[1]*self.error[3]+self.D[1]*self.error[4]+self.E[1]*self.error[5]-self.F[1]*self.error[6]]
-            [self.A[2]*self.error[1]-self.B[2]*self.error[2]-self.C[2]*self.error[3]+self.D[2]*self.error[4]+self.E[2]*self.error[5]+self.F[2]*self.error[6]]
-            [self.A[3]*self.error[1]-self.B[3]*self.error[2]-self.C[3]*self.error[3]+self.D[3]*self.error[4]+self.E[3]*self.error[5]-self.F[3]*self.error[6]]
-            [-self.A[4]*self.error[1]+self.B[4]*self.error[2]-self.C[4]*self.error[3]+self.D[4]*self.error[4]+self.E[4]*self.error[5]+self.F[4]*self.error[6]]
-            [-self.A[5]*self.error[1]-self.B[5]*self.error[2]-self.C[5]*self.error[3]+self.D[5]*self.error[4]-self.E[5]*self.error[5]-self.F[5]*self.error[6]]
-            [self.A[6]*self.error[1]+self.B[6]*self.error[2]-self.C[6]*self.error[3]+self.D[6]*self.error[4]-self.E[6]*self.error[5]+self.F[6]*self.error[6]]]
-
-        self.theta += d_theta*dt
+        self.error = np.asarray([sind(angles[0]), sind(angles[1]), sind(angles[2]), translation[0], translation[1], translation[2]]) + 0.9*self.error
+        self.d_theta += self.G*[[self.A[0]*self.error[0]+self.B[0]*self.error[1]-self.C[0]*self.error[2]+self.D[0]*self.error[3]+self.E[0]*self.error[4]-self.F[0]*self.error[5]],
+            [self.A[1]*self.error[0]-self.B[1]*self.error[1]-self.C[1]*self.error[2]+self.D[1]*self.error[3]+self.E[1]*self.error[4]+self.F[1]*self.error[5]],
+            [self.A[2]*self.error[0]-self.B[2]*self.error[1]-self.C[2]*self.error[2]+self.D[2]*self.error[3]+self.E[2]*self.error[4]-self.F[2]*self.error[5]],
+            [-self.A[3]*self.error[0]+self.B[3]*self.error[1]-self.C[3]*self.error[2]+self.D[3]*self.error[3]+self.E[3]*self.error[4]+self.F[3]*self.error[5]],
+            [-self.A[4]*self.error[0]-self.B[4]*self.error[1]-self.C[4]*self.error[2]+self.D[4]*self.error[3]-self.E[4]*self.error[4]-self.F[4]*self.error[5]],
+            [self.A[5]*self.error[0]+self.B[5]*self.error[1]-self.C[5]*self.error[2]+self.D[5]*self.error[3]-self.E[5]*self.error[4]+self.F[5]*self.error[5]]]
+        print(self.d_theta*dt)
+        print(self.theta)
+        self.theta += self.d_theta*dt
         return self
