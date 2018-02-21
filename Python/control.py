@@ -10,12 +10,12 @@ class controller:
         self.version = version
         self.bounds = bounds
         # Controller Weights
-        self.A = 250*np.ones(6)
-        self.B = 250*np.ones(6)
-        self.C = 100*np.ones(6)
-        self.D = 500*np.asarray([1, 1, 0, 0, 0, 0]) # Modify to Improve?
-        self.E = 500*np.asarray([0, 0, 1, 1, 1, 1]) # Modify to Improve?
-        self.F = 200*np.ones(6)
+        self.A = 25*np.ones(6)
+        self.B = 25*np.ones(6)
+        self.C = 10*np.ones(6)
+        self.D = 50*np.asarray([1, 1, 0, 0, 0, 0]) # Modify to Improve?
+        self.E = 50*np.asarray([0, 0, 1, 1, 1, 1]) # Modify to Improve?
+        self.F = 20*np.ones(6)
         self.G = np.asarray([0.25])
         # Error Data
         self.error = np.zeros(6)
@@ -27,7 +27,7 @@ class controller:
 
     def step(self, angles, translation, t):
         dt = np.asarray([t-self.t_old])
-        print(dt)
+        #print(dt)
         if self.version == 'v1.0':
             self = self.PI_control(angles, translation, dt)
         else:
@@ -52,7 +52,7 @@ class controller:
             [-self.A[3]*self.error[0]+self.B[3]*self.error[1]-self.C[3]*self.error[2]+self.D[3]*self.error[3]+self.E[3]*self.error[4]+self.F[3]*self.error[5]],
             [-self.A[4]*self.error[0]-self.B[4]*self.error[1]-self.C[4]*self.error[2]+self.D[4]*self.error[3]-self.E[4]*self.error[4]-self.F[4]*self.error[5]],
             [self.A[5]*self.error[0]+self.B[5]*self.error[1]-self.C[5]*self.error[2]+self.D[5]*self.error[3]-self.E[5]*self.error[4]+self.F[5]*self.error[5]]]
-        print(self.d_theta*dt)
-        print(self.theta)
+        #print(self.d_theta*dt)
+        #print(self.theta)
         self.theta += self.d_theta*dt
         return self
