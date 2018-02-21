@@ -31,8 +31,7 @@ while True:
     
     ## Parse IMU values in the form "#A=a1,a2,a3#E=y,p,r\n"
     #while imu_ser.in_waiting():
-    while imu_ser.inWaiting():
-        imu_data = imu_ser.readline()    
+    imu_data = imu_ser.readline()    
     print(imu_data)
     
     imu_data = imu_data.rstrip()
