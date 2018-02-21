@@ -23,7 +23,7 @@ init_angle = 135.0 # in degrees
 servo_angles = init_angle*np.asarray([1,-1,1,-1,1,-1])
 
 # Init controller
-controller = controller(init_angle=init_angle, version='v1.0', bounds=(-45, 45))
+controller = controller(init_angle=init_angle, version='v1.0', bounds=(100, 160))
 
 # Init Arduino serial connection
 ardu_ser = serial.Serial('/dev/ttyACM0', 19200)
@@ -95,11 +95,15 @@ while run_controller == True:
     # print("Accel = "+str(accel))
     # print("Eangles = "+str(e_angles))
     ## Lookup translation given current servo angles    
-    if count > 10000:
+    if count > 500:
         run_controller = False
     if count > 2 and first==True:
         # init_accel = accel
         init_eangles = e_angles
+        if e_angles[2] > 0:
+            e_angles[2] = -(180-e_angles[2])
+        else:
+            e_angles[2] = (180+e_angles[2])
         print('Intial Eangles')
         print(init_eangles)
         first = False
@@ -107,17 +111,17 @@ while run_controller == True:
     if first == False:
         ##  Controller
         if e_angles[2] > 0:
-            e_angles[2] = 180-e_angles[2]
+            e_angles[2] = -(180-e_angles[2])
         else:
-            e_angles[2] = -(180+e_angles[2])
+            e_angles[2] = (180+e_angles[2])
         # NOTE: Angles must be in degrees, time must be in seconds
         t = time.time() # in seconds
         # Re-Order & Correct Angles
-        orientation = np.asarray([-e_angles[1], e_angles[2], -(e_angles[0]-init_eangles[0])]) # whats the order?
+        orientation = np.asarray([e_angles[1]-init_eangles[1], e_angles[2]-init_eangles[2], -(e_angles[0]-init_eangles[0])]) # whats the order?
         print('Platform Orientation: ')
         print(orientation)
-        # controller = controller.step(orientation, np.asarray([0.0, 0.0, 0.0]), t)
-        # servo_angles = np.asarray([controller.theta[0], controller.theta[1], controller.theta[2], controller.theta[3], controller.theta[4], controller.theta[5]]) # This will be returned in degrees
+        controller = controller.step(orientation, np.asarray([0.0, 0.0, 0.0]), t)
+        servo_angles = np.asarray([controller.theta[0], controller.theta[1], controller.theta[2], controller.theta[3], controller.theta[4], controller.theta[5]]) # This will be returned in degrees
         # print('Controller Angles: ')
         # print(controller.theta)
         # print('Servo Angles: ')
@@ -132,13 +136,15 @@ while run_controller == True:
 
         servo_write = np.around(servo_write,2)
         buffer = str(servo_write[0])+','+str(servo_write[1])+','+str(servo_write[2])+','+str(servo_write[3])+','+str(servo_write[4])+','+str(servo_write[5])+'\n'
-        # ardu_ser.write(buffer)
-        # print(buffer)
+        ardu_ser.write(buffer)
+        print(buffer)
 ##Traceback (most recent call last):
 ##  File "main.py", line 71, in <module>
 ##  if (is_number(temp[0]) == True and is_number(temp[1]) == True and is_number(temp[2]) == True):
 ##IndexError: index 2 is out of bounds for axis 0 with size 2
-
         
+servo_write = 135.0*np.ones(6)
+buffer = str(servo_write[0])+','+str(servo_write[1])+','+str(servo_write[2])+','+str(servo_write[3])+','+str(servo_write[4])+','+str(servo_write[5])+'\n'
+ardu_ser.write(buffer)      
 ardu_ser.close();
 imu_ser.close();

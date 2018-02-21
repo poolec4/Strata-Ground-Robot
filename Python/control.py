@@ -6,13 +6,13 @@ def sind(angle):
     return math.sin(angle*math.pi/180)
 
 class controller:
-    def __init__(self, init_angle=135.0, version='v1.0', bounds=(-45, 45)):
+    def __init__(self, init_angle=135.0, version='v1.0', bounds=(100, 160)):
         self.version = version
         self.bounds = bounds
         # Controller Weights
-        self.A = 25*np.ones(6)
-        self.B = 25*np.ones(6)
-        self.C = 10*np.ones(6)
+        self.A = 200*np.ones(6)
+        self.B = 200*np.ones(6)
+        self.C = 0*np.ones(6)
         self.D = 50*np.asarray([1, 1, 0, 0, 0, 0]) # Modify to Improve?
         self.E = 50*np.asarray([0, 0, 1, 1, 1, 1]) # Modify to Improve?
         self.F = 20*np.ones(6)
@@ -32,7 +32,24 @@ class controller:
             self = self.PI_control(angles, translation, dt)
         else:
             raise ValueError('Invalid Controller Version Selected')
+        self = self.bound()
         self.t_old = t
+        return self
+    
+    def bound(self):
+        for i in range(0, 6):
+            if abs(self.theta[i]) < self.bounds[0]:
+                if self.theta[i] > 0:
+                    self.theta[i] = self.bounds[0]
+                else:
+                    self.theta[i] = -self.bounds[0]
+                    
+            elif abs(self.theta[i]) > self.bounds[1]:
+                if self.theta[i] > 0:
+                    self.theta[i] = self.bounds[1]
+                else:
+                    self.theta[i] = -self.bounds[1]
+                
         return self
 
 
