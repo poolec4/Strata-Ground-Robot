@@ -17,8 +17,7 @@
 #include <Servo.h> 
 
 Servo servo1, servo2, servo3, servo4, servo5, servo6;  // create servo object to control a servo 
-float theta[6] = {
-  0,0,0,0,0,0};
+float theta[6] = {135,135,135,135,135,135};
 float theta_m[6];
 float t;
 
@@ -104,12 +103,18 @@ void loop()
   }
   //sSerial.print("\n");
   
-  servo1.write(180-theta_m[0]);              
-  servo2.write(theta_m[1]);
-  servo3.write(180-theta_m[2]);
-  servo4.write(theta_m[3]);
-  servo5.write(180-theta_m[4]);
-  servo6.write(theta_m[5]);
+  if(abs(180-theta_m[0])<60 || abs(theta_m[1])<60 || abs(180-theta_m[2])<60 || abs(theta_m[3])<60 || abs(180-theta_m[4])<60 || abs(theta_m[5])<60)
+  {
+  }
+  else
+  {
+    servo1.write(180-theta_m[0]);              
+    servo2.write(theta_m[1]);
+    servo3.write(180-theta_m[2]);
+    servo4.write(theta_m[3]);
+    servo5.write(180-theta_m[4]);
+    servo6.write(theta_m[5]);
+  }
 } 
 
 

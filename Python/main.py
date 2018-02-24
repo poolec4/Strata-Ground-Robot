@@ -8,6 +8,7 @@ import serial
 import time
 import math
 import numpy as np
+from matplotlib import pyplot as plt
 from tools import is_number
 
 # Import our Controller
@@ -21,17 +22,22 @@ run_controller = True
 
 init_angle = 135.0 # in degrees
 servo_angles = init_angle*np.asarray([1,-1,1,-1,1,-1])
+      
 
 # Init controller
-controller = controller(init_angle=init_angle, version='v1.0', bounds=(100, 160))
+controller = controller(init_angle=init_angle, version='v1.0', bounds=(105, 170))
 
 # Init Arduino serial connection
-ardu_ser = serial.Serial('/dev/ttyACM0', 19200)
+ardu_ser = serial.Serial('/dev/ttyACM1', 19200)
 print(ardu_ser)
+buffer = str(servo_angles[0])+','+str(-servo_angles[1])+','+str(servo_angles[2])+','+str(-servo_angles[3])+','+str(servo_angles[4])+','+str(-servo_angles[5])+'\n'
+ardu_ser.write(buffer)
 
 # Init IMU serial connection
 imu_ser = serial.Serial('/dev/ttyUSB0', 57600)
 print(imu_ser)
+
+time.sleep(0.5)
 
 # Axis definition (differs from definition printed on the board!):
 #   X axis pointing forward (towards the short edge with the connector holes)
@@ -43,6 +49,11 @@ print(imu_ser)
 # Positive pitch : nose up
 
 # Transformation order: first yaw then pitch then roll.
+
+max_count = 1000
+servo_data = np.empty([max_count, 6])
+servo_accel = np.empty([max_count, 6])
+t_data = np.empty(max_count)
 
 accel = [0.0 ,0.0, 0.0]
 e_angles = [0.0, 0.0, 0.0]
@@ -57,6 +68,7 @@ while run_controller == True:
 ##  File "main.py", line 62, in <module>
 ##    accel = temp.astype(np.float)
 ##ValueError: invalid literal for float(): 237.
+    tic = time.time()
     imu_ser.write(str(chr(111)))
     count += 1
     imu_data = imu_ser.readline()
@@ -95,7 +107,7 @@ while run_controller == True:
     # print("Accel = "+str(accel))
     # print("Eangles = "+str(e_angles))
     ## Lookup translation given current servo angles    
-    if count > 500:
+    if count > 1000:
         run_controller = False
     if count > 2 and first==True:
         # init_accel = accel
@@ -122,6 +134,9 @@ while run_controller == True:
         print(orientation)
         controller = controller.step(orientation, np.asarray([0.0, 0.0, 0.0]), t)
         servo_angles = np.asarray([controller.theta[0], controller.theta[1], controller.theta[2], controller.theta[3], controller.theta[4], controller.theta[5]]) # This will be returned in degrees
+        servo_data[int(count-1), :] = servo_angles.reshape(6)
+        accel_data[count-1, :] = orientation
+        t_data[count-1] = time.time()
         # print('Controller Angles: ')
         # print(controller.theta)
         # print('Servo Angles: ')
@@ -132,17 +147,20 @@ while run_controller == True:
              servo_write[num] = -servo_angles[num] # convert all servo angles to positive (-1*[1,3,5])
         
         ## Test angle definition
-        # servo_angles = 135+np.ones(6)*45*np.sin(2*math.pi*1*t)
-
+        ##servo_write = 135+np.ones(6)*30*np.sin(2*math.pi*0.2*t)
+            
         servo_write = np.around(servo_write,2)
         buffer = str(servo_write[0])+','+str(servo_write[1])+','+str(servo_write[2])+','+str(servo_write[3])+','+str(servo_write[4])+','+str(servo_write[5])+'\n'
         ardu_ser.write(buffer)
+        print('Servo Angles: ')
         print(buffer)
+        print("Time Elapsed: " + str(time.time()-tic))
 ##Traceback (most recent call last):
 ##  File "main.py", line 71, in <module>
 ##  if (is_number(temp[0]) == True and is_number(temp[1]) == True and is_number(temp[2]) == True):
 ##IndexError: index 2 is out of bounds for axis 0 with size 2
-        
+
+plt.plot(t_data)
 servo_write = 135.0*np.ones(6)
 buffer = str(servo_write[0])+','+str(servo_write[1])+','+str(servo_write[2])+','+str(servo_write[3])+','+str(servo_write[4])+','+str(servo_write[5])+'\n'
 ardu_ser.write(buffer)      
