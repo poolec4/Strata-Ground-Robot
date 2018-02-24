@@ -28,7 +28,7 @@ servo_angles = init_angle*np.asarray([1,-1,1,-1,1,-1])
 controller = controller(init_angle=init_angle, version='v1.0', bounds=(105, 170))
 
 # Init Arduino serial connection
-ardu_ser = serial.Serial('/dev/ttyACM1', 19200)
+ardu_ser = serial.Serial('/dev/ttyACM0', 19200)
 print(ardu_ser)
 buffer = str(servo_angles[0])+','+str(-servo_angles[1])+','+str(servo_angles[2])+','+str(-servo_angles[3])+','+str(servo_angles[4])+','+str(-servo_angles[5])+'\n'
 ardu_ser.write(buffer)
@@ -37,7 +37,7 @@ ardu_ser.write(buffer)
 imu_ser = serial.Serial('/dev/ttyUSB0', 57600)
 print(imu_ser)
 
-time.sleep(0.5)
+time.sleep(2)
 
 # Axis definition (differs from definition printed on the board!):
 #   X axis pointing forward (towards the short edge with the connector holes)
@@ -50,10 +50,11 @@ time.sleep(0.5)
 
 # Transformation order: first yaw then pitch then roll.
 
-max_count = 1000
-servo_data = np.empty([max_count, 6])
-servo_accel = np.empty([max_count, 6])
-t_data = np.empty(max_count)
+max_count = 200
+servo_data = np.empty([max_count+2, 6])
+accel_data = np.empty([max_count+2])
+t_data = np.empty(max_count+2)
+t_init = time.time()
 
 accel = [0.0 ,0.0, 0.0]
 e_angles = [0.0, 0.0, 0.0]
@@ -107,7 +108,7 @@ while run_controller == True:
     # print("Accel = "+str(accel))
     # print("Eangles = "+str(e_angles))
     ## Lookup translation given current servo angles    
-    if count > 1000:
+    if count > max_count:
         run_controller = False
     if count > 2 and first==True:
         # init_accel = accel
@@ -135,8 +136,8 @@ while run_controller == True:
         controller = controller.step(orientation, np.asarray([0.0, 0.0, 0.0]), t)
         servo_angles = np.asarray([controller.theta[0], controller.theta[1], controller.theta[2], controller.theta[3], controller.theta[4], controller.theta[5]]) # This will be returned in degrees
         servo_data[int(count-1), :] = servo_angles.reshape(6)
-        accel_data[count-1, :] = orientation
-        t_data[count-1] = time.time()
+        accel_data[int(count-1)] = orientation[0]
+        t_data[count-1] = time.time()-t_init
         # print('Controller Angles: ')
         # print(controller.theta)
         # print('Servo Angles: ')
@@ -160,7 +161,10 @@ while run_controller == True:
 ##  if (is_number(temp[0]) == True and is_number(temp[1]) == True and is_number(temp[2]) == True):
 ##IndexError: index 2 is out of bounds for axis 0 with size 2
 
-plt.plot(t_data)
+print(t_data.size)
+print(accel_data.size)
+plt.plot(t_data, accel_data)
+plt.show()
 servo_write = 135.0*np.ones(6)
 buffer = str(servo_write[0])+','+str(servo_write[1])+','+str(servo_write[2])+','+str(servo_write[3])+','+str(servo_write[4])+','+str(servo_write[5])+'\n'
 ardu_ser.write(buffer)      
