@@ -50,10 +50,10 @@ time.sleep(2)
 
 # Transformation order: first yaw then pitch then roll.
 
-max_count = 200
-servo_data = np.empty([max_count+2, 6])
-accel_data = np.empty([max_count+2])
-t_data = np.empty(max_count+2)
+max_count = 400
+servo_data = np.empty([max_count+1, 6])
+accel_data = np.empty([max_count+1, 3])
+t_data = np.empty(max_count+1)
 t_init = time.time()
 
 accel = [0.0 ,0.0, 0.0]
@@ -136,7 +136,7 @@ while run_controller == True:
         controller = controller.step(orientation, np.asarray([0.0, 0.0, 0.0]), t)
         servo_angles = np.asarray([controller.theta[0], controller.theta[1], controller.theta[2], controller.theta[3], controller.theta[4], controller.theta[5]]) # This will be returned in degrees
         servo_data[int(count-1), :] = servo_angles.reshape(6)
-        accel_data[int(count-1)] = orientation[0]
+        accel_data[int(count-1)] = orientation.reshape(3)
         t_data[count-1] = time.time()-t_init
         # print('Controller Angles: ')
         # print(controller.theta)
@@ -156,14 +156,20 @@ while run_controller == True:
         print('Servo Angles: ')
         print(buffer)
         print("Time Elapsed: " + str(time.time()-tic))
+        print(count)
 ##Traceback (most recent call last):
 ##  File "main.py", line 71, in <module>
 ##  if (is_number(temp[0]) == True and is_number(temp[1]) == True and is_number(temp[2]) == True):
 ##IndexError: index 2 is out of bounds for axis 0 with size 2
 
-print(t_data.size)
-print(accel_data.size)
-plt.plot(t_data, accel_data)
+#accel_data[:,1] = accel_data[:,1]+180
+for i in range(0,count):
+    if accel_data[i,1] > 0:
+        accel_data[i,1] = -(180-accel_data[i,1])
+    else:
+        accel_data[i,1] = (180+accel_data[i,1])
+
+plt.plot(t_data[3:], accel_data[3:,0], t_data[3:], accel_data[3:,1])
 plt.show()
 servo_write = 135.0*np.ones(6)
 buffer = str(servo_write[0])+','+str(servo_write[1])+','+str(servo_write[2])+','+str(servo_write[3])+','+str(servo_write[4])+','+str(servo_write[5])+'\n'

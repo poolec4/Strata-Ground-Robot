@@ -10,13 +10,13 @@ class controller:
         self.version = version
         self.bounds = bounds
         # Controller Weights
-        self.A = 700*np.ones(6)
-        self.B = 700*np.ones(6)
+        self.A = 800*np.ones(6)
+        self.B = 800*np.ones(6)
         self.C = 0*np.ones(6)
         self.D = 50*np.asarray([1, 1, 0, 0, 0, 0]) # Modify to Improve?
         self.E = 50*np.asarray([0, 0, 1, 1, 1, 1]) # Modify to Improve?
         self.F = 20*np.ones(6)
-        self.G = np.asarray([0.005])
+        self.G = np.asarray([0.0008])
         # Error Data
         self.error = np.zeros(6)
         # Initial Angles
