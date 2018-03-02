@@ -15,22 +15,20 @@
  */
 
 #include <Servo.h> 
+#include <string.h>
 
 Servo servo1, servo2, servo3, servo4, servo5, servo6;  // create servo object to control a servo 
-float theta[6] = {
-  135,135,135,135,135,135};
-float theta_m[6];
-float t;
+double theta[6] = {135,135,135,135,135,135};
+double theta_m[6];
+double t;
 
-int incoming_byte = 0;
-int temp[20];
-int x, l, j, i, comma;
-int dec_index = -1;
-float val;
+String buffer;
+char buffer_array[100];
 
 void setup() 
 {   
   Serial.begin(19200);
+  Serial.setTimeout(5);
 
   servo1.attach(2,500,2500);  // attaches the servo on pin 9 to the servo object 
   servo2.attach(3,500,2500);
@@ -38,6 +36,11 @@ void setup()
   servo4.attach(5,500,2500);
   servo5.attach(6,500,2500);
   servo6.attach(7,500,2500);
+
+  char test_buff[15] = "A=6.3&B=6.5";
+  Serial.println("This is a test parse");
+  Serial.println(parse_string_to_double(test_buff, "A"));
+  Serial.println(parse_string_to_double(test_buff, "B"));
 } 
 
 
@@ -48,76 +51,71 @@ void loop()
 
   if(Serial.available() > 0)
   { 
-    //Serial.println("Beginning to process incoming data...");
-    comma = 0;
+    buffer = Serial.readStringUntil('\n');    
+    buffer.toCharArray(buffer_array,buffer.length()+1);
+    Serial.println(buffer_array);
 
-    do {
-      incoming_byte = Serial.read();
-      //Serial.println(incoming_byte);
+    theta[0] = parse_string_to_double(buffer_array, "A");
+    theta[1] = parse_string_to_double(buffer_array, "B");
+    theta[2] = parse_string_to_double(buffer_array, "C");
+    theta[3] = parse_string_to_double(buffer_array, "D");
+    theta[4] = parse_string_to_double(buffer_array, "E");
+    theta[5] = parse_string_to_double(buffer_array, "F");
 
-      while(incoming_byte != (int)',')
-      {
-        if(incoming_byte == (int)'\n')
-          break;
-
-        if(incoming_byte == (int)'.')
-          dec_index = i;
-
-        if((incoming_byte >= (int)'0') && (incoming_byte <= (int)'9'))
-        {
-          temp[i] = incoming_byte - (int)'0';
-          i++;
-        }
-
-        incoming_byte = Serial.read();
-      }
-
-      j = i;
-      i = 0;
-
-      theta[comma] = 0;
-
-      for(x=0, l=j; x<j; x++,l--)
-      {
-        theta[comma] = theta[comma] + temp[x]*pow(10,l-1);
-      }
-
-      if(dec_index != -1)
-        theta[comma] = theta[comma]*pow(10,dec_index-j);
-
-      //Serial.print(theta[comma]);
-      //Serial.print(", ");
-
-      comma++;
-      dec_index = -1;
-    }
-    while(comma < 6);
-    //Serial.print("\n"); 
     for(int servo_num = 0; servo_num <6; servo_num++)
     { 
       theta_m[servo_num] = map(theta[servo_num],0,270,0,180);
+    }
+  }
 
-      //Serial.print(theta[servo_num]);
-      //Serial.print(", ");
-    }
-    //Serial.print("\n");
-
-    if(abs(180-theta_m[0])<60 || abs(theta_m[1])<60 || abs(180-theta_m[2])<60 || abs(theta_m[3])<60 || abs(180-theta_m[4])<60 || abs(theta_m[5])<60)
-    {
-    }
-    else
-    {
-      servo1.write(180-theta_m[0]);              
-      servo2.write(theta_m[1]);
-      servo3.write(180-theta_m[2]);
-      servo4.write(theta_m[3]);
-      servo5.write(180-theta_m[4]);
-      servo6.write(theta_m[5]);
-    }
+  if(abs(180-theta_m[0])<60 || abs(theta_m[1])<60 || abs(180-theta_m[2])<60 || abs(theta_m[3])<60 || abs(180-theta_m[4])<60 || abs(theta_m[5])<60)
+  {
+  }
+  else
+  {
+    servo1.write(180-theta_m[0]);              
+    servo2.write(theta_m[1]);
+    servo3.write(180-theta_m[2]);
+    servo4.write(theta_m[3]);
+    servo5.write(180-theta_m[4]);
+    servo6.write(theta_m[5]);
   }
 } 
 
+double parse_string_to_double(char *string, char const *tag)
+{
+  char* string_copy = (char*)malloc(strlen(string) + 1);
+  char* char_result;
+  char* token;
+  double result = 0.0;
 
+  strcpy(string_copy, string);
+
+  token = strtok(string_copy, "&");
+
+  while(token)
+  {
+    char* equals_sign = strchr(token, '=');
+
+    if(equals_sign)
+    {
+      *equals_sign = 0;
+
+      if( 0 == strcmp(token, tag))
+      {
+        equals_sign++;
+        char_result = (char*)malloc(strlen(equals_sign) + 1);
+        strcpy(char_result, equals_sign);
+        result = atof(char_result);
+        free(char_result);
+      }
+    }
+    token = strtok(0, "&");
+  }
+  free(string_copy);
+
+  return result;
+}
 
 
 

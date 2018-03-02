@@ -30,7 +30,7 @@ controller = controller(init_angle=init_angle, version='v1.0', bounds=(105, 170)
 # Init Arduino serial connection
 ardu_ser = serial.Serial('/dev/ttyACM0', 19200)
 print(ardu_ser)
-buffer = str(servo_angles[0])+','+str(-servo_angles[1])+','+str(servo_angles[2])+','+str(-servo_angles[3])+','+str(servo_angles[4])+','+str(-servo_angles[5])+'\n'
+buffer = str('A='servo_angles[0])+'&B='+str(-servo_angles[1])+'&C='+str(servo_angles[2])+'&D='+str(-servo_angles[3])+'&E='+str(servo_angles[4])+'&F='+str(-servo_angles[5])+'\n'
 ardu_ser.write(buffer)
 
 # Init IMU serial connection
