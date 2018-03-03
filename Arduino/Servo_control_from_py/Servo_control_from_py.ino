@@ -23,7 +23,7 @@ double theta_m[6];
 double t;
 
 String buffer;
-char buffer_array[100];
+char buffer_array[150];
 
 void setup() 
 {   
@@ -36,11 +36,6 @@ void setup()
   servo4.attach(5,500,2500);
   servo5.attach(6,500,2500);
   servo6.attach(7,500,2500);
-
-  char test_buff[15] = "A=6.3&B=6.5";
-  Serial.println("This is a test parse");
-  Serial.println(parse_string_to_double(test_buff, "A"));
-  Serial.println(parse_string_to_double(test_buff, "B"));
 } 
 
 
@@ -53,21 +48,24 @@ void loop()
   { 
     buffer = Serial.readStringUntil('\n');    
     buffer.toCharArray(buffer_array,buffer.length()+1);
-    Serial.println(buffer_array);
-
+    //Serial.println(buffer_array);
+    
     theta[0] = parse_string_to_double(buffer_array, "A");
     theta[1] = parse_string_to_double(buffer_array, "B");
     theta[2] = parse_string_to_double(buffer_array, "C");
     theta[3] = parse_string_to_double(buffer_array, "D");
     theta[4] = parse_string_to_double(buffer_array, "E");
     theta[5] = parse_string_to_double(buffer_array, "F");
-
-    for(int servo_num = 0; servo_num <6; servo_num++)
-    { 
-      theta_m[servo_num] = map(theta[servo_num],0,270,0,180);
-    }
   }
-
+  
+  for(int servo_num = 0; servo_num <6; servo_num++)
+  { 
+    //Serial.print(theta[servo_num]);
+    //Serial.print(",");
+    theta_m[servo_num] = map(theta[servo_num],0,270,0,180);
+  }
+  //Serial.print("\n");
+  
   if(abs(180-theta_m[0])<60 || abs(theta_m[1])<60 || abs(180-theta_m[2])<60 || abs(theta_m[3])<60 || abs(180-theta_m[4])<60 || abs(theta_m[5])<60)
   {
   }

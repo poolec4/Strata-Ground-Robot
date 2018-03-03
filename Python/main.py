@@ -30,7 +30,7 @@ controller = controller(init_angle=init_angle, version='v1.0', bounds=(105, 170)
 # Init Arduino serial connection
 ardu_ser = serial.Serial('/dev/ttyACM0', 19200)
 print(ardu_ser)
-buffer = str('A='servo_angles[0])+'&B='+str(-servo_angles[1])+'&C='+str(servo_angles[2])+'&D='+str(-servo_angles[3])+'&E='+str(servo_angles[4])+'&F='+str(-servo_angles[5])+'\n'
+buffer = 'A='+str(servo_angles[0])+'&B='+str(-servo_angles[1])+'&C='+str(servo_angles[2])+'&D='+str(-servo_angles[3])+'&E='+str(servo_angles[4])+'&F='+str(-servo_angles[5])+'\n'
 ardu_ser.write(buffer)
 
 # Init IMU serial connection
@@ -150,8 +150,9 @@ while run_controller == True:
         ## Test angle definition
         ##servo_write = 135+np.ones(6)*30*np.sin(2*math.pi*0.2*t)
             
-        servo_write = np.around(servo_write,2)
-        buffer = str(servo_write[0])+','+str(servo_write[1])+','+str(servo_write[2])+','+str(servo_write[3])+','+str(servo_write[4])+','+str(servo_write[5])+'\n'
+        servo_write = np.around(servo_write,1)
+        buffer = 'A='+str(servo_write[0][0])+'&B='+str(servo_write[1][0])+'&C='+str(servo_write[2][0])+'&D='+str(servo_write[3][0])+'&E='+str(servo_write[4][0])+'&F='+str(servo_write[5][0])+'\n'
+        #import pdb; pdb.set_trace()
         ardu_ser.write(buffer)
         print('Servo Angles: ')
         print(buffer)
@@ -171,8 +172,9 @@ for i in range(0,count):
 
 plt.plot(t_data[3:], accel_data[3:,0], t_data[3:], accel_data[3:,1])
 plt.show()
-servo_write = 135.0*np.ones(6)
-buffer = str(servo_write[0])+','+str(servo_write[1])+','+str(servo_write[2])+','+str(servo_write[3])+','+str(servo_write[4])+','+str(servo_write[5])+'\n'
-ardu_ser.write(buffer)      
+init_angle = 135.0 # in degrees
+servo_angles = init_angle*np.asarray([1,-1,1,-1,1,-1])
+buffer = 'A='+str(servo_angles[0])+'&B='+str(-servo_angles[1])+'&C='+str(servo_angles[2])+'&D='+str(-servo_angles[3])+'&E='+str(servo_angles[4])+'&F='+str(-servo_angles[5])+'\n'
+ardu_ser.write(buffer);
 ardu_ser.close();
 imu_ser.close();
