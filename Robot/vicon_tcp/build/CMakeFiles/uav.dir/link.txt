@@ -1,0 +1,2 @@
+/usr/bin/ar qc libuav.a  CMakeFiles/uav.dir/src/fdcl_vicon.cpp.o CMakeFiles/uav.dir/src/fdcl_robot.cpp.o CMakeFiles/uav.dir/src/misc_matrix_func.cpp.o
+/usr/bin/ranlib libuav.a

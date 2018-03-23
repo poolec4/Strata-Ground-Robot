@@ -1,0 +1,1 @@
+/usr/bin/c++      CMakeFiles/jetson.dir/src/main.cpp.o  -o jetson  -L/usr/local/lib  -L/home/chris/Strata-Ground-Robot/Robot/C/build -rdynamic libuav.a libhost.a -lvn100 -lvrpn -pthread -Wl,-rpath,/usr/local/lib 
