@@ -23,7 +23,7 @@ To install VRPN library:
 ```bash
 cd Robot/vicon_host/libraries/vrpn/quat
 ```
-The Makefile must be edited to match the system type. Uncommemnt the appropriate line ("HW_OS := pc_linux" for 32 bit systems or "HW_OS := pc_linux64" for 64 bit systems):
+The Makefile must be edited to match the system type. Uncommemnt the appropriate line (`HW_OS := pc_linux` for 32 bit systems or `HW_OS := pc_linux64` for 64 bit systems):
 ```bash
 nano Makefile
 make
