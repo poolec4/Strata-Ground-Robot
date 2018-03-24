@@ -1,7 +1,7 @@
 # Strata-Ground-Robot
 GWU Senior Design 2018
 
-First cone repository:
+Clone repository:
 ```bash
 git clone https://github.com/poolec4/Strata-Ground-Robot.git
 cd Strata-Ground-Robot
@@ -58,6 +58,22 @@ Run the server and client (in different terminal windows):
 ./greeter_client
 ```
 The client window should print `Greeter received: Hello world` if everything is working.
+
+To install GRPC for Python:
+```bash
+python -m pip install grpcio
+python -m pip install grpcio-tools
+```
+Try GRPC examples (once again in separate terminal windows):
+```bash
+git clone -b v1.10.x https://github.com/grpc/grpc
+cd grpc/examples/python/helloworld
+python greeter_server.py
+python greeter_client.py
+```
+The client window should print `Greeter client received: Hello, you!` if everything is working.
+
+Next, test sending from one device to another. Might need to do this: https://github.com/grpc/grpc/issues/10946
 
 ##### Host
 
