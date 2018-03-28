@@ -75,6 +75,11 @@ The client window should print `Greeter client received: Hello, you!` if everyth
 
 Next, test sending from one device to another. Might need to do this: https://github.com/grpc/grpc/issues/10946
 
+To generate C code from `.proto` file:
+```bash
+make vicon.grpc.pb.cc vicon.pb.cc
+```
+
 ##### Host
 
 To build and run the host:
