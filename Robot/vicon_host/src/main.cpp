@@ -45,9 +45,8 @@ int main(){
 
        	printf("tx: %.3f  ty: %.3f  tz: %.3f ox: %.3f, oy:  %.3f, oz:  %.3f, ow: %.3f\r", ROBOT.x_v(0), ROBOT.x_v(1), ROBOT.x_v(2), ROBOT.q_v(0), ROBOT.q_v(1), ROBOT.q_v(2), ROBOT.q_v(3));
 
-
 	}
 
 	VICON.close();
-	printf("VISON: thread closing\n");
+	printf("VICON: thread closing\n");
 }
