@@ -50,6 +50,7 @@ void setup() {
     digitalWrite(R3_B, LOW);
 
   Serial.begin(9600);
+  Serial.println("Begin");
 }
 
 void loop() {
