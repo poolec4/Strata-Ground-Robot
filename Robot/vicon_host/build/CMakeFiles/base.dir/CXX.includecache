@@ -1145,11 +1145,15 @@ fstream
 -
 sys/socket.h
 -
+sys/types.h
+-
 stdlib.h
 -
 netinet/in.h
 -
 arpa/inet.h
+-
+netdb.h
 -
 Eigen/Dense
 /home/chris/Strata-Ground-Robot/Robot/vicon_host/src/Eigen/Dense

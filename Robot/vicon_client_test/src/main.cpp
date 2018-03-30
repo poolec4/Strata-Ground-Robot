@@ -6,45 +6,80 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <string.h>
-#define PORT 5000
 
-struct sockaddr_in address;
-int sock = 0, valread;
-struct sockaddr_in serv_addr;
-char const *hello = "Hello from client";
-char buffer[1024] = {0};
+int sockfd, newsockfd, port_number = 50002, n, count = 0;
+socklen_t client_ln;
+char buffer[1000], buffer_[1000];
+struct sockaddr_in serv_addr, cli_addr;
+
 
 int main(){
 
-    if ((sock = socket(AF_INET, SOCK_STREAM, 0)) < 0)
-    {
-        printf("\n Socket creation error \n");
-        return -1;
+    printf("\nTCP Server - starting\n");
+    printf("Connecting to TCP on port %d\n", port_number);
+    //Start TCP socket
+
+    printf("Please start sending Vicon data.\n");
+
+    sockfd = socket(AF_INET, SOCK_STREAM, 0);
+
+    if (sockfd < 1){
+        printf("\nERROR: failed to open socket\n");
     }
 
-    memset(&serv_addr, '0', sizeof(serv_addr));
+    bzero((char *) &serv_addr, sizeof(serv_addr));
 
     serv_addr.sin_family = AF_INET;
-    serv_addr.sin_port = htons(PORT);
-      
-    // Convert IPv4 and IPv6 addresses from text to binary form
-    if(inet_pton(AF_INET, "127.0.0.1", &serv_addr.sin_addr)<=0) 
-    {
-        printf("\nInvalid address/ Address not supported \n");
-        return -1;
+    serv_addr.sin_port = htons(port_number);
+    serv_addr.sin_addr.s_addr = INADDR_ANY;
+
+    int yes = 1;
+
+    if(setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof(yes)) == -1){
+        printf("\nERROR setsockopt");
     }
 
-     if (connect(sock, (struct sockaddr *)&serv_addr, sizeof(serv_addr)) < 0)
-        {
-            printf("\nConnection Failed \n");
-            return -1;
+    if (bind(sockfd, (struct sockaddr *) &serv_addr, sizeof(serv_addr)) <0){
+        printf("\nERROR: failed to bind to socket\n");
+    }
+
+    // listen(sockfd, 5);
+
+    // client_ln = sizeof(cli_addr);
+    // newsockfd = accept(sockfd, (struct sockaddr *) &cli_addr, &client_ln);
+
+    // if (newsockfd <0){
+    //     printf("\nERROR: failed to accept socket\n");
+    //             //exit(1);
+    // }
+
+    while(1){
+        listen(sockfd, 5);
+        client_ln = sizeof(cli_addr);
+        newsockfd = accept(sockfd, (struct sockaddr *) &cli_addr, &client_ln);
+
+        if (newsockfd <0){
+            printf("\nERROR: failed to accept socket\n");
         }
 
-    while(1)
-    {
-        listen(sock,5);
-        valread = read( sock , buffer, 1024);
-        printf("%s\n",buffer );
-        close(sock);
+        bzero(buffer, 1000);
+        listen(newsockfd, 5);
+        n = read(newsockfd, buffer, 1000);
+
+        if (n < 0){
+            printf("\nERROR: failed to read from socket\n");
+        }
+
+        close(newsockfd);
+
+        printf("%s\n",buffer);
+        // x_v[0] = parse_string_to_double(buffer, "x_v0");
+        // x_v[1] = parse_string_to_double(buffer, "x_v1");
+        // x_v[2] = parse_string_to_double(buffer, "x_v2");
+
+        // quat_vm[0] = parse_string_to_double(buffer, "quat_vm0");
+        // quat_vm[1] = parse_string_to_double(buffer, "quat_vm1");
+        // quat_vm[2] = parse_string_to_double(buffer, "quat_vm2");
+        // quat_vm[3] = parse_string_to_double(buffer, "quat_vm3");
     }
 }
