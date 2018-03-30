@@ -6,6 +6,14 @@
 
 #IncludeRegexTransform: 
 
+../include/char_parse.h
+stdio.h
+-
+stdlib.h
+-
+string.h
+-
+
 ../include/fdcl_common_type.h
 
 ../include/fdcl_param.h
@@ -1137,6 +1145,10 @@ fstream
 -
 sys/socket.h
 -
+stdlib.h
+-
+netinet/in.h
+-
 arpa/inet.h
 -
 Eigen/Dense
@@ -1151,6 +1163,8 @@ fdcl_robot.h
 /home/chris/Strata-Ground-Robot/Robot/vicon_host/src/fdcl_robot.h
 misc_matrix_func.h
 /home/chris/Strata-Ground-Robot/Robot/vicon_host/src/misc_matrix_func.h
+char_parse.h
+/home/chris/Strata-Ground-Robot/Robot/vicon_host/src/char_parse.h
 
 /usr/local/include/vrpn_BaseClass.h
 vrpn_Shared.h

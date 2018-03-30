@@ -1,0 +1,1 @@
+/usr/bin/c++      CMakeFiles/base.dir/src/main.cpp.o  -o base  -L/usr/local/lib -rdynamic -lhost -Wl,-rpath,/usr/local/lib 

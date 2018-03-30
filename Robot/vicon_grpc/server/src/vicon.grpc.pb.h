@@ -38,5 +38,118 @@ class ServerCompletionQueue;
 class ServerContext;
 }  // namespace grpc
 
+namespace vicon {
+
+class greeter final {
+ public:
+  static constexpr char const* service_full_name() {
+    return "vicon.greeter";
+  }
+  class StubInterface {
+   public:
+    virtual ~StubInterface() {}
+    // Sends a greeting
+    virtual ::grpc::Status SayHello(::grpc::ClientContext* context, const ::vicon::robot_state_request& request, ::vicon::robot_state_reply* response) = 0;
+    std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::vicon::robot_state_reply>> AsyncSayHello(::grpc::ClientContext* context, const ::vicon::robot_state_request& request, ::grpc::CompletionQueue* cq) {
+      return std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::vicon::robot_state_reply>>(AsyncSayHelloRaw(context, request, cq));
+    }
+    std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::vicon::robot_state_reply>> PrepareAsyncSayHello(::grpc::ClientContext* context, const ::vicon::robot_state_request& request, ::grpc::CompletionQueue* cq) {
+      return std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::vicon::robot_state_reply>>(PrepareAsyncSayHelloRaw(context, request, cq));
+    }
+  private:
+    virtual ::grpc::ClientAsyncResponseReaderInterface< ::vicon::robot_state_reply>* AsyncSayHelloRaw(::grpc::ClientContext* context, const ::vicon::robot_state_request& request, ::grpc::CompletionQueue* cq) = 0;
+    virtual ::grpc::ClientAsyncResponseReaderInterface< ::vicon::robot_state_reply>* PrepareAsyncSayHelloRaw(::grpc::ClientContext* context, const ::vicon::robot_state_request& request, ::grpc::CompletionQueue* cq) = 0;
+  };
+  class Stub final : public StubInterface {
+   public:
+    Stub(const std::shared_ptr< ::grpc::ChannelInterface>& channel);
+    ::grpc::Status SayHello(::grpc::ClientContext* context, const ::vicon::robot_state_request& request, ::vicon::robot_state_reply* response) override;
+    std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::vicon::robot_state_reply>> AsyncSayHello(::grpc::ClientContext* context, const ::vicon::robot_state_request& request, ::grpc::CompletionQueue* cq) {
+      return std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::vicon::robot_state_reply>>(AsyncSayHelloRaw(context, request, cq));
+    }
+    std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::vicon::robot_state_reply>> PrepareAsyncSayHello(::grpc::ClientContext* context, const ::vicon::robot_state_request& request, ::grpc::CompletionQueue* cq) {
+      return std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::vicon::robot_state_reply>>(PrepareAsyncSayHelloRaw(context, request, cq));
+    }
+
+   private:
+    std::shared_ptr< ::grpc::ChannelInterface> channel_;
+    ::grpc::ClientAsyncResponseReader< ::vicon::robot_state_reply>* AsyncSayHelloRaw(::grpc::ClientContext* context, const ::vicon::robot_state_request& request, ::grpc::CompletionQueue* cq) override;
+    ::grpc::ClientAsyncResponseReader< ::vicon::robot_state_reply>* PrepareAsyncSayHelloRaw(::grpc::ClientContext* context, const ::vicon::robot_state_request& request, ::grpc::CompletionQueue* cq) override;
+    const ::grpc::internal::RpcMethod rpcmethod_SayHello_;
+  };
+  static std::unique_ptr<Stub> NewStub(const std::shared_ptr< ::grpc::ChannelInterface>& channel, const ::grpc::StubOptions& options = ::grpc::StubOptions());
+
+  class Service : public ::grpc::Service {
+   public:
+    Service();
+    virtual ~Service();
+    // Sends a greeting
+    virtual ::grpc::Status SayHello(::grpc::ServerContext* context, const ::vicon::robot_state_request* request, ::vicon::robot_state_reply* response);
+  };
+  template <class BaseClass>
+  class WithAsyncMethod_SayHello : public BaseClass {
+   private:
+    void BaseClassMustBeDerivedFromService(const Service *service) {}
+   public:
+    WithAsyncMethod_SayHello() {
+      ::grpc::Service::MarkMethodAsync(0);
+    }
+    ~WithAsyncMethod_SayHello() override {
+      BaseClassMustBeDerivedFromService(this);
+    }
+    // disable synchronous version of this method
+    ::grpc::Status SayHello(::grpc::ServerContext* context, const ::vicon::robot_state_request* request, ::vicon::robot_state_reply* response) final override {
+      abort();
+      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+    }
+    void RequestSayHello(::grpc::ServerContext* context, ::vicon::robot_state_request* request, ::grpc::ServerAsyncResponseWriter< ::vicon::robot_state_reply>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
+      ::grpc::Service::RequestAsyncUnary(0, context, request, response, new_call_cq, notification_cq, tag);
+    }
+  };
+  typedef WithAsyncMethod_SayHello<Service > AsyncService;
+  template <class BaseClass>
+  class WithGenericMethod_SayHello : public BaseClass {
+   private:
+    void BaseClassMustBeDerivedFromService(const Service *service) {}
+   public:
+    WithGenericMethod_SayHello() {
+      ::grpc::Service::MarkMethodGeneric(0);
+    }
+    ~WithGenericMethod_SayHello() override {
+      BaseClassMustBeDerivedFromService(this);
+    }
+    // disable synchronous version of this method
+    ::grpc::Status SayHello(::grpc::ServerContext* context, const ::vicon::robot_state_request* request, ::vicon::robot_state_reply* response) final override {
+      abort();
+      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+    }
+  };
+  template <class BaseClass>
+  class WithStreamedUnaryMethod_SayHello : public BaseClass {
+   private:
+    void BaseClassMustBeDerivedFromService(const Service *service) {}
+   public:
+    WithStreamedUnaryMethod_SayHello() {
+      ::grpc::Service::MarkMethodStreamed(0,
+        new ::grpc::internal::StreamedUnaryHandler< ::vicon::robot_state_request, ::vicon::robot_state_reply>(std::bind(&WithStreamedUnaryMethod_SayHello<BaseClass>::StreamedSayHello, this, std::placeholders::_1, std::placeholders::_2)));
+    }
+    ~WithStreamedUnaryMethod_SayHello() override {
+      BaseClassMustBeDerivedFromService(this);
+    }
+    // disable regular version of this method
+    ::grpc::Status SayHello(::grpc::ServerContext* context, const ::vicon::robot_state_request* request, ::vicon::robot_state_reply* response) final override {
+      abort();
+      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+    }
+    // replace default version of method with streamed unary
+    virtual ::grpc::Status StreamedSayHello(::grpc::ServerContext* context, ::grpc::ServerUnaryStreamer< ::vicon::robot_state_request,::vicon::robot_state_reply>* server_unary_streamer) = 0;
+  };
+  typedef WithStreamedUnaryMethod_SayHello<Service > StreamedUnaryService;
+  typedef Service SplitStreamedService;
+  typedef WithStreamedUnaryMethod_SayHello<Service > StreamedService;
+};
+
+}  // namespace vicon
+
 
 #endif  // GRPC_vicon_2eproto__INCLUDED

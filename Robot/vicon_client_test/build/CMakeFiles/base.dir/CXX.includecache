@@ -1,0 +1,24 @@
+#IncludeRegexLine: ^[ 	]*#[ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/chris/Strata-Ground-Robot/Robot/vicon_client_test/src/main.cpp
+stdio.h
+-
+unistd.h
+-
+sys/socket.h
+-
+stdlib.h
+-
+netinet/in.h
+-
+arpa/inet.h
+-
+string.h
+-
+

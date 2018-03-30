@@ -16,7 +16,16 @@ syntax = "proto3";
 
 package vicon;
 
-message robot_state {
+service greeter {
+  // Sends a greeting
+  rpc SayHello (robot_state_request) returns (robot_state_reply) {}
+}
+
+message robot_state_request {
+  string name = 1;
+}
+
+message robot_state_reply {
   float tx = 1;
   float ty = 2;
   float tz = 3;

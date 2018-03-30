@@ -13,4 +13,52 @@
 #include <grpcpp/impl/codegen/rpc_service_method.h>
 #include <grpcpp/impl/codegen/service_type.h>
 #include <grpcpp/impl/codegen/sync_stream.h>
+namespace vicon {
+
+static const char* greeter_method_names[] = {
+  "/vicon.greeter/SayHello",
+};
+
+std::unique_ptr< greeter::Stub> greeter::NewStub(const std::shared_ptr< ::grpc::ChannelInterface>& channel, const ::grpc::StubOptions& options) {
+  (void)options;
+  std::unique_ptr< greeter::Stub> stub(new greeter::Stub(channel));
+  return stub;
+}
+
+greeter::Stub::Stub(const std::shared_ptr< ::grpc::ChannelInterface>& channel)
+  : channel_(channel), rpcmethod_SayHello_(greeter_method_names[0], ::grpc::internal::RpcMethod::NORMAL_RPC, channel)
+  {}
+
+::grpc::Status greeter::Stub::SayHello(::grpc::ClientContext* context, const ::vicon::robot_state_request& request, ::vicon::robot_state_reply* response) {
+  return ::grpc::internal::BlockingUnaryCall(channel_.get(), rpcmethod_SayHello_, context, request, response);
+}
+
+::grpc::ClientAsyncResponseReader< ::vicon::robot_state_reply>* greeter::Stub::AsyncSayHelloRaw(::grpc::ClientContext* context, const ::vicon::robot_state_request& request, ::grpc::CompletionQueue* cq) {
+  return ::grpc::internal::ClientAsyncResponseReaderFactory< ::vicon::robot_state_reply>::Create(channel_.get(), cq, rpcmethod_SayHello_, context, request, true);
+}
+
+::grpc::ClientAsyncResponseReader< ::vicon::robot_state_reply>* greeter::Stub::PrepareAsyncSayHelloRaw(::grpc::ClientContext* context, const ::vicon::robot_state_request& request, ::grpc::CompletionQueue* cq) {
+  return ::grpc::internal::ClientAsyncResponseReaderFactory< ::vicon::robot_state_reply>::Create(channel_.get(), cq, rpcmethod_SayHello_, context, request, false);
+}
+
+greeter::Service::Service() {
+  AddMethod(new ::grpc::internal::RpcServiceMethod(
+      greeter_method_names[0],
+      ::grpc::internal::RpcMethod::NORMAL_RPC,
+      new ::grpc::internal::RpcMethodHandler< greeter::Service, ::vicon::robot_state_request, ::vicon::robot_state_reply>(
+          std::mem_fn(&greeter::Service::SayHello), this)));
+}
+
+greeter::Service::~Service() {
+}
+
+::grpc::Status greeter::Service::SayHello(::grpc::ServerContext* context, const ::vicon::robot_state_request* request, ::vicon::robot_state_reply* response) {
+  (void) context;
+  (void) request;
+  (void) response;
+  return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+}
+
+
+}  // namespace vicon
 
