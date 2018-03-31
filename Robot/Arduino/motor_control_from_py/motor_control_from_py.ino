@@ -1,19 +1,22 @@
-#define L1_F 1
-#define L1_B 2
-#define R1_F 3
-#define R1_B 4
+#define L1_F 2
+#define L1_B 3
+#define R1_F 4
+#define R1_B 5
 
-#define L2_F 5
-#define L2_B 6
-#define R2_F 7
-#define R2_B 8
+#define L2_F 6
+#define L2_B 7
+#define R2_F 8
+#define R2_B 9
 
-#define L3_F 9
-#define L3_B 10
-#define R3_F 11
-#define R3_B 12
+#define L3_F 10
+#define L3_B 11
+#define R3_F 12
+#define R3_B 13
 
 double motor_vals[6] = {0,0,0,0,0,0}; 
+
+String buffer;
+char buffer_array[150];
 
 void setup() {
   pinMode(L1_F, OUTPUT);
@@ -44,7 +47,8 @@ void setup() {
   digitalWrite(R3_F, LOW);
   digitalWrite(R3_B, LOW);
 
-  Serial.begin(9600);
+  Serial.begin(19200);
+  Serial.setTimeout(5);
 }
 
 void loop() {
@@ -64,22 +68,22 @@ void loop() {
     motor_vals[5] = parse_string_to_double(buffer_array, "F");
   
     if(motor_vals[0]<255){
-      analogWrite(L1_R, 255-motor_vals[0]);
+      analogWrite(L1_B, 255-motor_vals[0]);
     }
     if(motor_vals[1]<255){
-      analogWrite(L2_R, 255-motor_vals[1]);
+      analogWrite(L2_B, 255-motor_vals[1]);
     }
     if(motor_vals[2]<255){
-      analogWrite(L3_R, 255-motor_vals[2]);
+      analogWrite(L3_B, 255-motor_vals[2]);
     }
     if(motor_vals[3]<255){
-      analogWrite(R1_R, 255-motor_vals[3]);
+      analogWrite(R1_B, 255-motor_vals[3]);
     }
     if(motor_vals[4]<255){
-      analogWrite(R2_R, 255-motor_vals[4]);
+      analogWrite(R2_B, 255-motor_vals[4]);
     }
     if(motor_vals[5]<255){
-      analogWrite(R3_R, 255-motor_vals[5]);
+      analogWrite(R3_B, 255-motor_vals[5]);
     }
 
     if(motor_vals[0]>255){
