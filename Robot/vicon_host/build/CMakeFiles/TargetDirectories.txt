@@ -1,4 +1,0 @@
-/home/chris/Strata-Ground-Robot/Robot/vicon_host/build/CMakeFiles/edit_cache.dir
-/home/chris/Strata-Ground-Robot/Robot/vicon_host/build/CMakeFiles/rebuild_cache.dir
-/home/chris/Strata-Ground-Robot/Robot/vicon_host/build/CMakeFiles/host.dir
-/home/chris/Strata-Ground-Robot/Robot/vicon_host/build/CMakeFiles/base.dir
