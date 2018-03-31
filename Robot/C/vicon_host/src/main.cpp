@@ -110,7 +110,7 @@ int main(){
         }
 
         close(newsockfd);
-        sleep(0.1);
+        sleep(0.01);
 	}
 
 	VICON.close();
