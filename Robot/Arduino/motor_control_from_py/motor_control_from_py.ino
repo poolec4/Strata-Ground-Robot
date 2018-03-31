@@ -1,17 +1,17 @@
-#define L1_F 2
-#define L1_B 3
-#define R1_F 4
-#define R1_B 5
+#define L1_F 1
+#define L1_B 2
+#define R1_F 3
+#define R1_B 4
 
-#define L2_F 6
-#define L2_B 7
-#define R2_F 8
-#define R2_B 9
+#define L2_F 5
+#define L2_B 6
+#define R2_F 7
+#define R2_B 8
 
-#define L3_F 10
-#define L3_B 11
-#define R3_F 12
-#define R3_B 13
+#define L3_F 9
+#define L3_B 10
+#define R3_F 11
+#define R3_B 12
 
 double motor_vals[6] = {0,0,0,0,0,0}; 
 

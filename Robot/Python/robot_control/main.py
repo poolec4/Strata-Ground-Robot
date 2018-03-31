@@ -3,7 +3,7 @@ import time
 import math
 import numpy as np
 
-motor_val = np.zeros((1,6))
+motor_val = np.asarray([0,0,0,0,0,0])
 
 ardu_ser = serial.Serial('/dev/ttyACM0', 19200)
 print(ardu_ser)
