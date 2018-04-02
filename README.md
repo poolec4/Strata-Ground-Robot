@@ -92,3 +92,10 @@ make
 ./base
 ```
 ### Rover (on Raspberry Pi)
+
+##### Vicon Client Test
+To run test:
+```bash
+cd Robot/Python/vicon_client_test
+python vicon_class_test.py
+```
