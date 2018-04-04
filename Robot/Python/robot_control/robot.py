@@ -5,7 +5,7 @@ import numpy as np
 
 def quat_to_eangles(quat):
 	alpha = math.atan2(2*(quat[3]*quat[0]-quat[1]*quat[2]), 1-2*(quat[0]**2+quat[2]**2))
-	gamma = asin(2*(quat[0]*quat[1]-quat[2]*quat[3]))
+	gamma = math.asin(2*(quat[0]*quat[1]-quat[2]*quat[3]))
 	beta = math.atan2(2*(quat[1]*quat[3]-quat[0]*quat[2]),1-2*(quat[1]**2+quat[2]**2))
 	eangles = [alpha, beta, gamma];
 	return eangles
@@ -29,7 +29,7 @@ class robot:
 		return self
 
 	def P_control(self, x_v, q_v):
-		eangles = self.quat_to_eangles(q_v)
+		eangles = quat_to_eangles(q_v)
 		dx = self.x_g - x_v[0];
 		dy = self.y_g - x_v[1];
 		
@@ -41,11 +41,11 @@ class robot:
 		# s_dot = np.array([-kp*p*math.cos(a); kp*math.sin(a) - ka*a - kb*b; -kp*math.sin(a)])
 		# s = s + s_dot
 
-		v = kp*p
-		omega = ka*a + kb*b
+		v = self.kp*p
+		omega = self.ka*a + self.kb*b
 
-		v_r = (2*v + omega*self.L)/(2*R)
-		v_l = (2*v - omega*self.L)/(2*R)
+		v_r = (2*v + omega*self.L)/(2*self.R)
+		v_l = (2*v - omega*self.L)/(2*self.R)
 
 		self.motor_vals[0:3] = v_l
 		self.motor_vals[3:6] = v_r
