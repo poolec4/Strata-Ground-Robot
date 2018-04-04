@@ -48,7 +48,7 @@ class robot:
 		self.ardu_ser.write(buffer)
 		return self
 
-	def stop_robot(self):
+	def stop_robot(self, ):
 		self.motor_vals = np.zeros(6)
 		self.write_motors()
 
