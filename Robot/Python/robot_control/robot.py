@@ -46,6 +46,7 @@ class robot:
 		motor_vals_to_write = self.motor_vals + 255
 		buffer = 'A='+str(motor_vals_to_write[0])+'&B='+str(motor_vals_to_write[1])+'&C='+str(motor_vals_to_write[2])+'&D='+str(motor_vals_to_write[3])+'&E='+str(motor_vals_to_write[4])+'&F='+str(motor_vals_to_write[5])+'\n'
 		self.ardu_ser.write(buffer)
+		print(buffer)
 		return self
 
 	def stop_robot(self, ):
