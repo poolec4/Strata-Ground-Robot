@@ -35,7 +35,7 @@ try:
 		robot = robot.P_control(vicon.x_v, vicon.q_v)
 		robot = robot.write_motors()
 
-		time.sleep(0.1)
+		time.sleep(0.05)
 
 		if(time.time() - t_init > 1000.0):
 			RUN_ROBOT = False
