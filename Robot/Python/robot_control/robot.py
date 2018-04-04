@@ -4,8 +4,8 @@ import numpy as np
 
 class robot:
 	def __init__(self, serial_port, baud_rate):
-		ardu_ser = serial.Serial(serial_port, baud_rate)
-		print(ardu_ser)
+		self.ardu_ser = serial.Serial(serial_port, baud_rate)
+		print(self.ardu_ser)
 		self.motor_vals = np.zeros(6)
 		self.kp = 0 # kp>0
 		self.ka = 0 # kb<0
