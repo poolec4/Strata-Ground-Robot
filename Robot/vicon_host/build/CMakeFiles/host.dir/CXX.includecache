@@ -1112,7 +1112,7 @@ lapacke_mangling.h
 
 ../libraries/eigen/Eigen/src/plugins/MatrixCwiseUnaryOps.h
 
-/home/chris/Strata-Ground-Robot/Robot/C/vicon_host/src/fdcl_param.cpp
+/home/chris/Strata-Ground-Robot/Robot/vicon_host/src/fdcl_param.cpp
 iostream
 -
 fstream
@@ -1124,19 +1124,19 @@ sstream
 iomanip
 -
 Eigen/Dense
-/home/chris/Strata-Ground-Robot/Robot/C/vicon_host/src/Eigen/Dense
+/home/chris/Strata-Ground-Robot/Robot/vicon_host/src/Eigen/Dense
 fdcl_param.h
-/home/chris/Strata-Ground-Robot/Robot/C/vicon_host/src/fdcl_param.h
+/home/chris/Strata-Ground-Robot/Robot/vicon_host/src/fdcl_param.h
 
-/home/chris/Strata-Ground-Robot/Robot/C/vicon_host/src/fdcl_robot.cpp
+/home/chris/Strata-Ground-Robot/Robot/vicon_host/src/fdcl_robot.cpp
 fdcl_robot.h
-/home/chris/Strata-Ground-Robot/Robot/C/vicon_host/src/fdcl_robot.h
+/home/chris/Strata-Ground-Robot/Robot/vicon_host/src/fdcl_robot.h
 
-/home/chris/Strata-Ground-Robot/Robot/C/vicon_host/src/fdcl_vicon.cpp
+/home/chris/Strata-Ground-Robot/Robot/vicon_host/src/fdcl_vicon.cpp
 fdcl_vicon.h
-/home/chris/Strata-Ground-Robot/Robot/C/vicon_host/src/fdcl_vicon.h
+/home/chris/Strata-Ground-Robot/Robot/vicon_host/src/fdcl_vicon.h
 
-/home/chris/Strata-Ground-Robot/Robot/C/vicon_host/src/misc_matrix_func.cpp
+/home/chris/Strata-Ground-Robot/Robot/vicon_host/src/misc_matrix_func.cpp
 stdio.h
 -
 iostream
@@ -1146,7 +1146,7 @@ Eigen/Dense
 Eigen/Eigenvalues
 -
 misc_matrix_func.h
-/home/chris/Strata-Ground-Robot/Robot/C/vicon_host/src/misc_matrix_func.h
+/home/chris/Strata-Ground-Robot/Robot/vicon_host/src/misc_matrix_func.h
 
 /usr/local/include/vrpn_BaseClass.h
 vrpn_Shared.h

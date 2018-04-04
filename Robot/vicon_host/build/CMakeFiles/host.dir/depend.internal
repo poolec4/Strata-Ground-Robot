@@ -214,7 +214,7 @@ CMakeFiles/host.dir/src/fdcl_param.cpp.o
  ../libraries/eigen/Eigen/src/plugins/CommonCwiseUnaryOps.h
  ../libraries/eigen/Eigen/src/plugins/MatrixCwiseBinaryOps.h
  ../libraries/eigen/Eigen/src/plugins/MatrixCwiseUnaryOps.h
- /home/chris/Strata-Ground-Robot/Robot/C/vicon_host/src/fdcl_param.cpp
+ /home/chris/Strata-Ground-Robot/Robot/vicon_host/src/fdcl_param.cpp
 CMakeFiles/host.dir/src/fdcl_robot.cpp.o
  ../include/fdcl_common_type.h
  ../include/fdcl_param.h
@@ -432,7 +432,7 @@ CMakeFiles/host.dir/src/fdcl_robot.cpp.o
  ../libraries/eigen/Eigen/src/plugins/CommonCwiseUnaryOps.h
  ../libraries/eigen/Eigen/src/plugins/MatrixCwiseBinaryOps.h
  ../libraries/eigen/Eigen/src/plugins/MatrixCwiseUnaryOps.h
- /home/chris/Strata-Ground-Robot/Robot/C/vicon_host/src/fdcl_robot.cpp
+ /home/chris/Strata-Ground-Robot/Robot/vicon_host/src/fdcl_robot.cpp
 CMakeFiles/host.dir/src/fdcl_vicon.cpp.o
  ../include/fdcl_common_type.h
  ../include/fdcl_param.h
@@ -651,7 +651,7 @@ CMakeFiles/host.dir/src/fdcl_vicon.cpp.o
  ../libraries/eigen/Eigen/src/plugins/CommonCwiseUnaryOps.h
  ../libraries/eigen/Eigen/src/plugins/MatrixCwiseBinaryOps.h
  ../libraries/eigen/Eigen/src/plugins/MatrixCwiseUnaryOps.h
- /home/chris/Strata-Ground-Robot/Robot/C/vicon_host/src/fdcl_vicon.cpp
+ /home/chris/Strata-Ground-Robot/Robot/vicon_host/src/fdcl_vicon.cpp
  /usr/local/include/vrpn_BaseClass.h
  /usr/local/include/vrpn_Configure.h
  /usr/local/include/vrpn_Connection.h
@@ -871,4 +871,4 @@ CMakeFiles/host.dir/src/misc_matrix_func.cpp.o
  ../libraries/eigen/Eigen/src/plugins/CommonCwiseUnaryOps.h
  ../libraries/eigen/Eigen/src/plugins/MatrixCwiseBinaryOps.h
  ../libraries/eigen/Eigen/src/plugins/MatrixCwiseUnaryOps.h
- /home/chris/Strata-Ground-Robot/Robot/C/vicon_host/src/misc_matrix_func.cpp
+ /home/chris/Strata-Ground-Robot/Robot/vicon_host/src/misc_matrix_func.cpp

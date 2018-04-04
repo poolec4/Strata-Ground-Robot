@@ -1,4 +1,4 @@
-# Install script for directory: /home/chris/Strata-Ground-Robot/Robot/C/vicon_host
+# Install script for directory: /home/chris/Strata-Ground-Robot/Robot/vicon_host
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -40,5 +40,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "/home/chris/Strata-Ground-Robot/Robot/C/vicon_host/build/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "/home/chris/Strata-Ground-Robot/Robot/vicon_host/build/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")

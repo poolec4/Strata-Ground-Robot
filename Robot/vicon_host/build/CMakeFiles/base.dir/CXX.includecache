@@ -1120,7 +1120,7 @@ lapacke_mangling.h
 
 ../libraries/eigen/Eigen/src/plugins/MatrixCwiseUnaryOps.h
 
-/home/chris/Strata-Ground-Robot/Robot/C/vicon_host/src/main.cpp
+/home/chris/Strata-Ground-Robot/Robot/vicon_host/src/main.cpp
 pthread.h
 -
 stdio.h
@@ -1156,19 +1156,19 @@ arpa/inet.h
 netdb.h
 -
 Eigen/Dense
-/home/chris/Strata-Ground-Robot/Robot/C/vicon_host/src/Eigen/Dense
+/home/chris/Strata-Ground-Robot/Robot/vicon_host/src/Eigen/Dense
 main.h
-/home/chris/Strata-Ground-Robot/Robot/C/vicon_host/src/main.h
+/home/chris/Strata-Ground-Robot/Robot/vicon_host/src/main.h
 fdcl_param.h
-/home/chris/Strata-Ground-Robot/Robot/C/vicon_host/src/fdcl_param.h
+/home/chris/Strata-Ground-Robot/Robot/vicon_host/src/fdcl_param.h
 fdcl_vicon.h
-/home/chris/Strata-Ground-Robot/Robot/C/vicon_host/src/fdcl_vicon.h
+/home/chris/Strata-Ground-Robot/Robot/vicon_host/src/fdcl_vicon.h
 fdcl_robot.h
-/home/chris/Strata-Ground-Robot/Robot/C/vicon_host/src/fdcl_robot.h
+/home/chris/Strata-Ground-Robot/Robot/vicon_host/src/fdcl_robot.h
 misc_matrix_func.h
-/home/chris/Strata-Ground-Robot/Robot/C/vicon_host/src/misc_matrix_func.h
+/home/chris/Strata-Ground-Robot/Robot/vicon_host/src/misc_matrix_func.h
 char_parse.h
-/home/chris/Strata-Ground-Robot/Robot/C/vicon_host/src/char_parse.h
+/home/chris/Strata-Ground-Robot/Robot/vicon_host/src/char_parse.h
 
 /usr/local/include/vrpn_BaseClass.h
 vrpn_Shared.h

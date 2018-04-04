@@ -220,7 +220,7 @@ CMakeFiles/base.dir/src/main.cpp.o
  ../libraries/eigen/Eigen/src/plugins/CommonCwiseUnaryOps.h
  ../libraries/eigen/Eigen/src/plugins/MatrixCwiseBinaryOps.h
  ../libraries/eigen/Eigen/src/plugins/MatrixCwiseUnaryOps.h
- /home/chris/Strata-Ground-Robot/Robot/C/vicon_host/src/main.cpp
+ /home/chris/Strata-Ground-Robot/Robot/vicon_host/src/main.cpp
  /usr/local/include/vrpn_BaseClass.h
  /usr/local/include/vrpn_Configure.h
  /usr/local/include/vrpn_Connection.h

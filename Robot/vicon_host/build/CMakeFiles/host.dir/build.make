@@ -43,10 +43,10 @@ RM = /usr/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/chris/Strata-Ground-Robot/Robot/C/vicon_host
+CMAKE_SOURCE_DIR = /home/chris/Strata-Ground-Robot/Robot/vicon_host
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/chris/Strata-Ground-Robot/Robot/C/vicon_host/build
+CMAKE_BINARY_DIR = /home/chris/Strata-Ground-Robot/Robot/vicon_host/build
 
 # Include any dependencies generated for this target.
 include CMakeFiles/host.dir/depend.make
@@ -59,16 +59,16 @@ include CMakeFiles/host.dir/flags.make
 
 CMakeFiles/host.dir/src/fdcl_param.cpp.o: CMakeFiles/host.dir/flags.make
 CMakeFiles/host.dir/src/fdcl_param.cpp.o: ../src/fdcl_param.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/chris/Strata-Ground-Robot/Robot/C/vicon_host/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/host.dir/src/fdcl_param.cpp.o"
-	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/host.dir/src/fdcl_param.cpp.o -c /home/chris/Strata-Ground-Robot/Robot/C/vicon_host/src/fdcl_param.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/chris/Strata-Ground-Robot/Robot/vicon_host/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/host.dir/src/fdcl_param.cpp.o"
+	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/host.dir/src/fdcl_param.cpp.o -c /home/chris/Strata-Ground-Robot/Robot/vicon_host/src/fdcl_param.cpp
 
 CMakeFiles/host.dir/src/fdcl_param.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/host.dir/src/fdcl_param.cpp.i"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/chris/Strata-Ground-Robot/Robot/C/vicon_host/src/fdcl_param.cpp > CMakeFiles/host.dir/src/fdcl_param.cpp.i
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/chris/Strata-Ground-Robot/Robot/vicon_host/src/fdcl_param.cpp > CMakeFiles/host.dir/src/fdcl_param.cpp.i
 
 CMakeFiles/host.dir/src/fdcl_param.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/host.dir/src/fdcl_param.cpp.s"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/chris/Strata-Ground-Robot/Robot/C/vicon_host/src/fdcl_param.cpp -o CMakeFiles/host.dir/src/fdcl_param.cpp.s
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/chris/Strata-Ground-Robot/Robot/vicon_host/src/fdcl_param.cpp -o CMakeFiles/host.dir/src/fdcl_param.cpp.s
 
 CMakeFiles/host.dir/src/fdcl_param.cpp.o.requires:
 
@@ -83,16 +83,16 @@ CMakeFiles/host.dir/src/fdcl_param.cpp.o.provides.build: CMakeFiles/host.dir/src
 
 CMakeFiles/host.dir/src/fdcl_vicon.cpp.o: CMakeFiles/host.dir/flags.make
 CMakeFiles/host.dir/src/fdcl_vicon.cpp.o: ../src/fdcl_vicon.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/chris/Strata-Ground-Robot/Robot/C/vicon_host/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/host.dir/src/fdcl_vicon.cpp.o"
-	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/host.dir/src/fdcl_vicon.cpp.o -c /home/chris/Strata-Ground-Robot/Robot/C/vicon_host/src/fdcl_vicon.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/chris/Strata-Ground-Robot/Robot/vicon_host/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/host.dir/src/fdcl_vicon.cpp.o"
+	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/host.dir/src/fdcl_vicon.cpp.o -c /home/chris/Strata-Ground-Robot/Robot/vicon_host/src/fdcl_vicon.cpp
 
 CMakeFiles/host.dir/src/fdcl_vicon.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/host.dir/src/fdcl_vicon.cpp.i"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/chris/Strata-Ground-Robot/Robot/C/vicon_host/src/fdcl_vicon.cpp > CMakeFiles/host.dir/src/fdcl_vicon.cpp.i
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/chris/Strata-Ground-Robot/Robot/vicon_host/src/fdcl_vicon.cpp > CMakeFiles/host.dir/src/fdcl_vicon.cpp.i
 
 CMakeFiles/host.dir/src/fdcl_vicon.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/host.dir/src/fdcl_vicon.cpp.s"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/chris/Strata-Ground-Robot/Robot/C/vicon_host/src/fdcl_vicon.cpp -o CMakeFiles/host.dir/src/fdcl_vicon.cpp.s
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/chris/Strata-Ground-Robot/Robot/vicon_host/src/fdcl_vicon.cpp -o CMakeFiles/host.dir/src/fdcl_vicon.cpp.s
 
 CMakeFiles/host.dir/src/fdcl_vicon.cpp.o.requires:
 
@@ -107,16 +107,16 @@ CMakeFiles/host.dir/src/fdcl_vicon.cpp.o.provides.build: CMakeFiles/host.dir/src
 
 CMakeFiles/host.dir/src/fdcl_robot.cpp.o: CMakeFiles/host.dir/flags.make
 CMakeFiles/host.dir/src/fdcl_robot.cpp.o: ../src/fdcl_robot.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/chris/Strata-Ground-Robot/Robot/C/vicon_host/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/host.dir/src/fdcl_robot.cpp.o"
-	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/host.dir/src/fdcl_robot.cpp.o -c /home/chris/Strata-Ground-Robot/Robot/C/vicon_host/src/fdcl_robot.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/chris/Strata-Ground-Robot/Robot/vicon_host/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/host.dir/src/fdcl_robot.cpp.o"
+	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/host.dir/src/fdcl_robot.cpp.o -c /home/chris/Strata-Ground-Robot/Robot/vicon_host/src/fdcl_robot.cpp
 
 CMakeFiles/host.dir/src/fdcl_robot.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/host.dir/src/fdcl_robot.cpp.i"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/chris/Strata-Ground-Robot/Robot/C/vicon_host/src/fdcl_robot.cpp > CMakeFiles/host.dir/src/fdcl_robot.cpp.i
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/chris/Strata-Ground-Robot/Robot/vicon_host/src/fdcl_robot.cpp > CMakeFiles/host.dir/src/fdcl_robot.cpp.i
 
 CMakeFiles/host.dir/src/fdcl_robot.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/host.dir/src/fdcl_robot.cpp.s"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/chris/Strata-Ground-Robot/Robot/C/vicon_host/src/fdcl_robot.cpp -o CMakeFiles/host.dir/src/fdcl_robot.cpp.s
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/chris/Strata-Ground-Robot/Robot/vicon_host/src/fdcl_robot.cpp -o CMakeFiles/host.dir/src/fdcl_robot.cpp.s
 
 CMakeFiles/host.dir/src/fdcl_robot.cpp.o.requires:
 
@@ -131,16 +131,16 @@ CMakeFiles/host.dir/src/fdcl_robot.cpp.o.provides.build: CMakeFiles/host.dir/src
 
 CMakeFiles/host.dir/src/misc_matrix_func.cpp.o: CMakeFiles/host.dir/flags.make
 CMakeFiles/host.dir/src/misc_matrix_func.cpp.o: ../src/misc_matrix_func.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/chris/Strata-Ground-Robot/Robot/C/vicon_host/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/host.dir/src/misc_matrix_func.cpp.o"
-	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/host.dir/src/misc_matrix_func.cpp.o -c /home/chris/Strata-Ground-Robot/Robot/C/vicon_host/src/misc_matrix_func.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/chris/Strata-Ground-Robot/Robot/vicon_host/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/host.dir/src/misc_matrix_func.cpp.o"
+	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/host.dir/src/misc_matrix_func.cpp.o -c /home/chris/Strata-Ground-Robot/Robot/vicon_host/src/misc_matrix_func.cpp
 
 CMakeFiles/host.dir/src/misc_matrix_func.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/host.dir/src/misc_matrix_func.cpp.i"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/chris/Strata-Ground-Robot/Robot/C/vicon_host/src/misc_matrix_func.cpp > CMakeFiles/host.dir/src/misc_matrix_func.cpp.i
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/chris/Strata-Ground-Robot/Robot/vicon_host/src/misc_matrix_func.cpp > CMakeFiles/host.dir/src/misc_matrix_func.cpp.i
 
 CMakeFiles/host.dir/src/misc_matrix_func.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/host.dir/src/misc_matrix_func.cpp.s"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/chris/Strata-Ground-Robot/Robot/C/vicon_host/src/misc_matrix_func.cpp -o CMakeFiles/host.dir/src/misc_matrix_func.cpp.s
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/chris/Strata-Ground-Robot/Robot/vicon_host/src/misc_matrix_func.cpp -o CMakeFiles/host.dir/src/misc_matrix_func.cpp.s
 
 CMakeFiles/host.dir/src/misc_matrix_func.cpp.o.requires:
 
@@ -169,7 +169,7 @@ libhost.a: CMakeFiles/host.dir/src/fdcl_robot.cpp.o
 libhost.a: CMakeFiles/host.dir/src/misc_matrix_func.cpp.o
 libhost.a: CMakeFiles/host.dir/build.make
 libhost.a: CMakeFiles/host.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/chris/Strata-Ground-Robot/Robot/C/vicon_host/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Linking CXX static library libhost.a"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/chris/Strata-Ground-Robot/Robot/vicon_host/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Linking CXX static library libhost.a"
 	$(CMAKE_COMMAND) -P CMakeFiles/host.dir/cmake_clean_target.cmake
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/host.dir/link.txt --verbose=$(VERBOSE)
 
@@ -190,6 +190,6 @@ CMakeFiles/host.dir/clean:
 .PHONY : CMakeFiles/host.dir/clean
 
 CMakeFiles/host.dir/depend:
-	cd /home/chris/Strata-Ground-Robot/Robot/C/vicon_host/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/chris/Strata-Ground-Robot/Robot/C/vicon_host /home/chris/Strata-Ground-Robot/Robot/C/vicon_host /home/chris/Strata-Ground-Robot/Robot/C/vicon_host/build /home/chris/Strata-Ground-Robot/Robot/C/vicon_host/build /home/chris/Strata-Ground-Robot/Robot/C/vicon_host/build/CMakeFiles/host.dir/DependInfo.cmake --color=$(COLOR)
+	cd /home/chris/Strata-Ground-Robot/Robot/vicon_host/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/chris/Strata-Ground-Robot/Robot/vicon_host /home/chris/Strata-Ground-Robot/Robot/vicon_host /home/chris/Strata-Ground-Robot/Robot/vicon_host/build /home/chris/Strata-Ground-Robot/Robot/vicon_host/build /home/chris/Strata-Ground-Robot/Robot/vicon_host/build/CMakeFiles/host.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : CMakeFiles/host.dir/depend
 

@@ -4,7 +4,7 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_CXX
-  "/home/chris/Strata-Ground-Robot/Robot/C/vicon_host/src/main.cpp" "/home/chris/Strata-Ground-Robot/Robot/C/vicon_host/build/CMakeFiles/base.dir/src/main.cpp.o"
+  "/home/chris/Strata-Ground-Robot/Robot/vicon_host/src/main.cpp" "/home/chris/Strata-Ground-Robot/Robot/vicon_host/build/CMakeFiles/base.dir/src/main.cpp.o"
   )
 set(CMAKE_CXX_COMPILER_ID "GNU")
 
@@ -37,7 +37,7 @@ set(CMAKE_CXX_TARGET_INCLUDE_PATH
 
 # Targets to which this target links.
 set(CMAKE_TARGET_LINKED_INFO_FILES
-  "/home/chris/Strata-Ground-Robot/Robot/C/vicon_host/build/CMakeFiles/host.dir/DependInfo.cmake"
+  "/home/chris/Strata-Ground-Robot/Robot/vicon_host/build/CMakeFiles/host.dir/DependInfo.cmake"
   )
 
 # Fortran module output directory.
