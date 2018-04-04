@@ -27,9 +27,11 @@ class robot:
 		a = -eangles[0] + math.atan2(dy,dy)
 		b = -eangles[0] - a;
 		
-		s = np.array([p; a; b])
-		s_dot = np.array([-kp*p*math.cos(a); kp*math.sin(a) - ka*a - kb*b; -kp*math.sin(a)])
-		s = s + s_dot
+		# s = np.array([p; a; b])
+		# s_dot = np.array([-kp*p*math.cos(a); kp*math.sin(a) - ka*a - kb*b; -kp*math.sin(a)])
+		# s = s + s_dot
+		v = kp*p
+		omega = ka*a + kb*b
 
 		v_r = (2*v + omega*self.L)/(2*R)
 		v_l = (2*v - omega*self.L)/(2*R)
@@ -42,11 +44,15 @@ class robot:
 		motor_vals[5] = v_r
 		return self
 
-	def set_motors(self):
-		self.motor_vals = self.motor_vals + 255*np.ones(1,6)
-		buffer = 'A='+str(self.motor_vals[0])+'&B='+str(self.motor_vals[1])+'&C='+str(self.motor_vals[2])+'&D='+str(self.motor_vals[3])+'&E='+str(self.motor_vals[4])+'&F='+str(self.motor_vals[5])+'\n'
+	def write_motors(self):
+		motor_vals_to_write = self.motor_vals + 255*np.ones(1,6)
+		buffer = 'A='+str(self.motor_vals_to_write[0])+'&B='+str(self.motor_vals_to_write[1])+'&C='+str(self.motor_vals_to_write[2])+'&D='+str(self.motor_vals_to_write[3])+'&E='+str(self.motor_vals_to_write[4])+'&F='+str(self.motor_vals_to_write[5])+'\n'
 		self.ardu_ser.write(buffer)
 		return self
+
+	def stop_robot(self):
+		self.motor_vals = np.array([0,0,0,0,0,0])
+		self.write_motors()
 
 	def quat_to_eangles(quat)
 		alpha = math.atan2(2*(quat[3]*quat[0]-quat[1]*quat[2]), 1-2*(quat[0]^2+quat[2]^2))
