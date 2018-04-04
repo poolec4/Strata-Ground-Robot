@@ -16,7 +16,6 @@ vicon = vicon(TCP_IP, TCP_PORT, BUFFER_SIZE)
 
 robot = robot('/dev/ttyACM0', 19200)
 robot = robot.write_motors()
-time.sleep(2)
 
 t_init = time.time()
 

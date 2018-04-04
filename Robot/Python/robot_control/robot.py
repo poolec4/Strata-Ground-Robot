@@ -3,6 +3,13 @@ import serial
 import math
 import numpy as np
 
+def quat_to_eangles(quat):
+	alpha = math.atan2(2*(quat[3]*quat[0]-quat[1]*quat[2]), 1-2*(quat[0]^2+quat[2]^2))
+	gamma = asin(2*(quat[0]*quat[1]-quat[2]*quat[3]))
+	beta = math.atan2(2*(quat[1]*quat[3]-quat[0]*quat[2]),1-2*(quat[1]^2+quat[2]^2))
+	eangles = [alpha, beta, gamma];
+	return eangles
+
 class robot:
 	def __init__(self, serial_port, baud_rate):
 		self.ardu_ser = serial.Serial(serial_port, baud_rate)
@@ -54,10 +61,3 @@ class robot:
 	def stop_robot(self):
 		self.motor_vals = np.zeros(6)
 		self.write_motors()
-
-	def quat_to_eangles(self, quat):
-		alpha = math.atan2(2*(quat[3]*quat[0]-quat[1]*quat[2]), 1-2*(quat[0]^2+quat[2]^2))
-		gamma = asin(2*(quat[0]*quat[1]-quat[2]*quat[3]))
-		beta = math.atan2(2*(quat[1]*quat[3]-quat[0]*quat[2]),1-2*(quat[1]^2+quat[2]^2))
-		eangles = [alpha, beta, gamma];
-		return eangles
