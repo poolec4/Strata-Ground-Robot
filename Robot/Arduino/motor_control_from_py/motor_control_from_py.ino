@@ -13,7 +13,7 @@
 #define R3_F 12
 #define R3_B 13
 
-double motor_vals[6] = {0,0,0,0,0,0}; 
+double motor_vals[6] = {0, 0, 0, 0, 0, 0};
 
 String buffer;
 char buffer_array[150];
@@ -53,58 +53,76 @@ void setup() {
 
 void loop() {
   Serial.flush();
-  
-  if(Serial.available() > 0)
-  { 
-    buffer = Serial.readStringUntil('\n');    
-    buffer.toCharArray(buffer_array,buffer.length()+1);
+
+  if (Serial.available() > 0)
+  {
+    buffer = Serial.readStringUntil('\n');
+    buffer.toCharArray(buffer_array, buffer.length() + 1);
     //Serial.println(buffer_array);
-    
+
     motor_vals[0] = parse_string_to_double(buffer_array, "A");
     motor_vals[1] = parse_string_to_double(buffer_array, "B");
     motor_vals[2] = parse_string_to_double(buffer_array, "C");
     motor_vals[3] = parse_string_to_double(buffer_array, "D");
     motor_vals[4] = parse_string_to_double(buffer_array, "E");
     motor_vals[5] = parse_string_to_double(buffer_array, "F");
-  
-    if(motor_vals[0]<255){
-      analogWrite(L1_B, 255-motor_vals[0]);
+
+    for (int i = 0; i < 6; i++) {
+      Serial.print(motor_vals[i]);
+      Serial.print(",");
     }
-    if(motor_vals[1]<255){
-      analogWrite(L2_B, 255-motor_vals[1]);
+    Serial.print("\n");
+
+    if (motor_vals[0] < 255) {
+      analogWrite(L1_B, 255 - motor_vals[0]);
+      digitalWrite(L1_F, LOW);
     }
-    if(motor_vals[2]<255){
-      analogWrite(L3_B, 255-motor_vals[2]);
+    if (motor_vals[1] < 255) {
+      analogWrite(L2_B, 255 - motor_vals[1]);
+      digitalWrite(L2_F, LOW);
     }
-    if(motor_vals[3]<255){
-      analogWrite(R1_B, 255-motor_vals[3]);
+    if (motor_vals[2] < 255) {
+      analogWrite(L3_B, 255 - motor_vals[2]);
+      digitalWrite(L3_F, LOW);
     }
-    if(motor_vals[4]<255){
-      analogWrite(R2_B, 255-motor_vals[4]);
+    if (motor_vals[3] < 255) {
+      analogWrite(R1_B, 255 - motor_vals[3]);
+      digitalWrite(R1_F, LOW);
     }
-    if(motor_vals[5]<255){
-      analogWrite(R3_B, 255-motor_vals[5]);
+    if (motor_vals[4] < 255) {
+      analogWrite(R2_B, 255 - motor_vals[4]);
+      digitalWrite(R2_F, LOW);
+    }
+    if (motor_vals[5] < 255) {
+      analogWrite(R3_B, 255 - motor_vals[5]);
+      digitalWrite(R3_F, LOW);
     }
 
-    if(motor_vals[0]>255){
-      analogWrite(L1_F, motor_vals[0]-255);
+    if (motor_vals[0] >= 255) {
+      analogWrite(L1_F, motor_vals[0] - 255);
+      digitalWrite(L1_B, LOW);
     }
-    if(motor_vals[1]>255){
-      analogWrite(L2_F, motor_vals[1]-255);
+    if (motor_vals[1] >= 255) {
+      analogWrite(L2_F, motor_vals[1] - 255);
+      digitalWrite(L2_B, LOW);
     }
-    if(motor_vals[2]>255){
-      analogWrite(L3_F, motor_vals[2]-255);
+    if (motor_vals[2] >= 255) {
+      analogWrite(L3_F, motor_vals[2] - 255);
+      digitalWrite(L3_B, LOW);
     }
-    if(motor_vals[3]>255){
-      analogWrite(R1_F, motor_vals[3]-255);
+    if (motor_vals[3] >= 255) {
+      analogWrite(R1_F, motor_vals[3] - 255);
+      digitalWrite(R1_B, LOW);
     }
-    if(motor_vals[4]>255){
-      analogWrite(R2_F, motor_vals[4]-255);
+    if (motor_vals[4] >= 255) {
+      analogWrite(R2_F, motor_vals[4] - 255);
+      digitalWrite(R2_B, LOW);
     }
-    if(motor_vals[5]>255){
-      analogWrite(R3_F, motor_vals[5]-255);
+    if (motor_vals[5] >= 255) {
+      analogWrite(R3_F, motor_vals[5] - 255);
+      digitalWrite(R3_B, LOW);
     }
-  
+
   }
 }
 
@@ -119,15 +137,15 @@ double parse_string_to_double(char *string, char const *tag)
 
   token = strtok(string_copy, "&");
 
-  while(token)
+  while (token)
   {
     char* equals_sign = strchr(token, '=');
 
-    if(equals_sign)
+    if (equals_sign)
     {
       *equals_sign = 0;
 
-      if( 0 == strcmp(token, tag))
+      if ( 0 == strcmp(token, tag))
       {
         equals_sign++;
         char_result = (char*)malloc(strlen(equals_sign) + 1);
