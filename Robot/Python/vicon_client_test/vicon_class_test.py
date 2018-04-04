@@ -1,6 +1,6 @@
 from vicon import vicon
 
-TCP_IP = '127.0.0.1'
+TCP_IP = '192.168.10.31'
 TCP_PORT = 5000
 BUFFER_SIZE = 1024
 
