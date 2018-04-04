@@ -54,6 +54,18 @@ class robot:
 		v_r = (2*v + omega*self.L)/(2*self.R)
 		v_l = (2*v - omega*self.L)/(2*self.R)
 
+		if(v_r > 255):
+			v_r = 255
+
+		if(v_r < -255):
+			v_r = -255
+
+		if(v_l > 255):
+			v_l = 255
+
+		if(v_l < -255):
+			v_l = -255
+
 		print("vl=" + str(v_l) + ", vr=" + str(v_r))
 
 		self.motor_vals[0:3] = v_l
