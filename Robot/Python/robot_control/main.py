@@ -33,7 +33,7 @@ try:
 		vicon.get_state()
 
 		robot = robot.P_control(vicon.x_v, vicon.q_v)
-#		robot = robot.write_motors()
+		robot = robot.write_motors()
 
 		time.sleep(0.1)
 

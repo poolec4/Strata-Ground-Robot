@@ -39,7 +39,7 @@ class robot:
 		print("dx=" + str(dx) + ", dy=" + str(dy) + ", th=" + str(th))
 		
 		p = math.sqrt(dx**2 + dy**2)
-		a = -th + math.atan2(dy,dy)
+		a = -th + math.atan2(dy,dx)
 		b = -th - a;
 
 		print("p=" + str(p) + ", a=" + str(a) + ", b=" + str(b))
@@ -51,8 +51,8 @@ class robot:
 		v = self.kp*p
 		omega = self.ka*a + self.kb*b
 
-		v_l = (2*v + omega*self.L)/(2*self.R)
-		v_r = (2*v - omega*self.L)/(2*self.R)
+		v_r = (2*v + omega*self.L)/(2*self.R)
+		v_l = (2*v - omega*self.L)/(2*self.R)
 
 		print("vl=" + str(v_l) + ", vr=" + str(v_r))
 
