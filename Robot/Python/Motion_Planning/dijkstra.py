@@ -1,9 +1,12 @@
 from collections import defaultdict, deque
-# import numpy as np
+import numpy as np
 
 class world:
     def __init__(self, gridSize, numObjects, maxSize):
         self.grid = self.generate(gridSize, numObjects, maxSize)
+        self.gridSize = gridSize
+        self.enc = self.encode()
+        self.neighbors = self.findNeighbors()
 
     def generate(self, gridSize, numObjects, maxSize):
         grid = np.zeros(gridSize)
@@ -34,7 +37,41 @@ class world:
 
         return location, grid
 
+    def encode(self):
+        enc_val = 0
+        enc_grid = np.empty(self.gridSize)
+        for i in range(self.gridSize[0]):
+            for j in range(self.gridSize[1]):
+                enc_grid[i, j] = int(enc_val)
+                enc_val += 1
+        return enc_grid
 
+    def findNeighbors(self):
+        neighbors = []
+        for n in range(self.gridSize[0]*self.gridSize[1]):
+            neighbors.append([])
+        for i in range(self.gridSize[0]):
+            for j in range(self.gridSize[1]):
+                for x in ([-1, 0, 1]):
+                    for y in ([-1, 0, 1]):
+                        potentialNeighbor = [i+x, j+y]
+                        if self.isNeighbor([i, j], potentialNeighbor) is True:
+                            neighbors[int(self.enc[i, j])].append(potentialNeighbor)
+
+        return neighbors
+
+    def isNeighbor(self, current, potentialNeighbor):
+        if potentialNeighbor[0] < 0 or potentialNeighbor[1] < 0 or potentialNeighbor[0] >= self.gridSize[0] or potentialNeighbor[1] >= self.gridSize[1]:
+            return False
+        elif current[0] == potentialNeighbor[0] and current[1] == potentialNeighbor[1]:
+            return False
+        else:
+            return True
+
+
+    def cost(self, gridSize):
+
+        return 0
 
 
 class Graph(object):
@@ -100,17 +137,45 @@ def shortest_path(graph, origin, destination):
 
 if __name__ == '__main__':
     graph = Graph()
-
-    for node in ['A', 'B', 'C', 'D', 'E', 'F', 'G']:
-        graph.add_node(node)
-
-    graph.add_edge('A', 'B', 10)
-    graph.add_edge('A', 'C', 20)
-    graph.add_edge('B', 'D', 15)
-    graph.add_edge('C', 'D', 30)
-    graph.add_edge('B', 'E', 50)
-    graph.add_edge('D', 'E', 30)
-    graph.add_edge('E', 'F', 5)
-    graph.add_edge('F', 'G', 2)
-
-    print(shortest_path(graph, 'A', 'D')) # output: (25, ['A', 'B', 'D']) 
+    world = world([10, 10], 0, 0)
+    for i in range(world.gridSize[0]):
+        for j in range(world.gridSize[1]):
+            node = world.enc[i, j]
+            graph.add_node(node)
+    # print(graph.nodes)
+    # print(world.neighbors[0])
+    print('Encoded World')
+    print(world.enc)
+    # print([int(world.enc[0, 0]), 0])
+    # print('--')
+    # ind = world.neighbors[int(world.enc[0, 0])][0]
+    # print(ind)
+    # print(ind[0])
+    # print(world.neighbors[ind[0]][ind[1]])
+    # print('Right Val')
+    # enc_ind = world.neighbors[ind[0]][ind[1]]
+    # print(world.enc[enc_ind[0]][enc_ind[1]])
+    # print(world.enc[(world.neighbors[ind[0]][ind[1]])])
+    for i in range(world.gridSize[0]-1):
+        for j in range(world.gridSize[1]-1):
+            for k in range(len(world.neighbors[int(world.enc[i, j])])):
+                # print('k', k)
+                ind = world.neighbors[int(world.enc[i, j])][k]
+                # print('ind: ', ind)
+                # enc_ind = world.neighbors[ind[0]][ind[1]]
+                enc_ind = ind
+                # print('enc_ind: ', enc_ind)
+                if int(world.enc[enc_ind[0]][enc_ind[1]]) not in graph.edges[int(world.enc[i, j])]:
+                    graph.add_edge(int(world.enc[i, j]), int(world.enc[enc_ind[0]][enc_ind[1]]), 1)
+                # print('Current: ', int(world.enc[i, j]))
+                # print('Edge: ', int(world.enc[enc_ind[0]][enc_ind[1]]))
+    # graph.add_edge('A', 'B', 10)
+    # graph.add_edge('A', 'C', 20)
+    # graph.add_edge('B', 'D', 15)
+    # graph.add_edge('C', 'D', 30)
+    # graph.add_edge('B', 'E', 50)
+    # graph.add_edge('D', 'E', 30)
+    # graph.add_edge('E', 'F', 5)
+    # graph.add_edge('F', 'G', 2)
+    # print(graph.edges[13])
+    print(shortest_path(graph, 18, 99)) # output: (25, ['A', 'B', 'D'])
