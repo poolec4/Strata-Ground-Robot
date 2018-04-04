@@ -16,9 +16,9 @@ class robot:
 		time.sleep(2)
 		print(self.ardu_ser)
 		self.motor_vals = np.zeros(6)
-		self.kp = 0 # kp>0
-		self.ka = 0 # kb<0
-		self.kb = 0 # ka-kb>0
+		self.kp = 5  # kp>0
+		self.ka = 1 # kb<0
+		self.kb = -0.5 # ka-kb>0
 		self.R = 0.0508 # wheel radius in meters
 		self.L = 0.3556 # wheelbase width in meters
 
@@ -44,8 +44,8 @@ class robot:
 		v = self.kp*p
 		omega = self.ka*a + self.kb*b
 
-		v_r = (2*v + omega*self.L)/(2*self.R)
-		v_l = (2*v - omega*self.L)/(2*self.R)
+		v_l = (2*v + omega*self.L)/(2*self.R)
+		v_r = (2*v - omega*self.L)/(2*self.R)
 
 		self.motor_vals[0:3] = v_l
 		self.motor_vals[3:6] = v_r

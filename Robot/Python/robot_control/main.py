@@ -1,6 +1,10 @@
+import sys
+import select
 import serial
 import time
 import math
+import termios
+import tty
 import numpy as np
 from vicon import vicon
 from robot import robot
@@ -20,12 +24,11 @@ robot = robot.write_motors()
 robot = robot.set_goal([0,0], 0)
 t_init = time.time()
 
-while (time.time()-t_init) < 10.0:
+while (time.time()-t_init) < 500.0:
 	vicon.get_state();
 
 	robot = robot.P_control(vicon.x_v, vicon.q_v)
 	robot = robot.write_motors()
 
 	time.sleep(0.05)
-
 robot.stop_robot()
