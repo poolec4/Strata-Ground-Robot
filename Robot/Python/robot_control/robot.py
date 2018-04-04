@@ -13,9 +13,9 @@ def quat_to_eangles(quat):
 class robot:
 	def __init__(self):
 		self.motor_vals = np.zeros(6)
-		self.kp = 5  # kp>0
-		self.ka = 1 # kb<0
-		self.kb = -0.5 # ka-kb>0
+		self.kp = 2  # kp>0
+		self.ka = 8 # kb<0
+		self.kb = -4 # ka-kb>0
 		self.R = 0.0508 # wheel radius in meters
 		self.L = 0.3556 # wheelbase width in meters
 
@@ -32,14 +32,15 @@ class robot:
 
 	def P_control(self, x_v, q_v):
 		eangles = quat_to_eangles(q_v)
+		th = -eangles[2] 
 		dx = self.x_g - x_v[0];
 		dy = self.y_g - x_v[1];
-
-		print("dx=" + str(dx) + ", dy=" + str(dy) + ", th=" str(eangles[0]))
+		print("xv=" + str(x_v[0]) + "yv=" + str(x_v[1]))
+		print("dx=" + str(dx) + ", dy=" + str(dy) + ", th=" + str(th))
 		
 		p = math.sqrt(dx**2 + dy**2)
-		a = -eangles[0] + math.atan2(dy,dy)
-		b = -eangles[0] - a;
+		a = -th + math.atan2(dy,dy)
+		b = -th - a;
 
 		print("p=" + str(p) + ", a=" + str(a) + ", b=" + str(b))
 		
@@ -53,7 +54,7 @@ class robot:
 		v_l = (2*v + omega*self.L)/(2*self.R)
 		v_r = (2*v - omega*self.L)/(2*self.R)
 
-		print("vl=" + str(vl) + ", vr=" + str(vr))
+		print("vl=" + str(v_l) + ", vr=" + str(v_r))
 
 		self.motor_vals[0:3] = v_l
 		self.motor_vals[3:6] = v_r

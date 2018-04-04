@@ -29,15 +29,18 @@ RUN_ROBOT = True
 
 try:
 	while (RUN_ROBOT == True):
-		vicon.get_state();
+		print("\n")
+		vicon.get_state()
 
 		robot = robot.P_control(vicon.x_v, vicon.q_v)
-		robot = robot.write_motors()
+#		robot = robot.write_motors()
 
-		time.sleep(0.05)
+		time.sleep(0.1)
 
-		if(time.time() - t_init > 100.0):
+		if(time.time() - t_init > 1000.0):
 			RUN_ROBOT = False
 
 except KeyboardInterrupt:
+	time.sleep(0.1)
 	robot.stop_robot()
+	print("Robot stopped.. hopefully")
