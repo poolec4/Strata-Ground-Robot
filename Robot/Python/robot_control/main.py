@@ -5,7 +5,7 @@ import numpy as np
 from vicon import vicon
 from robot import robot
 
-TCP_IP = '127.0.0.1'
+TCP_IP = '192.168.10.31'
 TCP_PORT = 5000
 BUFFER_SIZE = 1024
 
@@ -17,7 +17,7 @@ vicon = vicon(TCP_IP, TCP_PORT, BUFFER_SIZE)
 robot = robot('/dev/ttyACM0', 19200)
 robot = robot.write_motors()
 
-robot = robot.set_goal(0, 0, 0)
+robot = robot.set_goal([0,0], 0)
 t_init = time.time()
 
 while (time.time()-t_init) < 10.0:

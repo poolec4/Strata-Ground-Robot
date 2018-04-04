@@ -1,3 +1,4 @@
+import time
 import serial
 import math
 import numpy as np
@@ -15,8 +16,8 @@ class robot:
 		self.L = 0.3556 # wheelbase width in meters
 
 	def set_goal(self, p_g, th_g):
-		self.x_g = p_g[1];
-		self.y_g = p_g[2];
+		self.x_g = p_g[0];
+		self.y_g = p_g[1];
 		self.th_g = th_g;
 		return self
 
@@ -50,11 +51,11 @@ class robot:
 		print(buffer)
 		return self
 
-	def stop_robot(self, ):
+	def stop_robot(self):
 		self.motor_vals = np.zeros(6)
 		self.write_motors()
 
-	def quat_to_eangles(quat):
+	def quat_to_eangles(self, quat):
 		alpha = math.atan2(2*(quat[3]*quat[0]-quat[1]*quat[2]), 1-2*(quat[0]^2+quat[2]^2))
 		gamma = asin(2*(quat[0]*quat[1]-quat[2]*quat[3]))
 		beta = math.atan2(2*(quat[1]*quat[3]-quat[0]*quat[2]),1-2*(quat[1]^2+quat[2]^2))
