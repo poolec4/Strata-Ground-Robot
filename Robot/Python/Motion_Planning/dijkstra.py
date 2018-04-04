@@ -142,40 +142,13 @@ if __name__ == '__main__':
         for j in range(world.gridSize[1]):
             node = world.enc[i, j]
             graph.add_node(node)
-    # print(graph.nodes)
-    # print(world.neighbors[0])
     print('Encoded World')
     print(world.enc)
-    # print([int(world.enc[0, 0]), 0])
-    # print('--')
-    # ind = world.neighbors[int(world.enc[0, 0])][0]
-    # print(ind)
-    # print(ind[0])
-    # print(world.neighbors[ind[0]][ind[1]])
-    # print('Right Val')
-    # enc_ind = world.neighbors[ind[0]][ind[1]]
-    # print(world.enc[enc_ind[0]][enc_ind[1]])
-    # print(world.enc[(world.neighbors[ind[0]][ind[1]])])
     for i in range(world.gridSize[0]-1):
         for j in range(world.gridSize[1]-1):
             for k in range(len(world.neighbors[int(world.enc[i, j])])):
-                # print('k', k)
-                ind = world.neighbors[int(world.enc[i, j])][k]
-                # print('ind: ', ind)
-                # enc_ind = world.neighbors[ind[0]][ind[1]]
-                enc_ind = ind
-                # print('enc_ind: ', enc_ind)
+                enc_ind = world.neighbors[int(world.enc[i, j])][k]
                 if int(world.enc[enc_ind[0]][enc_ind[1]]) not in graph.edges[int(world.enc[i, j])]:
                     graph.add_edge(int(world.enc[i, j]), int(world.enc[enc_ind[0]][enc_ind[1]]), 1)
-                # print('Current: ', int(world.enc[i, j]))
-                # print('Edge: ', int(world.enc[enc_ind[0]][enc_ind[1]]))
-    # graph.add_edge('A', 'B', 10)
-    # graph.add_edge('A', 'C', 20)
-    # graph.add_edge('B', 'D', 15)
-    # graph.add_edge('C', 'D', 30)
-    # graph.add_edge('B', 'E', 50)
-    # graph.add_edge('D', 'E', 30)
-    # graph.add_edge('E', 'F', 5)
-    # graph.add_edge('F', 'G', 2)
-    # print(graph.edges[13])
+
     print(shortest_path(graph, 18, 99)) # output: (25, ['A', 'B', 'D'])
