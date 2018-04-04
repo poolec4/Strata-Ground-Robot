@@ -29,4 +29,3 @@ while (time.time()-t_init) < 10.0:
 	time.sleep(0.05)
 
 robot.stop_robot()
-

@@ -4,9 +4,9 @@ import math
 import numpy as np
 
 def quat_to_eangles(quat):
-	alpha = math.atan2(2*(quat[3]*quat[0]-quat[1]*quat[2]), 1-2*(quat[0]^2+quat[2]^2))
+	alpha = math.atan2(2*(quat[3]*quat[0]-quat[1]*quat[2]), 1-2*(quat[0]**2+quat[2]**2))
 	gamma = asin(2*(quat[0]*quat[1]-quat[2]*quat[3]))
-	beta = math.atan2(2*(quat[1]*quat[3]-quat[0]*quat[2]),1-2*(quat[1]^2+quat[2]^2))
+	beta = math.atan2(2*(quat[1]*quat[3]-quat[0]*quat[2]),1-2*(quat[1]**2+quat[2]**2))
 	eangles = [alpha, beta, gamma];
 	return eangles
 
