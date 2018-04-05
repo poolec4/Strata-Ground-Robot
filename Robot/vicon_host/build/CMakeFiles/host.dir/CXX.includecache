@@ -1155,10 +1155,6 @@ vrpn_Connection.h
 /usr/local/include/vrpn_Connection.h
 
 /usr/local/include/vrpn_Configure.h
-dinput.h
--
-vrpn_Configure.h
--
 
 /usr/local/include/vrpn_Connection.h
 stdio.h
