@@ -15,9 +15,9 @@ class robot:
 		self.motor_vals = np.zeros(6)
 		self.max_motor_speed = max_motor_speed;
 
-		self.kp = 2  # kp>0
-		self.ka = 8 # kb<0
-		self.kb = -4 # ka-kb>0
+		self.kp = 4  # kp>0
+		self.ka = 25 # kb<0
+		self.kb = -20 # ka-kb>0
 		self.kpi = 0  # kp>0
 		self.kai = 0 # kb<0
 		self.kbi = 0 # ka-kb>0
@@ -90,7 +90,7 @@ class robot:
 		self.motor_vals[3:6] = v_l
 		return self
 
-def PI_control(self, x_v, q_v):
+	def PI_control(self, x_v, q_v):
 		dt = time.time() - t_old;
 
 		eangles = quat_to_eangles(q_v)
