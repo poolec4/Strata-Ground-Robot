@@ -17,6 +17,7 @@ double motor_vals[6] = {0, 0, 0, 0, 0, 0};
 
 String buffer;
 char buffer_array[150];
+unsigned long t_old = 0;
 
 void setup() {
   pinMode(L1_F, OUTPUT);
@@ -56,6 +57,7 @@ void loop() {
 
   if (Serial.available() > 0)
   {
+    t_old = millis();
     buffer = Serial.readStringUntil('\n');
     buffer.toCharArray(buffer_array, buffer.length() + 1);
     //Serial.println(buffer_array);
@@ -123,6 +125,23 @@ void loop() {
       digitalWrite(R3_B, LOW);
     }
 
+  }
+
+  if ((millis() - t_old) > 500) {
+    digitalWrite(L1_F, LOW);
+    digitalWrite(L1_B, LOW);
+    digitalWrite(R1_F, LOW);
+    digitalWrite(R1_B, LOW);
+
+    digitalWrite(L2_F, LOW);
+    digitalWrite(L2_B, LOW);
+    digitalWrite(R2_F, LOW);
+    digitalWrite(R2_B, LOW);
+
+    digitalWrite(L3_F, LOW);
+    digitalWrite(L3_B, LOW);
+    digitalWrite(R3_F, LOW);
+    digitalWrite(R3_B, LOW);
   }
 }
 
