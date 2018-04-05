@@ -15,9 +15,9 @@ class robot:
 		self.motor_vals = np.zeros(6)
 		self.max_motor_speed = max_motor_speed;
 
-		self.kp = 4  # kp>0
-		self.ka = 25 # kb<0
-		self.kb = -20 # ka-kb>0
+		self.kp = 6  # kp>0
+		self.ka = 30 # kb<0
+		self.kb = -25 # ka-kb>0
 		self.kpi = 0  # kp>0
 		self.kai = 0 # kb<0
 		self.kbi = 0 # ka-kb>0
@@ -59,10 +59,14 @@ class robot:
 		b = -th - a;
 
 		if a > math.pi:
-			a = -(2*math.pi - a)
+			a = a - 2*math.pi
+		if a < -math.pi:
+			a = a + 2*math.pi
 
 		if b > math.pi:
-			b = -(2*math.pi - b)
+			b = b - 2*math.pi
+		if b < -math.pi:
+			b = b + 2*math.pi
 
 		print("p=" + str(p) + ", a=" + str(a) + ", b=" + str(b))
 
@@ -105,10 +109,9 @@ class robot:
 		b = -th - a;
 
 		if a > math.pi:
-			a = -(2*math.pi - a)
-
+			a = -(math.pi - a)
 		if b > math.pi:
-			b = -(2*math.pi - b)
+			b = -(math.pi - b)
 
 		print("p=" + str(p) + ", a=" + str(a) + ", b=" + str(b))
 
