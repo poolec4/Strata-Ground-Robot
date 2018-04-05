@@ -36,7 +36,7 @@ class robot:
 		self.b_sum = 0
 
 	def open(self, serial_port, baud_rate):
-		self.ardu_ser = serial.Serial(serial_port, baud_rate)
+		self.ardu_ser = serial.Serial(serial_port, baud_rate, timeout=0.1)
 		time.sleep(2)
 		print(self.ardu_ser)
 
@@ -139,14 +139,15 @@ class robot:
 		return self
 
 	def write_motors(self):
-		motor_vals_to_write = self.motor_vals + 255
-		buffer = 'A='+str(motor_vals_to_write[0])+'&B='+str(motor_vals_to_write[1])+'&C='+str(motor_vals_to_write[2])+'&D='+str(motor_vals_to_write[3])+'&E='+str(motor_vals_to_write[4])+'&F='+str(motor_vals_to_write[5])+'#\n'
+		motor_vals_to_write = np.round(self.motor_vals) + 255
+		buffer = 'A='+str(motor_vals_to_write[0])+'&B='+str(motor_vals_to_write[1])+'&C='+str(motor_vals_to_write[2])+'&D='+str(motor_vals_to_write[3])+'&E='+str(motor_vals_to_write[4])+'&F='+str(motor_vals_to_write[5])+"#\n"
+		self.ardu_ser.flush()
 		self.ardu_ser.write(buffer)
-		#print(buffer)
+		print(buffer)
 		return self
 
 	def stop_robot(self):
 		self.motor_vals = np.zeros(6)
-		buffer = 'Z#\n'
+		buffer = "Z#\n"
 		self.ardu_ser.write(buffer)
 		return self
