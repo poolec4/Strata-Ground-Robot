@@ -11,13 +11,29 @@ def quat_to_eangles(quat):
 	return eangles
 
 class robot:
-	def __init__(self):
+	def __init__(self, max_motor_speed=255):
 		self.motor_vals = np.zeros(6)
+		self.max_motor_speed = max_motor_speed;
+
 		self.kp = 2  # kp>0
 		self.ka = 8 # kb<0
 		self.kb = -4 # ka-kb>0
+		self.kpi = 0  # kp>0
+		self.kai = 0 # kb<0
+		self.kbi = 0 # ka-kb>0
+
 		self.R = 0.0508 # wheel radius in meters
 		self.L = 0.3556 # wheelbase width in meters
+
+		self.ardu_ser = None
+		self.x_g = None
+		self.y_g = None
+		self.th_g = None
+
+		self.t_old = time.time()
+		self.p_sum = 0
+		self.a_sum = 0
+		self.b_sum = 0
 
 	def open(self, serial_port, baud_rate):
 		self.ardu_ser = serial.Serial(serial_port, baud_rate)
@@ -42,11 +58,13 @@ class robot:
 		a = -th + math.atan2(dy,dx)
 		b = -th - a;
 
+		if a > math.pi:
+			a = -(2*math.pi - a)
+
+		if b > math.pi:
+			b = -(2*math.pi - b)
+
 		print("p=" + str(p) + ", a=" + str(a) + ", b=" + str(b))
-		
-		# s = np.array([p; a; b])
-		# s_dot = np.array([-kp*p*math.cos(a); kp*math.sin(a) - ka*a - kb*b; -kp*math.sin(a)])
-		# s = s + s_dot
 
 		v = self.kp*p
 		omega = self.ka*a + self.kb*b
@@ -54,22 +72,70 @@ class robot:
 		v_r = (2*v + omega*self.L)/(2*self.R)
 		v_l = (2*v - omega*self.L)/(2*self.R)
 
-		if(v_r > 255):
-			v_r = 255
+		if v_r > 255:
+			v_r = self.max_motor_speed
 
-		if(v_r < -255):
-			v_r = -255
+		if v_r < -255:
+			v_r = -self.max_motor_speed
 
-		if(v_l > 255):
-			v_l = 255
+		if v_l > 255:
+			v_l = self.max_motor_speed
 
-		if(v_l < -255):
-			v_l = -255
+		if v_l < -255:
+			v_l = -self.max_motor_speed
 
 		print("vl=" + str(v_l) + ", vr=" + str(v_r))
 
 		self.motor_vals[0:3] = v_r
 		self.motor_vals[3:6] = v_l
+		return self
+
+def PI_control(self, x_v, q_v):
+		dt = time.time() - t_old;
+
+		eangles = quat_to_eangles(q_v)
+		th = -eangles[2] 
+		dx = self.x_g - x_v[0];
+		dy = self.y_g - x_v[1];
+		print("xv=" + str(x_v[0]) + "yv=" + str(x_v[1]))
+		print("dx=" + str(dx) + ", dy=" + str(dy) + ", th=" + str(th))
+		
+		p = math.sqrt(dx**2 + dy**2)
+		a = -th + math.atan2(dy,dx)
+		b = -th - a;
+
+		if a > math.pi:
+			a = -(2*math.pi - a)
+
+		if b > math.pi:
+			b = -(2*math.pi - b)
+
+		print("p=" + str(p) + ", a=" + str(a) + ", b=" + str(b))
+
+		v = self.kp*p
+		omega = self.ka*a + self.kb*b
+
+		v_r = (2*v + omega*self.L)/(2*self.R)
+		v_l = (2*v - omega*self.L)/(2*self.R)
+
+		if v_r > 255:
+			v_r = self.max_motor_speed
+
+		if v_r < -255:
+			v_r = -self.max_motor_speed
+
+		if v_l > 255:
+			v_l = self.max_motor_speed
+
+		if v_l < -255:
+			v_l = -self.max_motor_speed
+
+		print("vl=" + str(v_l) + ", vr=" + str(v_r))
+
+		self.motor_vals[0:3] = v_r
+		self.motor_vals[3:6] = v_l
+
+		t_old = time.time;
 		return self
 
 	def write_motors(self):
