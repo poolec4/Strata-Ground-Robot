@@ -41,6 +41,7 @@ try:
 			RUN_ROBOT = False
 
 except KeyboardInterrupt:
-	time.sleep(0.1)
-	robot.stop_robot()
+	for i in range(5)
+		robot.stop_robot()
+		time.sleep(0.1)
 	print("Robot stopped.. hopefully")
