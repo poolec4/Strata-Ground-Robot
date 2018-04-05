@@ -44,7 +44,7 @@ int main(){
 	CFG.open("../robot_SEH.cfg");
 	VICON.load_config(CFG);
 
-    int sockfd, newsockfd, port_number = 5000, n, count = 0;
+    int sockfd, newsockfd, port_number = 50000, n, count = 0;
     socklen_t client_ln;
     char buffer[1000], buffer_[1000];
     struct sockaddr_in serv_addr, cli_addr;

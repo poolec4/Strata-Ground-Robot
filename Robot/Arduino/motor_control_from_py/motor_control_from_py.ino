@@ -60,88 +60,82 @@ void loop() {
     t_old = millis();
     buffer = Serial.readStringUntil('\n');
     buffer.toCharArray(buffer_array, buffer.length() + 1);
-    //Serial.println(buffer_array);
+    
+    if (buffer_array[buffer.length()-1] != '#'){
+      Serial.println("Invalid message");
+    }
+    else if (buffer_array[0] == 'Z') {
+      Serial.println("Stop command received");
+      stop_motors();
+    }
+    else {
+      motor_vals[0] = parse_string_to_double(buffer_array, "A");
+      motor_vals[1] = parse_string_to_double(buffer_array, "B");
+      motor_vals[2] = parse_string_to_double(buffer_array, "C");
+      motor_vals[3] = parse_string_to_double(buffer_array, "D");
+      motor_vals[4] = parse_string_to_double(buffer_array, "E");
+      motor_vals[5] = parse_string_to_double(buffer_array, "F");
 
-    motor_vals[0] = parse_string_to_double(buffer_array, "A");
-    motor_vals[1] = parse_string_to_double(buffer_array, "B");
-    motor_vals[2] = parse_string_to_double(buffer_array, "C");
-    motor_vals[3] = parse_string_to_double(buffer_array, "D");
-    motor_vals[4] = parse_string_to_double(buffer_array, "E");
-    motor_vals[5] = parse_string_to_double(buffer_array, "F");
+      for (int i = 0; i < 6; i++) {
+        Serial.print(motor_vals[i]);
+        Serial.print(",");
+      }
+      Serial.print("\n");
 
-    for (int i = 0; i < 6; i++) {
-      Serial.print(motor_vals[i]);
-      Serial.print(",");
-    }
-    Serial.print("\n");
+      if (motor_vals[0] < 255) {
+        analogWrite(L1_B, 255 - motor_vals[0]);
+        digitalWrite(L1_F, LOW);
+      }
+      if (motor_vals[1] < 255) {
+        analogWrite(L2_B, 255 - motor_vals[1]);
+        digitalWrite(L2_F, LOW);
+      }
+      if (motor_vals[2] < 255) {
+        analogWrite(L3_B, 255 - motor_vals[2]);
+        digitalWrite(L3_F, LOW);
+      }
+      if (motor_vals[3] < 255) {
+        analogWrite(R1_B, 255 - motor_vals[3]);
+        digitalWrite(R1_F, LOW);
+      }
+      if (motor_vals[4] < 255) {
+        analogWrite(R2_B, 255 - motor_vals[4]);
+        digitalWrite(R2_F, LOW);
+      }
+      if (motor_vals[5] < 255) {
+        analogWrite(R3_B, 255 - motor_vals[5]);
+        digitalWrite(R3_F, LOW);
+      }
 
-    if (motor_vals[0] < 255) {
-      analogWrite(L1_B, 255 - motor_vals[0]);
-      digitalWrite(L1_F, LOW);
+      if (motor_vals[0] >= 255) {
+        analogWrite(L1_F, motor_vals[0] - 255);
+        digitalWrite(L1_B, LOW);
+      }
+      if (motor_vals[1] >= 255) {
+        analogWrite(L2_F, motor_vals[1] - 255);
+        digitalWrite(L2_B, LOW);
+      }
+      if (motor_vals[2] >= 255) {
+        analogWrite(L3_F, motor_vals[2] - 255);
+        digitalWrite(L3_B, LOW);
+      }
+      if (motor_vals[3] >= 255) {
+        analogWrite(R1_F, motor_vals[3] - 255);
+        digitalWrite(R1_B, LOW);
+      }
+      if (motor_vals[4] >= 255) {
+        analogWrite(R2_F, motor_vals[4] - 255);
+        digitalWrite(R2_B, LOW);
+      }
+      if (motor_vals[5] >= 255) {
+        analogWrite(R3_F, motor_vals[5] - 255);
+        digitalWrite(R3_B, LOW);
+      }
     }
-    if (motor_vals[1] < 255) {
-      analogWrite(L2_B, 255 - motor_vals[1]);
-      digitalWrite(L2_F, LOW);
-    }
-    if (motor_vals[2] < 255) {
-      analogWrite(L3_B, 255 - motor_vals[2]);
-      digitalWrite(L3_F, LOW);
-    }
-    if (motor_vals[3] < 255) {
-      analogWrite(R1_B, 255 - motor_vals[3]);
-      digitalWrite(R1_F, LOW);
-    }
-    if (motor_vals[4] < 255) {
-      analogWrite(R2_B, 255 - motor_vals[4]);
-      digitalWrite(R2_F, LOW);
-    }
-    if (motor_vals[5] < 255) {
-      analogWrite(R3_B, 255 - motor_vals[5]);
-      digitalWrite(R3_F, LOW);
-    }
-
-    if (motor_vals[0] >= 255) {
-      analogWrite(L1_F, motor_vals[0] - 255);
-      digitalWrite(L1_B, LOW);
-    }
-    if (motor_vals[1] >= 255) {
-      analogWrite(L2_F, motor_vals[1] - 255);
-      digitalWrite(L2_B, LOW);
-    }
-    if (motor_vals[2] >= 255) {
-      analogWrite(L3_F, motor_vals[2] - 255);
-      digitalWrite(L3_B, LOW);
-    }
-    if (motor_vals[3] >= 255) {
-      analogWrite(R1_F, motor_vals[3] - 255);
-      digitalWrite(R1_B, LOW);
-    }
-    if (motor_vals[4] >= 255) {
-      analogWrite(R2_F, motor_vals[4] - 255);
-      digitalWrite(R2_B, LOW);
-    }
-    if (motor_vals[5] >= 255) {
-      analogWrite(R3_F, motor_vals[5] - 255);
-      digitalWrite(R3_B, LOW);
-    }
-
   }
 
   if ((millis() - t_old) > 500) {
-    digitalWrite(L1_F, LOW);
-    digitalWrite(L1_B, LOW);
-    digitalWrite(R1_F, LOW);
-    digitalWrite(R1_B, LOW);
-
-    digitalWrite(L2_F, LOW);
-    digitalWrite(L2_B, LOW);
-    digitalWrite(R2_F, LOW);
-    digitalWrite(R2_B, LOW);
-
-    digitalWrite(L3_F, LOW);
-    digitalWrite(L3_B, LOW);
-    digitalWrite(R3_F, LOW);
-    digitalWrite(R3_B, LOW);
+    stop_motors();
   }
 }
 
@@ -179,3 +173,21 @@ double parse_string_to_double(char *string, char const *tag)
 
   return result;
 }
+
+void stop_motors(){
+    digitalWrite(L1_F, LOW);
+    digitalWrite(L1_B, LOW);
+    digitalWrite(R1_F, LOW);
+    digitalWrite(R1_B, LOW);
+
+    digitalWrite(L2_F, LOW);
+    digitalWrite(L2_B, LOW);
+    digitalWrite(R2_F, LOW);
+    digitalWrite(R2_B, LOW);
+
+    digitalWrite(L3_F, LOW);
+    digitalWrite(L3_B, LOW);
+    digitalWrite(R3_F, LOW);
+    digitalWrite(R3_B, LOW);
+}
+
