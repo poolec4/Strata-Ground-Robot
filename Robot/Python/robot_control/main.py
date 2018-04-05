@@ -9,8 +9,8 @@ import numpy as np
 from vicon import vicon
 from robot import robot
 
-TCP_IP = '192.168.10.31'
-TCP_PORT = 5000
+TCP_IP = '192.168.10.7'
+TCP_PORT = 50000
 BUFFER_SIZE = 1024
 
 x_g = [0, 0];
@@ -41,7 +41,7 @@ try:
 			RUN_ROBOT = False
 
 except KeyboardInterrupt:
-	for i in range(5)
+	for i in range(5):
 		robot.stop_robot()
 		time.sleep(0.1)
 	print("Robot stopped.. hopefully")

@@ -132,8 +132,8 @@ class robot:
 
 		print("vl=" + str(v_l) + ", vr=" + str(v_r))
 
-		self.motor_vals[0:3] = v_r
-		self.motor_vals[3:6] = v_l
+		self.motor_vals[0:3] = v_l
+		self.motor_vals[3:6] = v_r
 
 		t_old = time.time;
 		return self
@@ -147,6 +147,6 @@ class robot:
 
 	def stop_robot(self):
 		self.motor_vals = np.zeros(6)
-		buffer = 'Z#'
+		buffer = 'Z#\n'
 		self.ardu_ser.write(buffer)
 		return self
