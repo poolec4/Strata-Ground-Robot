@@ -19,29 +19,35 @@ th_g = 0;
 vicon = vicon(TCP_IP, TCP_PORT, BUFFER_SIZE)
 robot = robot()
 
-robot.open('/dev/ttyACM0', 19200)
+robot.open('/dev/serial0', 19200)
 robot.write_motors()
 
 robot.set_goal(x_g, th_g)
 t_init = time.time()
+t_vicon = 0
+t_send = 0
 
 RUN_ROBOT = True
 
-try:
-	while (RUN_ROBOT == True):
-		print("\n")
+#try:
+while (RUN_ROBOT == True):
+	print("\n")
+	
+	if (time.time()-t_vicon > 0.2):
 		vicon.get_state()
+		t_vicon = time.time()
 
-		robot = robot.P_control(vicon.x_v, vicon.q_v)
+	robot = robot.P_control(vicon.x_v, vicon.q_v)
+	
+	if (time.time()-t_send) > 0.1:
 		robot = robot.write_motors()
+		t_send = time.time()
 
-		time.sleep(0.05)
+	if(time.time() - t_init > 1000.0):
+		RUN_ROBOT = False
 
-		if(time.time() - t_init > 1000.0):
-			RUN_ROBOT = False
-
-except KeyboardInterrupt:
-	for i in range(5):
-		robot.stop_robot()
-		time.sleep(0.1)
-	print("Robot stopped.. hopefully")
+#except KeyboardInterrupt:
+#	for i in range(5):
+#		robot.stop_robot()
+#		time.sleep(0.1)
+#	print("Robot stopped.. hopefully")
