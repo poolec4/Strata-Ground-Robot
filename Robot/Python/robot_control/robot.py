@@ -86,8 +86,8 @@ class robot:
 
 		print("vl=" + str(v_l) + ", vr=" + str(v_r))
 
-		self.motor_vals[0:3] = v_r
-		self.motor_vals[3:6] = v_l
+		self.motor_vals[0:3] = v_l
+		self.motor_vals[3:6] = v_r
 		return self
 
 	def PI_control(self, x_v, q_v):
