@@ -9,7 +9,7 @@ kb = -1.5;
 rob_pos = [2, 2];
 rob_th = 0;
 goal_pos = [0, 0];
-goal_th = 0;
+goal_th = pi;
 
 dt = 0.1;
 t = 0:dt:20;
@@ -31,14 +31,14 @@ for i = 1:length(t)
     b = -rob_th(i) - a + goal_th;
     
     if (a > pi)
-        a = -(2*pi - a);
+        a = 2*pi - pi);
     end
     if (a < -pi)
         a = 2*pi + b;
     end
     
     if (b > pi)
-        b = -(2*pi - b);
+        b = -(b - pi);
     end
     if (b < -pi)
         b = 2*pi + b;

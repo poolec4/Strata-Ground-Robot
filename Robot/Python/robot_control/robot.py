@@ -59,14 +59,14 @@ class Robot:
 		b = -th - a + self.th_g
 
 		if a > math.pi:
-			a = -(a - math.pi)
+			a = -(2*math.pi - a)
 		if a < -math.pi:
-			a = -(a + math.pi)
+			a =  2*math.pi + b
 
 		if b > math.pi:
-			b = -(b - math.pi)
+			b = -(2*math.pi - b)
 		if b < -math.pi:
-			b = -(b + math.pi)
+			b = 2*math.pi + b
 
 		print("p=" + str(p) + ", a=" + str(a) + ", b=" + str(b))
 
@@ -109,9 +109,14 @@ class Robot:
 		b = -th - a
 
 		if a > math.pi:
-			a = -(math.pi - a)
+			a = -(2*math.pi - a)
+		if a < -math.pi:
+			a =  2*math.pi + b
+
 		if b > math.pi:
-			b = -(math.pi - b)
+			b = -(2*math.pi - b)
+		if b < -math.pi:
+			b = 2*math.pi + b
 
 		print("p=" + str(p) + ", a=" + str(a) + ", b=" + str(b))
 
