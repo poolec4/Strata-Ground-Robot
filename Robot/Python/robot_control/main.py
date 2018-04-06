@@ -9,8 +9,8 @@ TCP_IP = '192.168.10.7'
 TCP_PORT = 50000
 BUFFER_SIZE = 1024
 
-x_g = [0,0]
-th_g = 0
+x_g = [-3,3]
+th_g = -math.pi
 
 vicon = Vicon(TCP_IP, TCP_PORT, BUFFER_SIZE)
 robot = Robot()
