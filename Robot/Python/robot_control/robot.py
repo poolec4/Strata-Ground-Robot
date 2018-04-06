@@ -6,23 +6,16 @@ import numpy as np
 def quat_to_eangles(quat):
 	# quat = [qx qy qz qw]
 	
-	qx = quat[0]
-	qy = quat[1]
-	qz = quat[2]
-	qw = quat[3]
+	q1 = quat[0]
+	q2 = quat[1]
+	q3 = quat[2]
+	q0 = quat[3]
+	
+	phi = math.atan2(2*(q0*q1 + q2*q3), 1 - 2*(q1**2 + q2**2))
+	theta = math.asin(2*(q0*q2 - q3*q1))
+	psi = math.atan2(2*(q0*q3 + q1*q2), 1 - 2*(q2**2 + q3**2))
 
-	if qx*qy + qz*qw == 0.5
-		heading = 2*math.atan2(qx,qw)
-		bank = 0
-	else if qx*qy + qz*qw = -0.5
-		heading = -2*math.atan2(qx,qw)
-		bank = 0
-	else
-		heading = math.atan2(2*(qy*qw) - 2*qx*qz, 1 - 2*qy**2 - 2*qz**2)
-		bank = math.atan2(2*qx*qw - 2*qy*qz, 1 - 2*qx**2 - 2*qz**2)
-
-	attitude = math.asin(2*(qx*qy + 2*qz*qw))
-	eangles = [heading, attitude, bank]
+	eangles = [phi, theta, psi]
 	return eangles
 
 class Robot:
