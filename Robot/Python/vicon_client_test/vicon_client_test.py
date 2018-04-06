@@ -1,7 +1,7 @@
 import socket
 import time
 import numpy as np
-from vicon import vicon
+from vicon import Vicon
 
 TCP_IP = '127.0.0.1'
 TCP_PORT = 5000
@@ -15,7 +15,7 @@ while 1:
 	s.connect((TCP_IP, TCP_PORT))
 	data = s.recv(BUFFER_SIZE)
 	data = data.rstrip()
-	data_b = vicon.to_str(data)
+	data_b = Vicon.to_str(data)
 	data = data_b.split('&')
 
 	for i in range(0,3):

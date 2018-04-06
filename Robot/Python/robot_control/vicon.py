@@ -4,9 +4,9 @@ import numpy as np
 
 def to_bytes(bytes_or_str):
 	if isinstance(bytes_or_str, str):
-	    value = bytes_or_str.encode() # uses 'utf-8' for encoding
+		value = bytes_or_str.encode() # uses 'utf-8' for encoding
 	else:
-	    value = bytes_or_str
+		value = bytes_or_str
 	return value # Instance of bytes
 
 def to_str(bytes_or_str):
@@ -16,14 +16,14 @@ def to_str(bytes_or_str):
 		value = bytes_or_str
 	return value # Instance of str
 
-class vicon:
+class Vicon:
 	def __init__(self, ip_address, port, buffer_size):
-		self.IP_ADDR = ip_address;
-		self.PORT_NUM = port;
-		self.BUFF_SIZE = buffer_size;
+		self.IP_ADDR = ip_address
+		self.PORT_NUM = port
+		self.BUFF_SIZE = buffer_size
 
-		self.x_v = np.zeros((3,1));
-		self.q_v = np.zeros((4,1));
+		self.x_v = np.zeros((3,1))
+		self.q_v = np.zeros((4,1))
 
 	def get_state(self):
 		s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -34,8 +34,8 @@ class vicon:
 		data = data_b.split('&')
 
 		for i in range(0,3):
-		 	temp = data[i].split('=')
-		 	self.x_v[i] = float(temp[1])
+			temp = data[i].split('=')
+			self.x_v[i] = float(temp[1])
 	 	
 		for i in range(3,7):
 			temp = data[i].split('=')

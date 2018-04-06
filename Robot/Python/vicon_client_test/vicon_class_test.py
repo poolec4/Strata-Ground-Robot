@@ -1,10 +1,10 @@
-from vicon import vicon
+from vicon import Vicon
 
 TCP_IP = '192.168.10.31'
 TCP_PORT = 5000
 BUFFER_SIZE = 1024
 
-vicon = vicon(TCP_IP, TCP_PORT, BUFFER_SIZE)
+vicon = Vicon(TCP_IP, TCP_PORT, BUFFER_SIZE)
 
 while 1:
 	vicon.get_state();

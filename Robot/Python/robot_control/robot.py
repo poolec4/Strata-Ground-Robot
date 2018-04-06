@@ -7,13 +7,13 @@ def quat_to_eangles(quat):
 	alpha = math.atan2(2*(quat[3]*quat[0]-quat[1]*quat[2]), 1-2*(quat[0]**2+quat[2]**2))
 	gamma = math.asin(2*(quat[0]*quat[1]-quat[2]*quat[3]))
 	beta = math.atan2(2*(quat[1]*quat[3]-quat[0]*quat[2]),1-2*(quat[1]**2+quat[2]**2))
-	eangles = [alpha, beta, gamma];
+	eangles = [alpha, beta, gamma]
 	return eangles
 
-class robot:
+class Robot:
 	def __init__(self, max_motor_speed=255):
 		self.motor_vals = np.zeros(6)
-		self.max_motor_speed = max_motor_speed;
+		self.max_motor_speed = max_motor_speed
 
 		self.kp = 6  # kp>0
 		self.ka = 30 # kb<0
@@ -41,22 +41,22 @@ class robot:
 		print(self.ardu_ser)
 
 	def set_goal(self, p_g, th_g):
-		self.x_g = p_g[0];
-		self.y_g = p_g[1];
-		self.th_g = th_g;
+		self.x_g = p_g[0]
+		self.y_g = p_g[1]
+		self.th_g = th_g
 		return self
 
 	def P_control(self, x_v, q_v):
 		eangles = quat_to_eangles(q_v)
 		th = -eangles[2] 
-		dx = self.x_g - x_v[0];
-		dy = self.y_g - x_v[1];
+		dx = self.x_g - x_v[0]
+		dy = self.y_g - x_v[1]
 		print("xv=" + str(x_v[0]) + "yv=" + str(x_v[1]))
 		print("dx=" + str(dx) + ", dy=" + str(dy) + ", th=" + str(th))
 		
 		p = math.sqrt(dx**2 + dy**2)
 		a = -th + math.atan2(dy,dx)
-		b = -th - a;
+		b = -th - a
 
 		if a > math.pi:
 			a = a - 2*math.pi
@@ -95,18 +95,18 @@ class robot:
 		return self
 
 	def PI_control(self, x_v, q_v):
-		dt = time.time() - t_old;
+		dt = time.time() - t_old
 
 		eangles = quat_to_eangles(q_v)
 		th = -eangles[2] 
-		dx = self.x_g - x_v[0];
-		dy = self.y_g - x_v[1];
+		dx = self.x_g - x_v[0]
+		dy = self.y_g - x_v[1]
 		print("xv=" + str(x_v[0]) + "yv=" + str(x_v[1]))
 		print("dx=" + str(dx) + ", dy=" + str(dy) + ", th=" + str(th))
 		
 		p = math.sqrt(dx**2 + dy**2)
 		a = -th + math.atan2(dy,dx)
-		b = -th - a;
+		b = -th - a
 
 		if a > math.pi:
 			a = -(math.pi - a)
@@ -138,7 +138,7 @@ class robot:
 		self.motor_vals[0:3] = v_l
 		self.motor_vals[3:6] = v_r
 
-		t_old = time.time;
+		t_old = time.time
 		return self
 
 	def write_motors(self):

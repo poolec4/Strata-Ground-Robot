@@ -1,23 +1,19 @@
-import sys
-import select
 import serial
 import time
 import math
-import termios
-import tty
 import numpy as np
-from vicon import vicon
-from robot import robot
+from vicon import Vicon
+from robot import Robot
 
 TCP_IP = '192.168.10.7'
 TCP_PORT = 50000
 BUFFER_SIZE = 1024
 
-x_g = [0, 0];
-th_g = 0;
+x_g = [0,0]
+th_g = 0
 
-vicon = vicon(TCP_IP, TCP_PORT, BUFFER_SIZE)
-robot = robot()
+vicon = Vicon(TCP_IP, TCP_PORT, BUFFER_SIZE)
+robot = Robot()
 
 robot.open('/dev/serial0', 19200)
 robot.write_motors()
@@ -29,25 +25,23 @@ t_send = 0
 
 RUN_ROBOT = True
 
-#try:
-while (RUN_ROBOT == True):
-	print("\n")
-	
-	if (time.time()-t_vicon > 0.2):
-		vicon.get_state()
-		t_vicon = time.time()
+try:
+	while RUN_ROBOT:
+		print("\n")
+		
+		if (time.time() - t_vicon) > 0.2:
+			vicon.get_state()
+			t_vicon = time.time()
 
-	robot = robot.P_control(vicon.x_v, vicon.q_v)
-	
-	if (time.time()-t_send) > 0.1:
-		robot = robot.write_motors()
-		t_send = time.time()
+		robot = robot.P_control(vicon.x_v, vicon.q_v)
+		
+		if (time.time() - t_send) > 0.1:
+			robot = robot.write_motors()
+			t_send = time.time()
 
-	if(time.time() - t_init > 1000.0):
-		RUN_ROBOT = False
+		if (time.time() - t_init) > 1000.0:
+			RUN_ROBOT = False
 
-#except KeyboardInterrupt:
-#	for i in range(5):
-#		robot.stop_robot()
-#		time.sleep(0.1)
-#	print("Robot stopped.. hopefully")
+except KeyboardInterrupt:
+	robot.stop_robot()
+	print("Robot stopped.. hopefully")
