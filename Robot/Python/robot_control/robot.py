@@ -56,17 +56,17 @@ class Robot:
 		
 		p = math.sqrt(dx**2 + dy**2)
 		a = -th + math.atan2(dy,dx)
-		b = -th - a
+		b = -th - a + self.th_g
 
 		if a > math.pi:
-			a = a - 2*math.pi
+			a = -(a - math.pi)
 		if a < -math.pi:
-			a = a + 2*math.pi
+			a = -(a + math.pi)
 
 		if b > math.pi:
-			b = b - 2*math.pi
+			b = -(b - math.pi)
 		if b < -math.pi:
-			b = b + 2*math.pi
+			b = -(b + math.pi)
 
 		print("p=" + str(p) + ", a=" + str(a) + ", b=" + str(b))
 
