@@ -4,10 +4,25 @@ import math
 import numpy as np
 
 def quat_to_eangles(quat):
-	alpha = math.atan2(2*(quat[3]*quat[0]-quat[1]*quat[2]), 1-2*(quat[0]**2+quat[2]**2))
-	gamma = math.asin(2*(quat[0]*quat[1]-quat[2]*quat[3]))
-	beta = math.atan2(2*(quat[1]*quat[3]-quat[0]*quat[2]),1-2*(quat[1]**2+quat[2]**2))
-	eangles = [alpha, beta, gamma]
+	# quat = [qx qy qz qw]
+	
+	qx = quat[0]
+	qy = quat[1]
+	qz = quat[2]
+	qw = quat[3]
+
+	if qx*qy + qz*qw == 0.5
+		heading = 2*math.atan2(qx,qw)
+		bank = 0
+	else if qx*qy + qz*qw = -0.5
+		heading = -2*math.atan2(qx,qw)
+		bank = 0
+	else
+		heading = math.atan2(2*(qy*qw) - 2*qx*qz, 1 - 2*qy**2 - 2*qz**2)
+		bank = math.atan2(2*qx*qw - 2*qy*qz, 1 - 2*qx**2 - 2*qz**2)
+
+	attitude = math.asin(2*(qx*qy + 2*qz*qw))
+	eangles = [heading, attitude, bank]
 	return eangles
 
 class Robot:
@@ -48,7 +63,7 @@ class Robot:
 
 	def P_control(self, x_v, q_v):
 		eangles = quat_to_eangles(q_v)
-		th = -eangles[2] 
+		th = -eangles[0] 
 		dx = self.x_g - x_v[0]
 		dy = self.y_g - x_v[1]
 		print("xv=" + str(x_v[0]) + "yv=" + str(x_v[1]))
