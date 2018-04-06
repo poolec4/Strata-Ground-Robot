@@ -15,7 +15,7 @@ def quat_to_eangles(quat):
 	theta = math.asin(2*(q0*q2 - q3*q1))
 	psi = math.atan2(2*(q0*q3 + q1*q2), 1 - 2*(q2**2 + q3**2))
 
-	eangles = [phi, theta, psi]
+	eangles = [phi, theta, psi] # [roll, pitch, yaw]
 	return eangles
 
 class Robot:
@@ -56,7 +56,7 @@ class Robot:
 
 	def P_control(self, x_v, q_v):
 		eangles = quat_to_eangles(q_v)
-		th = -eangles[0] 
+		th = eangles[2] 
 		dx = self.x_g - x_v[0]
 		dy = self.y_g - x_v[1]
 		print("xv=" + str(x_v[0]) + "yv=" + str(x_v[1]))

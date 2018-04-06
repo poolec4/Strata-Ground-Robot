@@ -41,6 +41,7 @@ try:
 
 		if (time.time() - t_init) > 1000.0:
 			RUN_ROBOT = False
+#		time.sleep(0.5)
 
 except KeyboardInterrupt:
 	robot.stop_robot()
