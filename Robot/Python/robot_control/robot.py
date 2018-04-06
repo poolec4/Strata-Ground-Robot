@@ -61,7 +61,7 @@ class Robot:
 		if a > math.pi:
 			a = -(2*math.pi - a)
 		if a < -math.pi:
-			a =  2*math.pi + b
+			a =  2*math.pi + a
 
 		if b > math.pi:
 			b = -(2*math.pi - b)

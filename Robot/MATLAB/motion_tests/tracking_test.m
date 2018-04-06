@@ -2,12 +2,12 @@ close all
 clear all
 clc
 
-kp = 0.5;
-ka = 3;
+kp = 0.3;
+ka = 2;
 kb = -1.5;
 
-rob_pos = [2, 2];
-rob_th = 0;
+rob_pos = [-2, 3];
+rob_th = pi;
 goal_pos = [0, 0];
 goal_th = 0;
 
@@ -34,7 +34,7 @@ for i = 1:length(t)
         a = -(2*pi - a);
     end
     if (a < -pi)
-        a = 2*pi + b;
+        a = 2*pi + a;
     end
     
     if (b > pi)
