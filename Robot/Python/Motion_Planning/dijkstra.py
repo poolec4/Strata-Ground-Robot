@@ -8,18 +8,23 @@ class world:
         self.enc = self.encode()
         self.neighbors = self.findNeighbors()
 
-    def generate(self, gridSize, numObjects, maxSize):
+    def generate(self, gridSize, numObjects, maxSize, random=False):
         grid = np.zeros(gridSize)
         for i in range(0, numObjects):
-            center = [random.randint(0.1*gridSize[0], 0.9*gridSize[0]), random.randint(0.2*gridSize[1], 0.9*gridSize[1])]
-            # center = [random.randint(0.2*gridSize[0], 0.8*gridSize[0]), random.randint(0.2*gridSize[1], 0.8*gridSize[1])]
-            size = random.randint(0, maxSize)
-            grid[center[0], center[1]] = 1
-            loc = center
-            for j in range(0, size):
-                index = random.randint(0, 3)
-                loc, grid = self.growObject(grid, loc, index, gridSize)
-
+            if random == True:
+                center = [random.randint(0.1*gridSize[0], 0.9*gridSize[0]), random.randint(0.2*gridSize[1], 0.9*gridSize[1])]
+                # center = [random.randint(0.2*gridSize[0], 0.8*gridSize[0]), random.randint(0.2*gridSize[1], 0.8*gridSize[1])]
+                size = random.randint(0, maxSize)
+                grid[center[0], center[1]] = 1
+                loc = center
+                for j in range(0, size):
+                    index = random.randint(0, 3)
+                    loc, grid = self.growObject(grid, loc, index, gridSize)
+            else:
+                center = [round(gridSize[0]/2), round(gridSize[1]/2)]
+                size = maxSize
+                grid[center[0], center[1]] = 1
+                
         return grid
 
 
@@ -45,6 +50,14 @@ class world:
                 enc_grid[i, j] = int(enc_val)
                 enc_val += 1
         return enc_grid
+    
+    def decode(self, encVal)
+        for i in range(self.gridSize[0]):
+            for j in range(self.gridSize[1]):
+                if self.enc[i, j] == encVal:
+                    coords = [i, j]
+                    return coords
+                    
 
     def findNeighbors(self):
         neighbors = []
@@ -87,6 +100,19 @@ class Graph(object):
         self.edges[from_node].append(to_node)
         self.edges[to_node].append(from_node)
         self.distances[(from_node, to_node)] = distance
+        
+    def add_nodes_and_edges(self, world):
+        for i in range(world.gridSize[0]):
+        for j in range(world.gridSize[1]):
+            node = world.enc[i, j]
+            self.add_node(node)
+        for i in range(world.gridSize[0]-1):
+        for j in range(world.gridSize[1]-1):
+            for k in range(len(world.neighbors[int(world.enc[i, j])])):
+                enc_ind = world.neighbors[int(world.enc[i, j])][k]
+                if int(world.enc[enc_ind[0]][enc_ind[1]]) not in graph.edges[int(world.enc[i, j])]:
+                    self.add_edge(int(world.enc[i, j]), int(world.enc[enc_ind[0]][enc_ind[1]]), 1)
+        return self
 
 
 def dijkstra(graph, initial):
@@ -135,20 +161,31 @@ def shortest_path(graph, origin, destination):
 
     return visited[destination], list(full_path)
 
+def path2coords(path, world)
+    path_coords = []
+    for i in range(path.size()):
+        grid_coords = world.decode(path[i])
+        coords_meters = 0.3048*[grid_coords[0]*2+1, grid_coords[1]*2+1]
+        path_coords.append(coords_meters)
+    return path_coords
+
 if __name__ == '__main__':
     graph = Graph()
-    world = world([10, 10], 0, 0)
+    world = world([7, 7], 1, 1)
+    ### Replace from here
     for i in range(world.gridSize[0]):
         for j in range(world.gridSize[1]):
             node = world.enc[i, j]
             graph.add_node(node)
-    print('Encoded World')
-    print(world.enc)
     for i in range(world.gridSize[0]-1):
         for j in range(world.gridSize[1]-1):
             for k in range(len(world.neighbors[int(world.enc[i, j])])):
                 enc_ind = world.neighbors[int(world.enc[i, j])][k]
                 if int(world.enc[enc_ind[0]][enc_ind[1]]) not in graph.edges[int(world.enc[i, j])]:
                     graph.add_edge(int(world.enc[i, j]), int(world.enc[enc_ind[0]][enc_ind[1]]), 1)
-
-    print(shortest_path(graph, 18, 99)) # output: (25, ['A', 'B', 'D'])
+    ### To here with:
+    ### graph = graph.add_nodes_and_edges(world)
+    print('Encoded World')
+    print(world.enc)
+    path = shortest_path(graph, 0, 48)
+    print(shortest_path(graph, 0, 48)) # output: (25, ['A', 'B', 'D'])
