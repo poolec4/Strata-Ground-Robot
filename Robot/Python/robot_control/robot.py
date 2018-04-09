@@ -18,9 +18,18 @@ def quat_to_eangles(quat):
 	eangles = [phi, theta, psi] # [roll, pitch, yaw]
 	return eangles
 
+def remap_angle(th)
+	if th > math.pi:
+		th_remap = -(2*math.pi - th)
+	if a < -math.pi:
+		th_remap =  2*math.pi + th
+	
+	return th_remap
+
 class Robot:
-	def __init__(self, max_motor_speed=255):
+	def __init__(self, min_motor_speed=50, max_motor_speed=255):
 		self.motor_vals = np.zeros(6)
+		self.min_motor_speed = min_motor_speed
 		self.max_motor_speed = max_motor_speed
 
 		self.kp = 3  # kp>0
@@ -54,6 +63,21 @@ class Robot:
 		self.th_g = th_g
 		return self
 
+	def bound_motor_speed(self, v):
+		if v > self.max_motor_speed:
+			v_bounded = self.max_motor_speed
+
+		if v < self.min_motor_speed and v > 10:
+			v_bounded = self.min_motor_speed
+
+		if v < -self.max_motor_speed:
+			v_bounded = -self.max_motor_speed
+
+		if v > -self.min_motor_speed and v < -10:
+			v_bounded = -self.min_motor_speed
+		
+		return v_bounded
+
 	def P_control(self, x_v, q_v):
 		eangles = quat_to_eangles(q_v)
 		th = eangles[2] 
@@ -66,15 +90,8 @@ class Robot:
 		a = -th + math.atan2(dy,dx)
 		b = -th - a + self.th_g
 
-		if a > math.pi:
-			a = -(2*math.pi - a)
-		if a < -math.pi:
-			a =  2*math.pi + a
-
-		if b > math.pi:
-			b = -(2*math.pi - b)
-		if b < -math.pi:
-			b = 2*math.pi + b
+		a = remap_angle(a)
+		b = remap_angle(b)
 
 		print("p=" + str(p) + ", a=" + str(a) + ", b=" + str(b))
 
@@ -84,17 +101,8 @@ class Robot:
 		v_r = (2*v + omega*self.L)/(2*self.R)
 		v_l = (2*v - omega*self.L)/(2*self.R)
 
-		if v_r > 255:
-			v_r = self.max_motor_speed
-
-		if v_r < -255:
-			v_r = -self.max_motor_speed
-
-		if v_l > 255:
-			v_l = self.max_motor_speed
-
-		if v_l < -255:
-			v_l = -self.max_motor_speed
+		v_r = self.bound_motor_speed(v_r)
+		v_l = self.bound_motor_speed(v_l)
 
 		print("vl=" + str(v_l) + ", vr=" + str(v_r))
 
@@ -102,7 +110,8 @@ class Robot:
 		self.motor_vals[3:6] = v_r
 		return self
 
-	def PI_control(self, x_v, q_v):
+	def PI_control(self, x_v, q_v, rolloff_fac):
+
 		dt = time.time() - t_old
 
 		eangles = quat_to_eangles(q_v)
@@ -116,35 +125,26 @@ class Robot:
 		a = -th + math.atan2(dy,dx)
 		b = -th - a
 
-		if a > math.pi:
-			a = -(2*math.pi - a)
-		if a < -math.pi:
-			a =  2*math.pi + b
+		self.p_sum = rolloff_fac*self.p_sum + p*dt
+		self.a_sum = rolloff_fac*self.a_sum + a*dt
+		self.b_sum = rolloff_fac*self.b_sum + b*dt
 
-		if b > math.pi:
-			b = -(2*math.pi - b)
-		if b < -math.pi:
-			b = 2*math.pi + b
+		a = remap_angle(a)
+		b = remap_angle(b)
+		self.a_sum = remap_angle(self.a_sum)
+		self.b_sum = remap_angle(self.b_sum)
 
 		print("p=" + str(p) + ", a=" + str(a) + ", b=" + str(b))
+		print("p_sum=" + str(self.p_sum) + ", a_sum=" + str(self.a_sum) + ", b_sum=" + str(self.b_sum))
 
-		v = self.kp*p
-		omega = self.ka*a + self.kb*b
+		v = self.kp*p + self.kpi*self.p_sum
+		omega = self.ka*a + self.kb*b + self.kai*a_sum + self.kbi*b_sum
 
 		v_r = (2*v + omega*self.L)/(2*self.R)
 		v_l = (2*v - omega*self.L)/(2*self.R)
 
-		if v_r > 255:
-			v_r = self.max_motor_speed
-
-		if v_r < -255:
-			v_r = -self.max_motor_speed
-
-		if v_l > 255:
-			v_l = self.max_motor_speed
-
-		if v_l < -255:
-			v_l = -self.max_motor_speed
+		v_r = self.bound_motor_speed(v_r)
+		v_l = self.bound_motor_speed(v_l)
 
 		print("vl=" + str(v_l) + ", vr=" + str(v_r))
 
