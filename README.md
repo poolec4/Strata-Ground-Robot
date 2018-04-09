@@ -60,7 +60,7 @@ To run main control:
 ```bash
 cd Robot/Python/robot_control
 ```
-Edit the gains of the controller in `robot.py` and the goal in `main.py`:
+Edit the gains of the controller in `robot.py` and the goal in `main.py`. Also be sure to change `TCP_IP` and `TCP_PORT` to match the host's IP address (found using `ifconfig`) and the port specified in `vicon_host`:
 ```bash
 nano robot.py
 nano main.py
