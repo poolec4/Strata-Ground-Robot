@@ -9,8 +9,8 @@ TCP_IP = '192.168.10.7'
 TCP_PORT = 50000
 BUFFER_SIZE = 1024
 
-x_g = [2, 2]
-th_g = 0
+x_g = [2.5, -1]
+th_g = -math.pi/2
 
 vicon = Vicon(TCP_IP, TCP_PORT, BUFFER_SIZE)
 robot = Robot()
@@ -34,7 +34,7 @@ try:
 			t_vicon = time.time()
 
 #		robot = robot.P_control(vicon.x_v, vicon.q_v)
-		robot = robot.PI_control(vicon.x_v, vicon.q_v, 0.9)
+		robot = robot.PI_control(vicon.x_v, vicon.q_v, 0.95)
 		
 		if (time.time() - t_send) > 0.1:
 			robot = robot.write_motors()

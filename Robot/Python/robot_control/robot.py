@@ -4,15 +4,15 @@ import math
 import numpy as np
 
 class Robot:
-	def __init__(self, min_motor_speed=50, max_motor_speed=255):
+	def __init__(self, min_motor_speed=120, max_motor_speed=255):
 		self.motor_vals = np.zeros(6)
 		self.min_motor_speed = min_motor_speed
 		self.max_motor_speed = max_motor_speed
 
 		self.kp = 3  # kp>0
-		self.ka = 50 # kb<0
+		self.ka = 60 # kb<0
 		self.kb = -40 # ka-kb>0
-		self.kpi = 5  # kp>0
+		self.kpi = 10  # kp>0
 		self.kai = 0 # kb<0
 		self.kbi = 0 # ka-kb>0
 
@@ -50,7 +50,7 @@ class Robot:
 		elif v > -self.min_motor_speed and v < -10:
 			v_bounded = -self.min_motor_speed
 		else:
-			v_bounded =	v
+			v_bounded = v
 
 		return v_bounded
 
@@ -135,7 +135,7 @@ class Robot:
 		buffer = 'A='+str(motor_vals_to_write[0])+'&B='+str(motor_vals_to_write[1])+'&C='+str(motor_vals_to_write[2])+'&D='+str(motor_vals_to_write[3])+'&E='+str(motor_vals_to_write[4])+'&F='+str(motor_vals_to_write[5])+"#\n"
 		self.ardu_ser.flush()
 		self.ardu_ser.write(buffer)
-		print(buffer)
+#		print(buffer)
 		return self
 
 	def stop_robot(self):
