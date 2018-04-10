@@ -187,4 +187,5 @@ if __name__ == '__main__':
     path_cost = path_obj[0]
     path = path_obj[1]
     print(path) # output: (25, ['A', 'B', 'D'])
-    print(path2coords(path, world))
+    coords = path2coords(path, world)
+    print(coords)
