@@ -1,7 +1,27 @@
 from collections import defaultdict, deque
 import numpy as np
+import math
 
-class world:
+class Planner:
+    def __init__(self):
+        self.graph = Graph()
+        self.world = World([7, 7], 1, 1)
+        self.graph = self.graph.add_nodes_and_edges(self.world)
+        print('Encoded Grid')
+        print(self.world.enc)
+
+    def plan(self, start, dest):
+        path_obj = shortest_path(self.graph, start, dest)
+        path_cost = path_obj[0]
+        path = path_obj[1]
+        print(path)
+        coords = path2coords(path, self.world)
+        print(coords)
+        angles = getAngles(path, self.world)
+        print(angles)
+        return coords, angles # coodinates in meters, angles in radians
+
+class World:
     def __init__(self, gridSize, numObjects, maxSize):
         self.grid = self.generate(gridSize, numObjects, maxSize)
         self.gridSize = gridSize
@@ -23,7 +43,6 @@ class world:
             else:
                 center = [round(gridSize[0]/2), round(gridSize[1]/2)]
                 size = maxSize
-                print(center)
                 grid[int(center[0]), int(center[1])] = 1
 
         return grid
@@ -116,7 +135,7 @@ class Graph(object):
             for j in range(world.gridSize[1]-1):
                 for k in range(len(world.neighbors[int(world.enc[i, j])])):
                     enc_ind = world.neighbors[int(world.enc[i, j])][k]
-                    if int(world.enc[enc_ind[0]][enc_ind[1]]) not in graph.edges[int(world.enc[i, j])]:
+                    if int(world.enc[enc_ind[0]][enc_ind[1]]) not in self.edges[int(world.enc[i, j])]:
                         current = [i, j]
                         edge = enc_ind
                         self.add_edge(int(world.enc[i, j]), int(world.enc[enc_ind[0]][enc_ind[1]]), world.cost(current, edge))
@@ -177,15 +196,29 @@ def path2coords(path, world):
         path_coords.append(coords_meters)
     return path_coords
 
+def getAngles(path, world): # angle in radians
+    angle = []
+    i = 1
+    while(i < len(path)):
+        current_coords = world.decode(path[i-1])
+        next_coords = world.decode(path[i])
+        theta = math.atan2(next_coords[0]-current_coords[0], next_coords[1]-current_coords[1]) # numpy grid flips x and y coords
+        angle.append(theta)
+        i += 1
+    angle.append(0.0) # Final angle of zero
+    return angle
+
 if __name__ == '__main__':
-    graph = Graph()
-    world = world([7, 7], 1, 1)
-    graph = graph.add_nodes_and_edges(world)
-    print('Encoded World')
-    print(world.enc)
-    path_obj = shortest_path(graph, 0, 48)
-    path_cost = path_obj[0]
-    path = path_obj[1]
-    print(path) # output: (25, ['A', 'B', 'D'])
-    coords = path2coords(path, world)
-    print(coords)
+    planner = Planner()
+    coords = planner.plan(0, 48) # Lower left corner to upper right corner
+    # graph = Graph()
+    # world = World([7, 7], 1, 1)
+    # graph = graph.add_nodes_and_edges(world)
+    # print('Encoded World')
+    # print(world.enc)
+    # path_obj = shortest_path(graph, 0, 48)
+    # path_cost = path_obj[0]
+    # path = path_obj[1]
+    # print(path) # output: (25, ['A', 'B', 'D'])
+    # coords = path2coords(path, world)
+    # print(coords)
