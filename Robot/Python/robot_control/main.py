@@ -18,7 +18,10 @@ robot = Robot()
 robot.open('/dev/serial0', 19200)
 robot.write_motors()
 
-robot.set_goal(x_g, th_g)
+traj_length = 50
+[x_traj, y_traj, th_traj] = robot.create_trajectory('circle', 2, traj_length)
+traj_count = 0
+
 t_init = time.time()
 t_vicon = 0
 t_send = 0
@@ -33,16 +36,18 @@ try:
 			vicon.get_state()
 			t_vicon = time.time()
 
-#		robot = robot.P_control(vicon.x_v, vicon.q_v)
+		robot = robot.set_goal([x_traj[traj_count],y_traj[traj_count]], th_traj[traj_count])
 		robot = robot.PI_control(vicon.x_v, vicon.q_v, 0.95)
 		
 		if (time.time() - t_send) > 0.1:
 			robot = robot.write_motors()
 			t_send = time.time()
 
-		if (time.time() - t_init) > 1000.0:
+		if robot.p < 0.2:
+			traj_count = traj_count + 1
+
+		if traj_count == traj_length:
 			RUN_ROBOT = False
-#		time.sleep(1)
 
 except KeyboardInterrupt:
 	robot.stop_robot()
