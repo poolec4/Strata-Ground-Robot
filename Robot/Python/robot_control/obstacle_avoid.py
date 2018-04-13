@@ -10,9 +10,6 @@ TCP_IP = '192.168.10.7'
 TCP_PORT = 50000
 BUFFER_SIZE = 1024
 
-x_g = [-2, 2]
-th_g = math.pi/2
-
 vicon = Vicon(TCP_IP, TCP_PORT, BUFFER_SIZE)
 robot = Robot()
 
@@ -27,7 +24,7 @@ start = [vicon.x_v[0], vicon.x_v[1]]
 
 print('start :', start)
 
-goals = [[1.5, 1.5], [0.3, 0.3]]
+goals = [[-2, -2], [0.3, 0.3]]
 x_coords, y_coords, angles, path = planner.planWaypoints(start, goals)
 traj_length = len(x_coords[0])
 x_traj = x_coords[0]

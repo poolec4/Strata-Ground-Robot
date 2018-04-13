@@ -10,10 +10,10 @@ class Robot:
 		self.max_motor_speed = max_motor_speed
 		self.low_motor_cutoff = motor_cutoff
 
-		self.kp = 2 # kp>0
-		self.ka = 25 # kb<0
-		self.kb = -24 # ka-kb>0
-		self.kpi = 2 # kp>0
+		self.kp = 5 # kp>0
+		self.ka = 45 # kb<0
+		self.kb = -20 # ka-kb>0
+		self.kpi = 3 # kp>0
 		self.kai = 0 # kb<0
 		self.kbi = 0 # ka-kb>0
 

@@ -45,7 +45,7 @@ try:
 			robot = robot.write_motors()
 			t_send = time.time()
 
-		if robot.p < 0.25:
+		if robot.p < 0.1:
 			traj_count = traj_count + 1
 			robot.integral_reset()
 

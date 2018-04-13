@@ -155,7 +155,7 @@ class World:
         if current[0]-destination[0] == 0 or current[1]-destination[1] == 0:
             move_cost += 1
         else:
-            move_cost += 1.414
+            move_cost += 1.2
         return move_cost
 
 
@@ -256,7 +256,7 @@ def getAngles(path, world, nextGrid=[-1, -1]): # angle in radians
     while(i < len(path)-1):
         current_coords = world.decode(path[i])
         next_coords = world.decode(path[i+1])
-        theta = math.atan2(next_coords[0]-current_coords[0], next_coords[1]-current_coords[1]) # numpy grid flips x and y coords
+        theta = math.atan2(next_coords[1]-current_coords[1], next_coords[0]-current_coords[0]) # numpy grid flips x and y coords
         angle.append(theta)
         i += 1
     if nextGrid[0] == -1:
@@ -264,7 +264,7 @@ def getAngles(path, world, nextGrid=[-1, -1]): # angle in radians
     else:
         current_coords = world.decode(path[len(path)-1])
         next_coords = nextGrid
-        theta = math.atan2(next_coords[0]-current_coords[0], next_coords[1]-current_coords[1]) # numpy grid flips x and y coords
+        theta = math.atan2(next_coords[1]-current_coords[1], next_coords[0]-current_coords[0]) # numpy grid flips x and y coords
         angle.append(theta)
     return angle
 
