@@ -14,6 +14,8 @@ class Planner:
         self.abs_goal = coordTransform(dest)
         start = self.coords2enc(start)
         dest = self.coords2enc(dest)
+        print('start: ', start)
+        print('dest: ', dest)
         path_obj = shortest_path(self.graph, start, dest)
         path_cost = path_obj[0]
         path = path_obj[1]
@@ -24,6 +26,7 @@ class Planner:
 
     def coords2enc(self, coords):
         grid_coords = self.coords2grid(coords)
+        print(grid_coords)
         grid_enc = self.world.enc[grid_coords[0]][grid_coords[1]]
         return grid_enc
 
@@ -38,7 +41,7 @@ class Planner:
         coords = []
         angles = []
         path = []
-        current = start
+        current = invTransform(start)
         for i in range(len(goals)):
             if i < len(goals)-1:
                 nextGrid = self.coords2grid(goals[i+1])
@@ -251,9 +254,12 @@ def getAngles(path, world, nextGrid=[-1, -1]): # angle in radians
 def coordTransform(coords, offset=[-2.1336, -2.1336]):
     return [coords[0] + offset[0], coords[1] + offset[1]]
 
+def invTransform(coords, offset=[2.1336, 2.1336]):
+    return [coords[0] + offset[0], coords[1] + offset[1]]
+
 if __name__ == '__main__':
     planner = Planner()
-    start = [0.3048, 0.3048]
+    start = [-1.85, -1.85]
     goals = [[1.2, 3], [3.524, 4], [4, 1]]
     coords, angles, path = planner.planWaypoints(start, goals)
     print('coords: ', coords)
