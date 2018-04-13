@@ -176,8 +176,8 @@ class Graph(object):
             for j in range(world.gridSize[1]):
                 node = world.enc[i, j]
                 self.add_node(node)
-        for i in range(world.gridSize[0]-1):
-            for j in range(world.gridSize[1]-1):
+        for i in range(world.gridSize[0]):
+            for j in range(world.gridSize[1]):
                 for k in range(len(world.neighbors[int(world.enc[i, j])])):
                     enc_ind = world.neighbors[int(world.enc[i, j])][k]
                     if int(world.enc[enc_ind[0]][enc_ind[1]]) not in self.edges[int(world.enc[i, j])]:
