@@ -37,7 +37,7 @@ try:
 			t_vicon = time.time()
 
 		robot = robot.set_goal([x_traj[traj_count],y_traj[traj_count]], th_traj[traj_count])
-		robot = robot.PI_control(vicon.x_v, vicon.q_v, 1-0.01)
+		robot = robot.PI_control(vicon.x_v, vicon.q_v, 1)
 		
 		if (time.time() - t_send) > 0.1:
 			robot = robot.write_motors()
@@ -45,6 +45,7 @@ try:
 
 		if robot.p < 0.2:
 			traj_count = traj_count + 1
+			robot.integral_reset()
 
 		if traj_count == traj_length:
 			RUN_ROBOT = False
