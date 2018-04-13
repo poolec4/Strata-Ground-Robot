@@ -7,31 +7,23 @@ class Planner:
         self.graph = Graph()
         self.world = World([7, 7], 1, 1)
         self.graph = self.graph.add_nodes_and_edges(self.world)
-        # print(self.graph.edges)
-        # print(self.graph.distances)
         print('Encoded Grid')
         print(self.world.enc)
 
     def plan(self, start, dest, nextGrid=[-1, -1]):
-        self.abs_goal = dest
-        # start = self.coords2enc(start)
-        # dest = self.coords2enc(dest)
-        # print('start: ', start)
-        # print('goal: ', dest)
+        self.abs_goal = coordTransform(dest)
+        start = self.coords2enc(start)
+        dest = self.coords2enc(dest)
         path_obj = shortest_path(self.graph, start, dest)
         path_cost = path_obj[0]
         path = path_obj[1]
-        # print(path)
         coords = path2coords(path, self.world)
-        # coords.append(self.abs_goal) #UNCOMMENT FOR IMPLEMENTATION
-        # print(coords)
+        coords.append(self.abs_goal)
         angles = getAngles(path, self.world, nextGrid=nextGrid)
-        # print(angles)
         return coords, angles, path # coodinates in meters, angles in radians
 
     def coords2enc(self, coords):
         grid_coords = self.coords2grid(coords)
-        # print(grid_coords)
         grid_enc = self.world.enc[grid_coords[0]][grid_coords[1]]
         return grid_enc
 
@@ -46,8 +38,6 @@ class Planner:
         coords = []
         angles = []
         path = []
-        # print('start: ', start)
-        # print('goals: ', goals)
         current = start
         for i in range(len(goals)):
             if i < len(goals)-1:
@@ -59,7 +49,6 @@ class Planner:
             angles.append(angles_)
             path.append(path_)
             current = goals[i]
-            # print(current)
         return coords, angles, path
 
 
@@ -75,7 +64,6 @@ class World:
         for i in range(0, numObjects):
             if random == True:
                 center = [random.randint(0.1*gridSize[0], 0.9*gridSize[0]), random.randint(0.2*gridSize[1], 0.9*gridSize[1])]
-                # center = [random.randint(0.2*gridSize[0], 0.8*gridSize[0]), random.randint(0.2*gridSize[1], 0.8*gridSize[1])]
                 size = random.randint(0, maxSize)
                 grid[center[0], center[1]] = 1
                 loc = center
@@ -137,24 +125,19 @@ class World:
 
     def isNeighbor(self, current, potentialNeighbor):
         if potentialNeighbor[0] < 0 or potentialNeighbor[1] < 0 or potentialNeighbor[0] > self.gridSize[0] or potentialNeighbor[1] > self.gridSize[1]:
-            # print('current: ', current)
-            # print('potential: ', potentialNeighbor)
             return False
         elif current[0] == potentialNeighbor[0] and current[1] == potentialNeighbor[1]:
-            # print('current: ', current)
-            # print('potential: ', potentialNeighbor)
             return False
         else:
             return True
 
 
     def cost(self, current, destination):
-        move_cost = 10*self.grid[destination[0], destination[1]]
+        move_cost = self.grid[destination[0], destination[1]]
         if current[0]-destination[0] == 0 or current[1]-destination[1] == 0:
             move_cost += 1
         else:
             move_cost += 1.414
-
         return move_cost
 
 
@@ -171,15 +154,14 @@ class Graph(object):
         self.edges[from_node].append(to_node)
         self.edges[to_node].append(from_node)
         self.distances[(from_node, to_node)] = distance
-        # print('Current: ', from_node, ' Neighbor: ', to_node, ' Distance: ', distance)
 
     def add_nodes_and_edges(self, world):
         for i in range(world.gridSize[0]):
             for j in range(world.gridSize[1]):
                 node = world.enc[i, j]
                 self.add_node(node)
-        for i in range(world.gridSize[0]): # changed (-1)
-            for j in range(world.gridSize[1]): # changed (-1)
+        for i in range(world.gridSize[0]):
+            for j in range(world.gridSize[1]):
                 for k in range(len(world.neighbors[int(world.enc[i, j])])):
                     enc_ind = world.neighbors[int(world.enc[i, j])][k]
                     if enc_ind[0] < world.gridSize[0] and enc_ind[1] < world.gridSize[1]:
@@ -221,14 +203,12 @@ def dijkstra(graph, initial):
             if edge not in visited or weight < visited[edge]:
                 visited[edge] = weight
                 path[edge] = min_node
-                # print('path: ', path)
 
     return visited, path
 
 
 def shortest_path(graph, origin, destination):
     visited, paths = dijkstra(graph, origin)
-    #  print('paths: ', paths)
     full_path = deque()
     _destination = paths[destination]
 
@@ -243,7 +223,7 @@ def shortest_path(graph, origin, destination):
 
 def path2coords(path, world):
     path_coords = []
-    for i in range(len(path)):
+    for i in range(len(path)-1):
         grid_coords = world.decode(path[i])
         coords_meters = [0.3048*(grid_coords[0]*2+1), 0.3048*(grid_coords[1]*2+1)]
         coords_meters_offset = coordTransform(coords_meters)
@@ -263,8 +243,6 @@ def getAngles(path, world, nextGrid=[-1, -1]): # angle in radians
         angle.append(0.0) # Final angle of zero if no next grid given
     else:
         current_coords = world.decode(path[len(path)-1])
-        # print(world.enc[current_coords[0]][current_coords[1]])
-        # print(world.enc[nextGrid[0]][current_coords[1]])
         next_coords = nextGrid
         theta = math.atan2(next_coords[0]-current_coords[0], next_coords[1]-current_coords[1]) # numpy grid flips x and y coords
         angle.append(theta)
@@ -275,22 +253,9 @@ def coordTransform(coords, offset=[-2.1336, -2.1336]):
 
 if __name__ == '__main__':
     planner = Planner()
-    coords, angles, path = planner.plan(0, 48) # Lower left corner to upper right corner
-    # start = [0.3048, 0.3048]
-    # goals = [[1.2, 3], [3.524, 4], [4, 1]]
-    # coords, angles, path = planner.plan(start, goal)
-    # coords, angles, path = planner.planWaypoints(start, goals)
+    start = [0.3048, 0.3048]
+    goals = [[1.2, 3], [3.524, 4], [4, 1]]
+    coords, angles, path = planner.planWaypoints(start, goals)
     print('coords: ', coords)
     print('angles: ', angles)
     print('path: ', path)
-    # graph = Graph()
-    # world = World([7, 7], 1, 1)
-    # graph = graph.add_nodes_and_edges(world)
-    # print('Encoded World')
-    # print(world.enc)
-    # path_obj = shortest_path(graph, 0, 48)
-    # path_cost = path_obj[0]
-    # path = path_obj[1]
-    # print(path) # output: (25, ['A', 'B', 'D'])
-    # coords = path2coords(path, world)
-    # print(coords)
