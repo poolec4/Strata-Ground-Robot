@@ -11,9 +11,9 @@ class Robot:
 		self.low_motor_cutoff = motor_cutoff
 
 		self.kp = 3  # kp>0
-		self.ka = 60 # kb<0
-		self.kb = -40 # ka-kb>0
-		self.kpi = 10  # kp>0
+		self.ka = 40 # kb<0
+		self.kb = -20 # ka-kb>0
+		self.kpi = 0  # kp>0
 		self.kai = 0 # kb<0
 		self.kbi = 0 # ka-kb>0
 
@@ -44,13 +44,14 @@ class Robot:
 			t = np.linspace(0, 2*math.pi, num_points)
 			x = size*np.cos(t)
 			y = size*np.sin(2*t)
-
+		
+		th = np.zeros([num_points])
 		for i in range(len(t)-1):
 			dx = x[i+1] - x[i]
 			dy = y[i+1] - y[i]
 			th[i] = math.atan2(dy,dx)
 
-		th[num_points] = th[num_points-1]
+		th[num_points-1] = th[num_points-2]
 		traj = [x,y,th]
 		return traj
 
