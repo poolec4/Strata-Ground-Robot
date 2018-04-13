@@ -1,6 +1,7 @@
 from collections import defaultdict, deque
 import numpy as np
 import math
+import pdb
 
 class Planner:
     def __init__(self):
@@ -11,18 +12,19 @@ class Planner:
         print(self.world.enc)
 
     def plan(self, start, dest, nextGrid=[-1, -1]):
-        self.abs_goal = coordTransform(dest)
-        start = self.coords2enc(start)
+        self.abs_goal = dest
+	start = self.coords2enc(start)
         dest = self.coords2enc(dest)
         print('start: ', start)
         print('dest: ', dest)
         path_obj = shortest_path(self.graph, start, dest)
         path_cost = path_obj[0]
         path = path_obj[1]
-        coords = path2coords(path, self.world)
-        coords.append(self.abs_goal)
+        x_coords, y_coords = path2coords(path, self.world)
+        x_coords.append(self.abs_goal[0])
+	y_coords.append(self.abs_goal[1])
         angles = getAngles(path, self.world, nextGrid=nextGrid)
-        return coords, angles, path # coodinates in meters, angles in radians
+        return x_coords, y_coords, angles, path # coodinates in meters, angles in radians
 
     def coords2enc(self, coords):
         grid_coords = self.coords2grid(coords)
@@ -32,27 +34,33 @@ class Planner:
 
     def coords2grid(self, coords):
         grid = [-1, -1]
+	coords = invTransform(coords)
+	print('transformed: ', coords)
         for i in range(len(coords)):
-            grid[i] = int((1/2)*(coords[i]/0.3048 - 1))
-
+# 		pdb.set_trace()
+		grid[i] = int((1.0/2.0)*(coords[i]/0.3048 - 1))
+	print('grid: ', grid)
         return grid
 
     def planWaypoints(self, start, goals):
-        coords = []
+        x_coords = []
+	y_coords = []
         angles = []
         path = []
-        current = invTransform(start)
+	current = start
+        # current = invTransform(start)
         for i in range(len(goals)):
-            if i < len(goals)-1:
-                nextGrid = self.coords2grid(goals[i+1])
-            else:
-                nextGrid = [-1, -1]
-            coords_, angles_, path_ = self.plan(current, goals[i], nextGrid=nextGrid)
-            coords.append(coords_)
+            # if i < len(goals)-1:
+            #     nextGrid = self.coords2grid(goals[i+1])
+            # else:
+            nextGrid = [-1, -1]
+            x_coords_, y_coords_, angles_, path_ = self.plan(current, goals[i], nextGrid=nextGrid)
+            x_coords.append(x_coords_)
+	    y_coords.append(y_coords_)
             angles.append(angles_)
             path.append(path_)
             current = goals[i]
-        return coords, angles, path
+        return x_coords, y_coords, angles, path
 
 
 class World:
@@ -68,7 +76,10 @@ class World:
             if random == True:
                 center = [random.randint(0.1*gridSize[0], 0.9*gridSize[0]), random.randint(0.2*gridSize[1], 0.9*gridSize[1])]
                 size = random.randint(0, maxSize)
-                grid[center[0], center[1]] = 1
+		for i in ([-1, 0, 1]):
+		   for j in range ([-1, 0, 1]):
+			grid[center[0]+i, center[0]+j] = 1
+                grid[center[0], center[1]] = 2
                 loc = center
                 for j in range(0, size):
                     index = random.randint(0, 3)
@@ -225,20 +236,22 @@ def shortest_path(graph, origin, destination):
     return visited[destination], list(full_path)
 
 def path2coords(path, world):
-    path_coords = []
+    x_coords = []
+    y_coords = []
     for i in range(len(path)-1):
         grid_coords = world.decode(path[i])
         coords_meters = [0.3048*(grid_coords[0]*2+1), 0.3048*(grid_coords[1]*2+1)]
         coords_meters_offset = coordTransform(coords_meters)
-        path_coords.append(coords_meters_offset)
-    return path_coords
+        x_coords.append(coords_meters_offset[0])
+	y_coords.append(coords_meters_offset[1])
+    return x_coords, y_coords
 
 def getAngles(path, world, nextGrid=[-1, -1]): # angle in radians
     angle = []
-    i = 1
-    while(i < len(path)):
-        current_coords = world.decode(path[i-1])
-        next_coords = world.decode(path[i])
+    i = 0
+    while(i < len(path)-1):
+        current_coords = world.decode(path[i])
+        next_coords = world.decode(path[i+1])
         theta = math.atan2(next_coords[0]-current_coords[0], next_coords[1]-current_coords[1]) # numpy grid flips x and y coords
         angle.append(theta)
         i += 1

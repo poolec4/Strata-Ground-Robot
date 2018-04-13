@@ -3,7 +3,7 @@ import time
 import math
 import numpy as np
 from vicon import Vicon
-from robot import motion_p
+from robot import Robot
 from motion_plan import Planner
 
 TCP_IP = '192.168.10.7'
@@ -21,15 +21,21 @@ robot.write_motors()
 
 # Trajectory Planning
 planner = Planner()
-start = vicon.x_v
-goals = [[1.5, 1.5], [0.3, 0.3]]
-coords, angles, path = planner.planWaypoints(start, goals)
-traj_length = len(coords[0])
-x_traj = coords[0][:][0]
-y_traj = coords[0][:][1]
-th_traj = angles[0]
+for i in range(10):
+	vicon.get_state()
+start = [vicon.x_v[0], vicon.x_v[1]]
 
-print('coords: ', coords)
+print('start :', start)
+
+goals = [[1.5, 1.5], [0.3, 0.3]]
+x_coords, y_coords, angles, path = planner.planWaypoints(start, goals)
+traj_length = len(x_coords[0])
+x_traj = x_coords[0]
+y_traj = y_coords[0]
+th_traj = angles[0]
+traj_count = 0
+
+print('path: ', path)
 print('angles: ', angles)
 print('x_traj: ', x_traj)
 print('y_traj: ', y_traj)
