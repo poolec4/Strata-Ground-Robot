@@ -66,6 +66,7 @@ class Planner:
 class World:
     def __init__(self, gridSize, numObjects, maxSize):
         self.grid = self.generate(gridSize, numObjects, maxSize)
+	print(self.grid)
         self.gridSize = gridSize
         self.enc = self.encode()
         self.neighbors = self.findNeighbors()
@@ -76,18 +77,21 @@ class World:
             if random == True:
                 center = [random.randint(0.1*gridSize[0], 0.9*gridSize[0]), random.randint(0.2*gridSize[1], 0.9*gridSize[1])]
                 size = random.randint(0, maxSize)
-		for i in ([-1, 0, 1]):
-		   for j in range ([-1, 0, 1]):
-			grid[center[0]+i, center[0]+j] = 1
-                grid[center[0], center[1]] = 2
+		# for i in ([-1, 0, 1]):
+		#   for j in range ([-1, 0, 1]):
+		#	grid[center[0]+i, center[0]+j] = 1
+                grid[center[0], center[1]] = 1
                 loc = center
                 for j in range(0, size):
                     index = random.randint(0, 3)
                     loc, grid = self.growObject(grid, loc, index, gridSize)
             else:
-                center = [round(gridSize[0]/2), round(gridSize[1]/2)]
+                center = [int(round(gridSize[0]/2.0)), int(round(gridSize[1]/2.0))]
                 size = maxSize
-                grid[int(center[0]), int(center[1])] = 1
+		for i in ([-1, 0, 1]):
+		   for j in ([-1, 0, 1]):
+			grid[center[0]+i][center[1]+j] = 1
+                grid[int(center[0]), int(center[1])] = 2
 
         return grid
 
