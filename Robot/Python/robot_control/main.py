@@ -9,8 +9,8 @@ TCP_IP = '192.168.10.7'
 TCP_PORT = 50000
 BUFFER_SIZE = 1024
 
-x_g = [2.5, -1]
-th_g = -math.pi/2
+x_g = [-2, 2]
+th_g = math.pi/2
 
 vicon = Vicon(TCP_IP, TCP_PORT, BUFFER_SIZE)
 robot = Robot()
@@ -18,8 +18,8 @@ robot = Robot()
 robot.open('/dev/serial0', 19200)
 robot.write_motors()
 
-traj_length = 50
-[x_traj, y_traj, th_traj] = robot.create_trajectory('circle', 2, traj_length)
+traj_length = 200
+[x_traj, y_traj, th_traj] = robot.create_trajectory('fig8', 2, traj_length)
 traj_count = 0
 
 t_init = time.time()
@@ -37,7 +37,7 @@ try:
 			t_vicon = time.time()
 
 		robot = robot.set_goal([x_traj[traj_count],y_traj[traj_count]], th_traj[traj_count])
-		robot = robot.PI_control(vicon.x_v, vicon.q_v, 0.95)
+		robot = robot.PI_control(vicon.x_v, vicon.q_v, 1-0.01)
 		
 		if (time.time() - t_send) > 0.1:
 			robot = robot.write_motors()

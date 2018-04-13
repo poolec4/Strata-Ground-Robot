@@ -4,21 +4,21 @@ import math
 import numpy as np
 
 class Robot:
-	def __init__(self, min_motor_speed=120, max_motor_speed=255, motor_cutoff=5):
+	def __init__(self, min_motor_speed=160, max_motor_speed=255, motor_cutoff=5):
 		self.motor_vals = np.zeros(6)
 		self.min_motor_speed = min_motor_speed
 		self.max_motor_speed = max_motor_speed
 		self.low_motor_cutoff = motor_cutoff
 
-		self.kp = 3  # kp>0
-		self.ka = 40 # kb<0
-		self.kb = -20 # ka-kb>0
-		self.kpi = 0  # kp>0
-		self.kai = 0 # kb<0
+		self.kp = 5  # kp>0
+		self.ka = 20 # kb<0
+		self.kb = -2 # ka-kb>0
+		self.kpi = 2  # kp>0
+		self.kai = 30 # kb<0
 		self.kbi = 0 # ka-kb>0
 
 		self.R = 0.0508 # wheel radius in meters
-		self.L = 0.3556 # wheelbase width in meters
+		self.L = 0.42 # wheelbase width in meters
 
 		self.ardu_ser = None
 		self.x_g = None
