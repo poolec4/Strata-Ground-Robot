@@ -18,7 +18,7 @@ robot = Robot()
 robot.open('/dev/serial0', 19200)
 robot.write_motors()
 
-traj_length = 200
+traj_length = 400
 [x_traj, y_traj, th_traj] = robot.create_trajectory('fig8', 2, traj_length)
 traj_count = 0
 
@@ -37,13 +37,13 @@ try:
 			t_vicon = time.time()
 
 		robot = robot.set_goal([x_traj[traj_count],y_traj[traj_count]], th_traj[traj_count])
-		robot = robot.PI_control(vicon.x_v, vicon.q_v, 1)
+		robot = robot.PI_control(vicon.x_v, vicon.q_v, 1-0.0001)
 		
 		if (time.time() - t_send) > 0.1:
 			robot = robot.write_motors()
 			t_send = time.time()
 
-		if robot.p < 0.2:
+		if robot.p < 0.25:
 			traj_count = traj_count + 1
 			robot.integral_reset()
 
