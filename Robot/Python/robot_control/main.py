@@ -18,7 +18,7 @@ robot = Robot()
 robot.open('/dev/serial0', 19200)
 robot.write_motors()
 
-traj_length = 400
+traj_length = 30
 [x_traj, y_traj, th_traj] = robot.create_trajectory('fig8', 2, traj_length)
 traj_count = 0
 
