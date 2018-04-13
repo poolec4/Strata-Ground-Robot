@@ -11,6 +11,10 @@ class Planner:
         print(self.world.enc)
 
     def plan(self, start, dest):
+        start = self.coords2enc(start)
+        dest = self.coords2enc(dest)
+        print('start: ', start)
+        print('goal: ', dest)
         path_obj = shortest_path(self.graph, start, dest)
         path_cost = path_obj[0]
         path = path_obj[1]
@@ -20,6 +24,19 @@ class Planner:
         angles = getAngles(path, self.world)
         print(angles)
         return coords, angles # coodinates in meters, angles in radians
+
+    def coords2enc(self, coords):
+        grid_coords = self.coords2grid(coords)
+        print(grid_coords)
+        grid_enc = self.world.enc[grid_coords[0]][grid_coords[1]]
+        return grid_enc
+
+    def coords2grid(self, coords):
+        grid = [-1, -1]
+        for i in range(len(coords)):
+            grid[i] = int((1/2)*(coords[i]/0.3048 - 1))
+
+        return grid
 
 class World:
     def __init__(self, gridSize, numObjects, maxSize):
@@ -210,7 +227,10 @@ def getAngles(path, world): # angle in radians
 
 if __name__ == '__main__':
     planner = Planner()
-    coords = planner.plan(0, 48) # Lower left corner to upper right corner
+    # coords = planner.plan(0, 48) # Lower left corner to upper right corner
+    start = [0.3048, 0.3048]
+    goal = [3.9624, 3.9624]
+    coords = planner.plan(start, goal)
     # graph = Graph()
     # world = World([7, 7], 1, 1)
     # graph = graph.add_nodes_and_edges(world)
