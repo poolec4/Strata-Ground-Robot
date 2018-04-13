@@ -4,17 +4,17 @@ import math
 import numpy as np
 
 class Robot:
-	def __init__(self, min_motor_speed=160, max_motor_speed=255, motor_cutoff=5):
+	def __init__(self, min_motor_speed=10, max_motor_speed=180, motor_cutoff=1):
 		self.motor_vals = np.zeros(6)
 		self.min_motor_speed = min_motor_speed
 		self.max_motor_speed = max_motor_speed
 		self.low_motor_cutoff = motor_cutoff
 
-		self.kp = 5  # kp>0
-		self.ka = 20 # kb<0
-		self.kb = -2 # ka-kb>0
-		self.kpi = 2  # kp>0
-		self.kai = 30 # kb<0
+		self.kp = 8 # kp>0
+		self.ka = 55 # kb<0
+		self.kb = -15 # ka-kb>0
+		self.kpi = 15  # kp>0
+		self.kai = 3 # kb<0
 		self.kbi = 0 # ka-kb>0
 
 		self.R = 0.0508 # wheel radius in meters
@@ -153,6 +153,12 @@ class Robot:
 		self.motor_vals[3:6] = v_r
 
 		self.t_old = time.time()
+		return self
+
+	def integral_reset(self):
+		self.p_sum = self.p_sum*0.5
+		self.a_sum = self.a_sum*0.5
+		self.b_sum = self.b_sum*0.5
 		return self
 
 	def write_motors(self):
