@@ -7,29 +7,30 @@ class Planner:
         self.graph = Graph()
         self.world = World([7, 7], 1, 1)
         self.graph = self.graph.add_nodes_and_edges(self.world)
+        print(self.graph.edges)
         print('Encoded Grid')
         print(self.world.enc)
 
-    def plan(self, start, dest):
+    def plan(self, start, dest, nextGrid=[-1, -1]):
         self.abs_goal = dest
-        start = self.coords2enc(start)
-        dest = self.coords2enc(dest)
+        # start = self.coords2enc(start)
+        # dest = self.coords2enc(dest)
         print('start: ', start)
         print('goal: ', dest)
         path_obj = shortest_path(self.graph, start, dest)
         path_cost = path_obj[0]
         path = path_obj[1]
-        print(path)
+        # print(path)
         coords = path2coords(path, self.world)
         coords.append(self.abs_goal)
-        print(coords)
-        angles = getAngles(path, self.world)
-        print(angles)
-        return coords, angles # coodinates in meters, angles in radians
+        # print(coords)
+        angles = getAngles(path, self.world, nextGrid=nextGrid)
+        # print(angles)
+        return coords, angles, path # coodinates in meters, angles in radians
 
     def coords2enc(self, coords):
         grid_coords = self.coords2grid(coords)
-        print(grid_coords)
+        # print(grid_coords)
         grid_enc = self.world.enc[grid_coords[0]][grid_coords[1]]
         return grid_enc
 
@@ -39,6 +40,27 @@ class Planner:
             grid[i] = int((1/2)*(coords[i]/0.3048 - 1))
 
         return grid
+
+    def planWaypoints(self, start, goals):
+        coords = []
+        angles = []
+        path = []
+        # print('start: ', start)
+        # print('goals: ', goals)
+        current = start
+        for i in range(len(goals)):
+            if i < len(goals)-1:
+                nextGrid = self.coords2grid(goals[i+1])
+            else:
+                nextGrid = [-1, -1]
+            coords_, angles_, path_ = self.plan(current, goals[i], nextGrid=nextGrid)
+            coords.append(coords_)
+            angles.append(angles_)
+            path.append(path_)
+            current = goals[i]
+            # print(current)
+        return coords, angles, path
+
 
 class World:
     def __init__(self, gridSize, numObjects, maxSize):
@@ -113,9 +135,13 @@ class World:
         return neighbors
 
     def isNeighbor(self, current, potentialNeighbor):
-        if potentialNeighbor[0] < 0 or potentialNeighbor[1] < 0 or potentialNeighbor[0] >= self.gridSize[0] or potentialNeighbor[1] >= self.gridSize[1]:
+        if potentialNeighbor[0] < 0 or potentialNeighbor[1] < 0 or potentialNeighbor[0] > self.gridSize[0] or potentialNeighbor[1] > self.gridSize[1]:
+            print('current: ', current)
+            print('potential: ', potentialNeighbor)
             return False
         elif current[0] == potentialNeighbor[0] and current[1] == potentialNeighbor[1]:
+            print('current: ', current)
+            print('potential: ', potentialNeighbor)
             return False
         else:
             return True
@@ -215,7 +241,7 @@ def path2coords(path, world):
         path_coords.append(coords_meters)
     return path_coords
 
-def getAngles(path, world): # angle in radians
+def getAngles(path, world, nextGrid=[-1, -1]): # angle in radians
     angle = []
     i = 1
     while(i < len(path)):
@@ -224,15 +250,27 @@ def getAngles(path, world): # angle in radians
         theta = math.atan2(next_coords[0]-current_coords[0], next_coords[1]-current_coords[1]) # numpy grid flips x and y coords
         angle.append(theta)
         i += 1
-    angle.append(0.0) # Final angle of zero
+    if nextGrid[0] == -1:
+        angle.append(0.0) # Final angle of zero if no next grid given
+    else:
+        current_coords = world.decode(path[len(path)-1])
+        print(world.enc[current_coords[0]][current_coords[1]])
+        print(world.enc[nextGrid[0]][current_coords[1]])
+        next_coords = nextGrid
+        theta = math.atan2(next_coords[0]-current_coords[0], next_coords[1]-current_coords[1]) # numpy grid flips x and y coords
+        angle.append(theta)
     return angle
 
 if __name__ == '__main__':
     planner = Planner()
-    # coords = planner.plan(0, 48) # Lower left corner to upper right corner
-    start = [0.3048, 0.3048]
-    goal = [3.524, 3.524]
-    coords = planner.plan(start, goal)
+    coords, angles, path = planner.plan(48, 14) # Lower left corner to upper right corner
+    # start = [0.3048, 0.3048]
+    # goals = [[1.2, 3], [3.524, 4], [4, 1]]
+    # coords, angles, path = planner.plan(start, goal)
+    # coords, angles, path = planner.planWaypoints(start, goals)
+    print('coords: ', coords)
+    print('angles: ', angles)
+    print('path: ', path)
     # graph = Graph()
     # world = World([7, 7], 1, 1)
     # graph = graph.add_nodes_and_edges(world)
