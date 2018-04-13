@@ -40,12 +40,17 @@ class Robot:
 			t = np.linspace(0, 2*math.pi, num_points)
 			x = size*np.cos(t)
 			y = size*np.sin(t)
-			th = size*np.cos(t)/-size*np.sin(t) 
 		if shape == 'fig8':
 			t = np.linspace(0, 2*math.pi, num_points)
 			x = size*np.cos(t)
 			y = size*np.sin(2*t)
-			th = size*np.cos(2*t)/-size*np.sin(t) 
+
+		for i in range(len(t)-1):
+			dx = x[i+1] - x[i]
+			dy = y[i+1] - y[i]
+			th[i] = math.atan2(dy,dx)
+
+		th[num_points] = th[num_points-1]
 		traj = [x,y,th]
 		return traj
 
