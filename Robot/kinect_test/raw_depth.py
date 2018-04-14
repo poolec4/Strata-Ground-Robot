@@ -9,23 +9,23 @@ import freenect
 import cv2
 import pdb
 import numpy as np
+from kinect import Kinect
 
+kinect = Kinect()
 cv2.namedWindow('Depth')
-ind = 0
-
-def get_depth(ind):
-    return freenect.sync_get_depth(ind)[0]/2047.0
 
 while 1:
-    try:
-        depth = get_depth(ind)
-        print(depth)
-        # pdb.set_trace()
-        cv2.imshow('Depth',(depth))
-        if cv2.waitKey(10) == 27:
-            break
+    depth = kinect.get_raw_depth()
+    print(depth)
+    # pdb.set_trace()
+    p_w = np.empty([3,kinect.width*kinect.height])
+    for x in range(kinect.width):
+        for y in range(kinect.height):
+            ind = x + y*kinect.width
+            p_w[:,ind] = kinect.raw_depth_to_world(x,y,depth[y,x])
 
-    except TypeError:
-        ind = 0
-        continue
+    cv2.imshow('Depth', depth/2047.0)
+    if cv2.waitKey(10) == 27:
+        break
+
 #freenect.sync_stop()  # NOTE: Uncomment if your machine can't handle it
