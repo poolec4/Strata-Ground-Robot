@@ -70,3 +70,29 @@ Run the program:
 python main.py
 ```
 The robot will drive to the desired goal location and orientation.
+
+##### Kinect
+Install libraries:
+```bash
+sudo apt-get install freenect
+sudo apt-get install libfreenect-bin
+pip install opencv-python
+git clone https://github.com/OpenKinect/libfreenect.git
+cd libfreenect/
+mkdir build
+cd build
+cmake ..
+make
+sudo make install
+cd ..
+cd wrappers/python
+python setup.py -v install
+```
+Run depth test:
+```bash
+cd ~/Strata-Ground-Robot/Robot/kinect_test
+sudo python raw_depth.py
+```
+*Note*: this must be run as `sudo` for freenect to access the USB device
+
+Useful information on the kinect can be found here: http://graphics.stanford.edu/~mdfisher/Kinect.html
