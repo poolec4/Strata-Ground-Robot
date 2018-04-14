@@ -95,4 +95,4 @@ sudo python raw_depth.py
 ```
 *Note*: this must be run as `sudo` for freenect to access the USB device
 
-Useful information on the kinect can be found here: http://graphics.stanford.edu/~mdfisher/Kinect.html
+Useful information on the kinect can be found here: http://graphics.stanford.edu/~mdfisher/Kinect.html and https://github.com/shiffman/OpenKinect-for-Processing/blob/master/OpenKinect-Processing/examples/Kinect_v1/PointCloud/PointCloud.pde
