@@ -94,3 +94,5 @@ cd ~/Strata-Ground-Robot/Robot/kinect_test
 sudo python raw_depth.py
 ```
 *Note*: this must be run as `sudo` for freenect to access the USB device
+
+Useful information on the kinect can be found here: http://graphics.stanford.edu/~mdfisher/Kinect.html
