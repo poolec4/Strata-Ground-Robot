@@ -35,7 +35,7 @@ class controller:
         self = self.bound()
         self.t_old = t
         return self
-    
+
     def bound(self):
         for i in range(0, 6):
             if abs(self.theta[i]) < self.bounds[0]:
@@ -43,13 +43,13 @@ class controller:
                     self.theta[i] = self.bounds[0]
                 else:
                     self.theta[i] = -self.bounds[0]
-                    
+
             elif abs(self.theta[i]) > self.bounds[1]:
                 if self.theta[i] > 0:
                     self.theta[i] = self.bounds[1]
                 else:
                     self.theta[i] = -self.bounds[1]
-                
+
         return self
 
 
