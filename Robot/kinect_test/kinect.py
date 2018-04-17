@@ -2,6 +2,7 @@ import math
 import freenect
 import cv2
 import numpy as np
+import pdb
 
 class Kinect:
 	def __init__(self):
@@ -28,7 +29,8 @@ class Kinect:
 		cy_d = 2.4273913761751615e+02
 
 		point = np.empty([3])
-		depth = self.depth_lookup_table[raw_depth_value]
+		# pdb.set_trace()
+		depth = self.depth_lookup_table[int(raw_depth_value)]
 		point[0] = (x - cx_d)*depth*fx_d
 		point[1] = (y - cy_d)*depth*fy_d
 		point[2] = depth
