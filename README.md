@@ -76,7 +76,7 @@ Install libraries:
 ```bash
 sudo apt-get install freenect
 sudo apt-get install libfreenect-bin
-pip install opencv-python
+sudo pip install opencv-python
 git clone https://github.com/OpenKinect/libfreenect.git
 cd libfreenect/
 mkdir build
@@ -86,7 +86,7 @@ make
 sudo make install
 cd ..
 cd wrappers/python
-python setup.py -v install
+sudo python setup.py -v install
 ```
 Run depth test:
 ```bash
