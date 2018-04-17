@@ -18,7 +18,7 @@ class Kinect:
 
 	def raw_depth_to_meters(self, raw_depth_value):
 		if raw_depth_value < 2047:
-			return 1.0/(raw_depth_value*-0.0030711016 + 3.3309495161)
+			return 1.0/(float(raw_depth_value)*-0.0030711016 + 3.3309495161)
 		else:
 			return 0.0
 
@@ -29,10 +29,10 @@ class Kinect:
 		cy_d = 2.4273913761751615e+02
 
 		point = np.empty([3])
-		# pdb.set_trace()
 		depth = self.depth_lookup_table[int(raw_depth_value)]
 		point[0] = (x - cx_d)*depth*fx_d
 		point[1] = (y - cy_d)*depth*fy_d
 		point[2] = depth
+		#pdb.set_trace()
 
 		return point

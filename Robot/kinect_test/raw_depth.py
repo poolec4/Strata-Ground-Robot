@@ -10,41 +10,49 @@ import cv2
 import pdb
 import numpy as np
 import random
-from mpl_toolkits.mplot3d import Axes3D
-import matplotlib.pyplot as plt
 from kinect import Kinect
+import matplotlib.pyplot as plt
 
 kinect = Kinect()
 cv2.namedWindow('Depth')
 
-fig = plt.figure()
-ax = fig.add_subplot(111, projection='3d')
+# fig = plt.figure()
+# ax = fig.add_subplot(111, projection='3d')
 
-for i in range(1):
-    # depth = kinect.get_raw_depth()
-    # depth = np.random.rand(kinect.height,kinect.width)*2047
-    depth = cv2.imread('test_depth6_640x480.png',0)*(2047.0/255.0)
+# for i in range(1):
+while 1:
+    raw_depth = kinect.get_raw_depth()
+    # raw_depth = np.random.rand(kinect.height,kinect.width)*2047
+    # raw_depth = cv2.imread('test_depth6_640x480.png',0)*(2047.0/255.0)
     
-    print(depth)
-    # pdb.set_trace()
-    p_w = np.empty([3,kinect.width*kinect.height])
+    print(raw_depth)
+    p_w = []
     
-    dpx = 10
+    dpx = 1
+    ind = 0
 
     for x in dpx*np.array(range(kinect.width/dpx)):
-        for y in dpx*np.array(range(kinect.height/dpx)):
-            ind = x + y*kinect.width
-            p_w[:,ind] = kinect.raw_depth_to_world(x,y,depth[y,x])
+        for y in [479]: #dpx*np.array(range(kinect.height/dpx)):
+            if raw_depth[y,x] != 0:
+                # depth_meters[y,x] = kinect.raw_depth_to_meters(raw_depth[y,x])
+                p = kinect.raw_depth_to_world(x,y,raw_depth[y,x])
+                p_w.append(p)
+                ind = ind + 1
 
-    ax.scatter(p_w[0,:], p_w[1,:], p_w[2,:])
-    ax.set_xlabel('X')
-    ax.set_ylabel('Y')
-    ax.set_zlabel('Z')
+    if not p_w:
+        p_w = [[0, 0, 0],[0,0,0]]
 
-    plt.show()
+    p_wmat = np.asarray(p_w)
 
-    # cv2.imshow('Depth', depth/2047.0)
-    # if cv2.waitKey(10) == 27:
-    #     break
+    plt.clf()
+    plt.scatter(p_wmat[:,0], p_wmat[:,2], s=1, alpha=0.5)
+    plt.axis([-3, 3, 0, 6])
+    plt.pause(0.01)
+
+    cv2.imshow('Depth', raw_depth/2047.0) 
+    if cv2.waitKey(10) == 27:
+        break
+
+plt.show()
 
 #freenect.sync_stop()  # NOTE: Uncomment if your machine can't handle it
