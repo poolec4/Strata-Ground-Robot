@@ -66,7 +66,7 @@ class Planner:
 class World:
     def __init__(self, gridSize, numObjects, maxSize):
         self.grid = self.generate(gridSize, numObjects, maxSize)
-	print(self.grid)
+	    print(self.grid)
         self.gridSize = gridSize
         self.enc = self.encode()
         self.neighbors = self.findNeighbors()
