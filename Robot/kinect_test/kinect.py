@@ -5,11 +5,13 @@ import numpy as np
 import pdb
 
 class Kinect:
-	def __init__(self):
+	def __init__(self, dx=5, dy=10):
 		self.width = 640
-		self.height = 480 
+		self.height = 480
 		self.depth_lookup_table = np.empty([2048])
-		
+		self.dx = dx
+		self.dy = dy
+
 		for i in range(len(self.depth_lookup_table)):
 			self.depth_lookup_table[i] = self.raw_depth_to_meters(i)
 
@@ -36,3 +38,18 @@ class Kinect:
 		#pdb.set_trace()
 
 		return point
+
+	def get_point_cloud(self, raw_depth):
+		p_w = []
+		for x in self.dx*np.array(range(self.width/self.dx)):
+			for y in self.dy*np.array(range(self.height/self.dy)):
+				if raw_depth[y,x] != 0:
+					if self.raw_depth_to_meters(raw_depth[y,x]) <= 6:
+						p = self.raw_depth_to_world(x,y,raw_depth[y,x])
+						p_w.append(p)
+
+		if not p_w:
+			p_w = [[0, 0, 0],[0,0,0]]
+
+		p_wmat = np.asarray(p_w)
+		return p_wmat
