@@ -226,7 +226,21 @@ def getAngles(path, world):
         next_coords = world.decode(path[i+1])
         theta = math.atan2(next_coords[1]-current_coords[1], next_coords[0]-current_coords[0]) # numpy grid flips x and y coords
         angles.append(theta)
-    angles.append(0.0)
+    angles.append(math.pi/2.0)
+    return angles
+
+def local2world(x_coords, y_coords, angles, start, start_angle): # start in global frame
+    x_global = []
+    y_global = []
+    angles_global = []
+    for i in range(len(x_coords)):
+        x_global.append(x_coords[i]+start[0])
+        y_global.append(y_coords[i]+start[1])
+        angles_global.append(angles[i]+start_angle-math.pi/2.0)
+
+    return x_global, y_global, angles_global
+
+
 
 def plan(start, dest, depth_map, world_size): # Called to plan trajectory
     graph = Graph()
@@ -250,14 +264,20 @@ if __name__ == '__main__':
     # Dest_kinect: grid in kinect world closest to goal location
     # Should end with angle theta such that it faces the destination
     depth_map = np.random.rand(300000, 3)
-    start = np.random.rand(1, 2).flatten()
-    dest = np.random.rand(1, 2).flatten()
-    world_size = [100, 100]
+    global_start = [2, 3]
+    global_angle = math.pi/4.0
+    local_start = np.asarray([0.5, 0]) # should be 0, 0 in implementation
+    local_dest = np.random.rand(1, 2).flatten()
+    world_size = [50, 50]
     depth_map = coordTransform(depth_map)
     t = time.time()
-    x_coords, y_coords, angles, path, path_cost, world = plan(start, dest, depth_map, world_size)
+    x_coords, y_coords, angles, path, path_cost, world = plan(local_start, local_dest, depth_map, world_size)
+    x_global, y_global, angles_global = local2world(x_coords, y_coords, angles, global_start, global_angle)
     print('Execution Time: ', time.time()-t)
     print(world.enc_world)
     print(path)
+    print(angles)
+    print(angles_global)
+    print(angles_global-angles)
     plt.plot(x_coords, y_coords)
     plt.show()
