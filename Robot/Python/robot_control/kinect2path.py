@@ -99,7 +99,8 @@ class World:
             move_cost += 1.2
         return move_cost
 
-    def addBuffer(self, depth_map): # Adds buffer around obstacle
+    def addBuffer(self, depth_map, threshold): # Adds buffer around obstacle
+        # To be completed
         return 0
 
 class Graph(object):
@@ -229,7 +230,7 @@ def getAngles(path, world):
 
 def plan(start, dest, depth_map, world_size): # Called to plan trajectory
     graph = Graph()
-    world = World(depth_map, world_size=[100, 100])
+    world = World(depth_map, world_size=world_size)
     graph = graph.add_nodes_and_edges(world)
     start_enc = coords2enc(start, world)
     dest_enc = coords2enc(dest, world)
@@ -242,21 +243,21 @@ def plan(start, dest, depth_map, world_size): # Called to plan trajectory
 
 
 if __name__ == '__main__':
-    # depth_map = np.asarray([1.0, 2.0, 3.0, 4.0, 5.0, 6.0]).reshape(2, 3)
+    # Start: Robot's Current Location in Vicon
+    # Dest: Goal Location in Vicon
+    # These will need to be translated to current kinect frame
+    # Start_kinect: [0, 0] grid
+    # Dest_kinect: grid in kinect world closest to goal location
+    # Should end with angle theta such that it faces the destination
     depth_map = np.random.rand(300000, 3)
     start = np.random.rand(1, 2).flatten()
     dest = np.random.rand(1, 2).flatten()
     world_size = [100, 100]
-    # print('depth map: ', depth_map)
     depth_map = coordTransform(depth_map)
-    # print('sorted: ', depth_map)
     t = time.time()
-    # world = World(depth_map)
     x_coords, y_coords, angles, path, path_cost, world = plan(start, dest, depth_map, world_size)
     print('Execution Time: ', time.time()-t)
     print(world.enc_world)
     print(path)
     plt.plot(x_coords, y_coords)
     plt.show()
-    # print(world.dones)
-    # print(world.world)
