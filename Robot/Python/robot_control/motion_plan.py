@@ -13,7 +13,7 @@ class Planner:
 
     def plan(self, start, dest, nextGrid=[-1, -1]):
         self.abs_goal = dest
-	start = self.coords2enc(start)
+	    start = self.coords2enc(start)
         dest = self.coords2enc(dest)
         print('start: ', start)
         print('dest: ', dest)
@@ -22,7 +22,7 @@ class Planner:
         path = path_obj[1]
         x_coords, y_coords = path2coords(path, self.world)
         x_coords.append(self.abs_goal[0])
-	y_coords.append(self.abs_goal[1])
+	    y_coords.append(self.abs_goal[1])
         angles = getAngles(path, self.world, nextGrid=nextGrid)
         return x_coords, y_coords, angles, path # coodinates in meters, angles in radians
 
@@ -34,12 +34,10 @@ class Planner:
 
     def coords2grid(self, coords):
         grid = [-1, -1]
-	coords = invTransform(coords)
-	print('transformed: ', coords)
+	    coords = invTransform(coords)
+	    print('transformed: ', coords)
         for i in range(len(coords)):
-# 		pdb.set_trace()
-		grid[i] = int((1.0/2.0)*(coords[i]/0.3048 - 1))
-	print('grid: ', grid)
+            grid[i] = int((1.0/2.0)*(coords[i]/0.3048 - 1))
         return grid
 
     def planWaypoints(self, start, goals):
@@ -247,7 +245,7 @@ def path2coords(path, world):
         coords_meters = [0.3048*(grid_coords[0]*2+1), 0.3048*(grid_coords[1]*2+1)]
         coords_meters_offset = coordTransform(coords_meters)
         x_coords.append(coords_meters_offset[0])
-	y_coords.append(coords_meters_offset[1])
+    	y_coords.append(coords_meters_offset[1])
     return x_coords, y_coords
 
 def getAngles(path, world, nextGrid=[-1, -1]): # angle in radians
