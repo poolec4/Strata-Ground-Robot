@@ -5,7 +5,7 @@ import numpy as np
 import pdb
 
 class Kinect:
-	def __init__(self, dx=5, dy=10):
+	def __init__(self, dx=2, dy=10):
 		self.width = 640
 		self.height = 480
 		self.depth_lookup_table = np.empty([2048])
