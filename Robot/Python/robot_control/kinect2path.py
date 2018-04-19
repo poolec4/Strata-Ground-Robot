@@ -3,6 +3,7 @@ import time
 from collections import defaultdict, deque
 import math
 from matplotlib import pyplot as plt
+import pdb
 
 # Small grids with cost >half width of robot around obstacle
 # Consider all grids behind obstacle occupied
@@ -12,12 +13,13 @@ class World:
     def __init__(self, depth_map, world_size=[100, 100]):
         self.world = self.generate(world_size)
         self.enc_world = self.encode(world_size)
+        self.world_size = world_size
         bounds = np.asarray(getBounds(depth_map))
-        # print('bounds: ', bounds)
+        print('bounds: ', bounds)
         self.grid_size = self.gridSize(world_size, bounds)
         self.world = self.addObstacles(depth_map, bounds, world_size)
-        self.world_size = world_size
         self.neighbors = self.findNeighbors()
+        self.bounds = bounds
 
     def generate(self, world_size):
         world = np.zeros(world_size)
@@ -65,8 +67,16 @@ class World:
         return  x_factor, y_factor
 
     def coords2grid(self, x, y):
-        x_index = int(x/self.grid_size[0]-0.5)
-        y_index = int(y/self.grid_size[1]-0.5)
+        x = x/self.grid_size[0]-0.49
+        y = y/self.grid_size[1]-0.49
+        if x > self.world_size[0]-1:
+            x_index = int(x)
+        else:
+            x_index = int(round(x))
+        if y > self.world_size[1]-1:
+            y_index = int(y)
+        else:
+            y_index = int(round(y))
         return x_index, y_index
 
     def findNeighbors(self):
@@ -99,8 +109,7 @@ class World:
             move_cost += 1.2
         return move_cost
 
-    def addBuffer(self, depth_map, threshold): # Adds buffer around obstacle
-        # To be completed
+    def addBuffer(self, depth_map): # Adds buffer around obstacle
         return 0
 
 class Graph(object):
@@ -198,23 +207,25 @@ def shortest_path(graph, origin, destination):
 
 # Path Planning Functions
 def coords2enc(coords, world): # returns encoded grid value
+    print(coords)
     grid_coords = world.coords2grid(coords[0], coords[1])
     grid_enc = world.enc_world[grid_coords[0]][grid_coords[1]]
+    print('grid_enc ', grid_enc)
     return grid_enc
 
-def coords2dist(grid_coords, grid_size): # returns coordinates in meters
+def coords2dist(grid_coords, grid_size, local_start): # returns coordinates in meters
     coords = []
     for i in range(len(grid_coords)):
-        coords.append(grid_size[i]*(grid_coords[i]+0.5))
+        coords.append(grid_size[i]*(grid_coords[i]+0.5-local_start[i]))
     return coords
 
-def path2coords(path, world, grid_size):
+def path2coords(path, world, grid_size, local_start):
     x_coords = []
     y_coords = []
-    for i in range(len(path)-1):
+    for i in range(len(path)):
         grid_coords = world.decode(path[i])
         print(grid_coords)
-        coords = coords2dist(grid_coords, grid_size)
+        coords = coords2dist(grid_coords, grid_size, local_start)
         x_coords.append(coords[0])
         y_coords.append(coords[1])
     return x_coords, y_coords
@@ -226,62 +237,94 @@ def getAngles(path, world):
         next_coords = world.decode(path[i+1])
         theta = math.atan2(next_coords[1]-current_coords[1], next_coords[0]-current_coords[0]) # numpy grid flips x and y coords
         angles.append(theta)
-    angles.append(math.pi/2.0)
+    angles.append(0.0)
     return angles
 
-def local2world(x_coords, y_coords, angles, start, start_angle): # start in global frame
-    x_global = []
-    y_global = []
-    angles_global = []
+def getLocalGoal(global_start, global_goal, global_angle, world, local_start):
+    global_angle -= math.pi/2
+    dist_to_goal = [abs(global_goal[0]-global_start[0]), abs(global_goal[1]-global_start[1])]
+    if dist_to_goal[0] <= world.bounds[0, 1] and dist_to_goal[1] <= world.bounds[1, 1]: # goal in current world
+        R_gl = [[math.cos(global_angle), math.sin(global_angle)], [-math.sin(global_angle), math.cos(global_angle)]]
+        P_g = [[global_goal[0]], [global_goal[1]]]
+        P_v = [[global_start[0]], [global_start[1]]]
+        print(R_gl)
+        local_coords = (np.matmul(R_gl, P_v)-np.matmul(R_gl, P_g)).flatten()
+        print('local coords ', local_coords)
+        # local_coords = [(global_goal[0]-global_start[0]-local_start[0]*world.grid_size[0], global_goal[1]-global_start[1]]
+        # local_coords = coords2enc(local_goal, world)
+    else:
+        print('out of bounds')
+        shortest_path_angle = math.atan2(global_goal[1]-global_start[1], global_goal[0]-global_start[0])  - global_angle # local angle to shortest path
+        print('shortest path angle: ', shortest_path_angle)
+        local_coords = [0.5*(world.bounds[0, 1]-world.bounds[0, 0])*math.cos(shortest_path_angle)+local_start[0]*world.grid_size[0], (world.bounds[1, 1]-world.bounds[1, 0])*math.sin(shortest_path_angle)]
+        print('local coords ', local_coords)
+    return local_coords
+
+def local2global(x_coords, y_coords, angles, global_start, global_start_angle, world):
+    global_x_coords = []
+    global_y_coords = []
+    global_start_angle -= math.pi/2.0
     for i in range(len(x_coords)):
-        x_global.append(x_coords[i]+start[0])
-        y_global.append(y_coords[i]+start[1])
-        angles_global.append(angles[i]+start_angle-math.pi/2.0)
-
-    return x_global, y_global, angles_global
-
-
+        global_x_coords.append(x_coords[i]*math.cos(global_start_angle)+y_coords[i]*-math.sin(global_start_angle)+global_start[0])
+        global_y_coords.append(x_coords[i]*math.sin(global_start_angle)+y_coords[i]*math.cos(global_start_angle)+global_start[1])
+        # pdb.set_trace()
+    return global_x_coords, global_y_coords
 
 def plan(start, dest, depth_map, world_size): # Called to plan trajectory
     graph = Graph()
-    world = World(depth_map, world_size=world_size)
     graph = graph.add_nodes_and_edges(world)
-    start_enc = coords2enc(start, world)
+    # start_enc = coords2enc(start, world)
+    start_enc = world.enc_world[start[0], start[1]]
+    print('start_enc ', start_enc)
     dest_enc = coords2enc(dest, world)
+    print('dest enc ', dest_enc)
     path_obj = shortest_path(graph, start_enc, dest_enc)
     path_cost = path_obj[0]
     path = path_obj[1]
-    x_coords, y_coords = path2coords(path, world, world.grid_size)
+    x_coords, y_coords = path2coords(path, world, world.grid_size, start)
     angles = getAngles(path, world)
     return x_coords, y_coords, angles, path, path_cost, world
 
 
 if __name__ == '__main__':
-    # Start: Robot's Current Location in Vicon
-    # Dest: Goal Location in Vicon
-    # These will need to be translated to current kinect frame
-    # Start_kinect: [0, 0] grid
-    # Dest_kinect: grid in kinect world closest to goal location
-    # Should end with angle theta such that it faces the destination
-    depth_map = np.random.rand(300000, 3)
-    global_start = [2, 3]
-    global_angle = math.pi/4.0
-    local_start = np.asarray([0.5, 0]) # should be 0, 0 in implementation
-    local_dest = np.random.rand(1, 2).flatten()
-    world_size = [50, 50]
+    # depth_map = np.asarray([1.0, 2.0, 3.0, 4.0, 5.0, 6.0]).reshape(2, 3)
+    depth_map = np.asarray([2.*np.random.rand(300000, 1)-1, np.zeros([300000, 1]) ,np.random.rand(300000, 1)])
+    print(depth_map.shape)
+    depth_map = np.swapaxes(depth_map, 0, 2)
+    depth_map = depth_map[0]
+    global_start = [1, 1]
+    global_dest = [2, 2]
+    global_angle = 4.0*math.pi/4.0 # -math.pi/2
+    local_start = [5, 0]
+    world_size = [11, 10]
+    world = World(depth_map, world_size=world_size)
+    # print('depth map: ', depth_map)
     depth_map = coordTransform(depth_map)
+    local_dest = getLocalGoal(global_start, global_dest, global_angle, world, local_start)
+    print('local dest: ', local_dest)
+    # print('sorted: ', depth_map)
     t = time.time()
+    # world = World(depth_map)
     x_coords, y_coords, angles, path, path_cost, world = plan(local_start, local_dest, depth_map, world_size)
-    x_global, y_global, angles_global = local2world(x_coords, y_coords, angles, global_start, global_angle)
+    global_x_coords, global_y_coords = local2global(x_coords, y_coords, angles, global_start, global_angle, world)
     print('Execution Time: ', time.time()-t)
     print(world.enc_world)
     print(path)
     print(angles)
-    print(angles_global)
+    print(x_coords[0:3])
+    print(global_x_coords[0:3])
+    print(y_coords[0:3])
+    print(global_y_coords[0:3])
     fig1 = plt.figure()
     ax1 = fig1.add_subplot(111)
-    ax1.plot(x_coords, y_coords)
+    ax1.plot(x_coords, y_coords, 'o')
+    ax1.set_xlim([-1, 1])
+    ax1.set_ylim([-1, 1])
     fig2 = plt.figure()
     ax2 = fig2.add_subplot(111)
-    ax2.plot(x_global, y_global)
+    ax2.plot(global_x_coords, global_y_coords, 'o')
+    ax2.set_xlim([0, 2])
+    ax2.set_ylim([0, 2])
     plt.show()
+    # print(world.dones)
+    # print(world.world)
