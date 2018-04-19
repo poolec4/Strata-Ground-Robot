@@ -10,6 +10,7 @@ import freenect
 import pdb
 import math
 import numpy as np
+import time
 #import random
 from kinect import Kinect
 #from mpl_toolkits.mplot3d import Axes3D
@@ -29,23 +30,26 @@ global_start = [1, 1]
 global_dest = [2, 2]
 global_angle = 2.0*math.pi/4.0 # -math.pi/2
 local_start = [5, 0]
-world_size = [100, 100]
+world_size = [30, 30]
+
+for i in range(5):
+    raw_depth = kinect.get_raw_depth()
+    time.sleep(0.1)
 
 # for i in range(1):
 while 1:
     raw_depth = kinect.get_raw_depth()
     # raw_depth = np.random.rand(kinect.height,kinect.width)*2047
     # raw_depth = cv2.imread('test_depth6_640x480.png',0)*(2047.0/255.0)
-    
-    print(raw_depth)
+   
     pcl = kinect.get_point_cloud(raw_depth)
 
     #plt.imshow(raw_depth)
-	
+    print(pcl.shape)
     depth_map = coordTransform(pcl)
     world = World(depth_map, world_size=world_size)
     local_dest = getLocalGoal(global_start, global_dest, global_angle, world, local_start)
-    x_coords, y_coords, angles, path, path_cost, world = plan(local_start, local_dest, depth_map, world_size)
+    x_coords, y_coords, angles, path, path_cost, world = plan(local_start, local_dest, depth_map, world)
     global_x_coords, global_y_coords, global_angles = local2global(x_coords, y_coords, angles, global_start, global_angle, world)
 
     ax1 = fig1.add_subplot(111)
@@ -58,7 +62,9 @@ while 1:
     ax2.set_xlim([0, 2])
     ax2.set_ylim([0, 2])
     # fig3 = plt.figure()
-    plt.imshow(np.transpose(world.world), cmap='gray')
+    world_max = np.max(world.world)
+    print(np.transpose(world.world)*(1/world_max))
+    plt.imshow(np.transpose(world.world)*(1/world_max), cmap='gray')
     plt.show()
     plt.pause(0.1)
     ax1.cla()
