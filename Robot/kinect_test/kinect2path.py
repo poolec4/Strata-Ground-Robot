@@ -3,6 +3,7 @@ import time
 from collections import defaultdict, deque
 import math
 from matplotlib import pyplot as plt
+
 import pdb
 
 # Small grids with cost >half width of robot around obstacle
@@ -19,8 +20,14 @@ class World:
         self.grid_size = self.gridSize(world_size, bounds)
         print('grid size: ', self.grid_size)
         self.world = self.addObstacles(depth_map, bounds, world_size)
-        print(self.world)
-        # self.world = self.addBuffer()
+        self.old_world = self.world
+	plt.ion()
+	# fig = plt.figure()
+	# ax = fig.add_subplot(111)
+	# ax.matshow(self.world, cmap='gray')
+	# plt.show()
+	# plt.ioff()
+        self.world = self.addBuffer()
         # print(self.world)
         self.neighbors = self.findNeighbors()
         self.bounds = bounds
@@ -48,22 +55,23 @@ class World:
     def addObstacles(self, depth_map, bounds, world_size):
         dones = np.ones(world_size)
         for i in range(depth_map.shape[0]):
-            x = depth_map[i, 0]-bounds[0, 0]
-            y = depth_map[i, 2]-bounds[1, 0]
-            z = depth_map[i, 1]-bounds[2, 0]
-            # print('x, y: ', x, y)
-            index = self.coords2grid(x, y)
-            # print('index: ', index)
-            if z > self.world[index[0], index[1]]:
-		print('object placed at: ', index)
-                self.world[index[0], index[1]] = z
-                # print('added object')
-            else:
-                dones[index[0], index[1]] = 0
-                if np.max(dones) == 0:
-                    print('Exited at Sample: ', i)
-                    self.dones = dones
-                    break
+	    if (depth_map[i, 0]+depth_map[i, 2]+depth_map[i, 1] != 0):
+		    x = depth_map[i, 0]-bounds[0, 0]
+		    y = depth_map[i, 2]-bounds[1, 0]
+		    z = depth_map[i, 1]-bounds[2, 0]
+		    # print('x, y: ', x, y)
+		    index = self.coords2grid(x, y)
+		    # print('index: ', index)
+		    if z > self.world[index[0], index[1]]:
+			print('object placed at: ', index)
+		        self.world[index[0], index[1]] = z
+		        # print('added object')
+		    else:
+		        dones[index[0], index[1]] = 0
+		        if np.max(dones) == 0:
+		            print('Exited at Sample: ', i)
+		            self.dones = dones
+		            break
         self.dones = dones
         return self.world
 
@@ -116,20 +124,20 @@ class World:
         return move_cost
 
     def addBuffer(self): # Adds buffer around obstacle
-        threshold = 0.15
-        new_world = self.world
+        threshold = 0.0
+        new_world = np.copy(self.world)
         buff_width = int(0.25/self.grid_size[0]) # half of robot's width in grids
         print('buff_width: ', buff_width)
         for i in range(self.world_size[0]):
             for j in range(self.world_size[1]):
                 if self.world[i, j] > threshold: # object here
                     height = self.world[i, j]
-                    for k in range(-buff_width, buff_width):
+                    for k in range(i-buff_width, i+buff_width):
                         for m in range(j, self.world_size[1]):
-                            if k+i >= 0 and k+i < self.world_size[0]:
-                                if height > self.world[k+i, m] and self.world[k+i, m] < threshold:
+                            if k >= 0 and k < self.world_size[0]:
+                                if height > self.world[k, m] and self.world[k, m] < height:
                                     new_world[k, m] = height
-                                    # print('adding buffer')
+                                    print('adding buffer at: ', [k, m])
 
         return new_world
 
@@ -171,7 +179,9 @@ def coordTransform(depth_map):
     return depth_map
 
 def getBounds(depth_map): # Translates to robot's frame
-    x_bounds = np.asarray([np.min(depth_map[:, 0]), np.max(depth_map[:, 0])]).flatten()
+    x_max = np.max(abs(depth_map[:, 0]))
+    x_bounds = np.asarray([-x_max, x_max]).flatten()
+    # x_bounds = np.asarray([np.min(depth_map[:, 0]), np.max(depth_map[:, 0])]).flatten()
     y_bounds = np.asarray([np.min(depth_map[:, 2]), np.max(depth_map[:, 2])]).flatten()
     z_bounds = np.asarray([np.min(depth_map[:, 1]), np.max(depth_map[:, 1])]).flatten()
     return x_bounds, y_bounds, z_bounds
@@ -249,7 +259,7 @@ def path2coords(path, world, grid_size, local_start):
         coords = coords2dist(grid_coords, grid_size, local_start)
         x_coords.append(coords[0])
         y_coords.append(coords[1])
-    return x_coords, y_coords
+    return x_coords, y_coords, grid_coords
 
 def getAngles(path, world):
     angles = []
@@ -303,9 +313,9 @@ def plan(start, dest, depth_map, world): # Called to plan trajectory
     path_obj = shortest_path(graph, start_enc, dest_enc)
     path_cost = path_obj[0]
     path = path_obj[1]
-    x_coords, y_coords = path2coords(path, world, world.grid_size, start)
+    x_coords, y_coords, grid_coords = path2coords(path, world, world.grid_size, start)
     angles = getAngles(path, world)
-    return x_coords, y_coords, angles, path, path_cost, world
+    return x_coords, y_coords, angles, path, path_cost, world, grid_coords
 
 
 if __name__ == '__main__':
@@ -327,7 +337,7 @@ if __name__ == '__main__':
     # print('sorted: ', depth_map)
     t = time.time()
     # world = World(depth_map)
-    x_coords, y_coords, angles, path, path_cost, world = plan(local_start, local_dest, depth_map, world)
+    x_coords, y_coords, angles, path, path_cost, world, grid_coords = plan(local_start, local_dest, depth_map, world)
     global_x_coords, global_y_coords, global_angles = local2global(x_coords, y_coords, angles, global_start, global_angle, world)
     print('Execution Time: ', time.time()-t)
     print(world.enc_world)
@@ -350,6 +360,7 @@ if __name__ == '__main__':
     fig3 = plt.figure()
     ax3 = fig3.add_subplot(111)
     ax3.matshow(np.transpose(world.world), cmap='gray')
+    # ax3.matshow(np.transpose(
     plt.show()
     # print(world.dones)
     # print(world.world)
