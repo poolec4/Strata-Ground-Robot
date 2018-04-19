@@ -13,7 +13,7 @@ import numpy as np
 import time
 #import random
 from kinect import Kinect
-#from mpl_toolkits.mplot3d import Axes3D
+from mpl_toolkits.mplot3d import Axes3D
 #from matplotlib import cm
 import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
@@ -22,10 +22,10 @@ from kinect2path import plan, World, coordTransform, getLocalGoal, local2global
 kinect = Kinect()
 #cv2.namedWindow('Depth')
 
-#plt.ion()
+plt.ion()
 
-# fig1 = plt.figure()
-#ax = fig.add_subplot(111, projection='3d')
+fig = plt.figure()
+ax = fig.add_subplot(111, projection='3d')
 
 # fig1 = plt.figure()
 # ax1 = fig1.add_subplot(111)
@@ -46,43 +46,46 @@ world_size = [30, 30]
 
 # for i in range(1):
 while 1:
-    #raw_depth = kinect.get_raw_depth()
-    # raw_depth = np.random.rand(kinect.height,kinect.width)*2047
-    raw_depth = plt.imread('test_depth6_640x480.png')*(2047.0/255.0)
+	#raw_depth = kinect.get_raw_depth()
+	# raw_depth = np.random.rand(kinect.height,kinect.width)*2047
+	raw_depth = plt.imread('kinect_depth.png')*(2047.0)
+	raw_depth = raw_depth[:,:,0]
+	#pdb.set_trace()
+	pcl = kinect.get_point_cloud(raw_depth)
 
-    pcl = kinect.get_point_cloud(raw_depth)
+	#plt.imshow(raw_depth)
+	print(pcl.shape)
+	depth_map = coordTransform(pcl)
+	world = World(depth_map, world_size=world_size)
+	local_dest = getLocalGoal(global_start, global_dest, global_angle, world, local_start)
+	x_coords, y_coords, angles, path, path_cost, world = plan(local_start, local_dest, depth_map, world)
+	global_x_coords, global_y_coords, global_angles = local2global(x_coords, y_coords, angles, global_start, global_angle, world)
 
-    #plt.imshow(raw_depth)
-    print(pcl.shape)
-    depth_map = coordTransform(pcl)
-    world = World(depth_map, world_size=world_size)
-    local_dest = getLocalGoal(global_start, global_dest, global_angle, world, local_start)
-    x_coords, y_coords, angles, path, path_cost, world = plan(local_start, local_dest, depth_map, world)
-    global_x_coords, global_y_coords, global_angles = local2global(x_coords, y_coords, angles, global_start, global_angle, world)
+	# ax1.cla()
+	# ax2.cla()
+	# ax3.cla()
+	# ax1.plot(x_coords, y_coords, 'o')
+	# ax1.set_xlim([-1, 1])
+	# ax1.set_ylim([-1, 1])
+	# ax2.plot(global_x_coords, global_y_coords, 'o')
+	# ax2.set_xlim([0, 2])
+	# ax2.set_ylim([0, 2])
 
-    # ax1.cla()
-    # ax2.cla()
-    # ax3.cla()
-    # ax1.plot(x_coords, y_coords, 'o')
-    # ax1.set_xlim([-1, 1])
-    # ax1.set_ylim([-1, 1])
-    # ax2.plot(global_x_coords, global_y_coords, 'o')
-    # ax2.set_xlim([0, 2])
-    # ax2.set_ylim([0, 2])
+	plt.imshow(np.transpose(world.world),)
+	plt.show()
+	plt.pause(0.1)
 
-    plt.imshow(np.transpose(world.world))
-    plt.show()
- #   ax.clear()
- #  ax.scatter(pcl[:,0], pcl[:,2], -pcl[:,1])
- #   ax.set_xlabel('X')
- #   ax.set_ylabel('Y')
- #   ax.set_zlabel('Z')
- #  ax.set_xlim(-3,3)
- #   ax.set_ylim(0,6)
- #   ax.set_zlim(-2,4)
- #   ax.view_init(elev=0., azim=-90)
-
- #   plt.pause(0.01)
+	# ax.clear()
+	# ax.scatter(pcl[:,0], pcl[:,2], -pcl[:,1])
+	# ax.set_xlabel('X')
+	# ax.set_ylabel('Y')
+	# ax.set_zlabel('Z')
+	# ax.set_xlim(-3,3)
+	# ax.set_ylim(0,6)
+	# ax.set_zlim(-2,4)
+	# ax.view_init(elev=0., azim=-90)
+	# plt.show()
+	# plt.pause(0.01)
  #   pdb.set_trace()
  #   cv2.imshow('Depth', raw_depth/2047.0)
  #   if cv2.waitKey(10) == 27:

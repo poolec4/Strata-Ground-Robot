@@ -43,11 +43,13 @@ class Kinect:
 		p_w = []
 		for x in self.dx*np.array(range(self.width/self.dx)):
 			for y in self.dy*np.array(range(self.height/self.dy)):
-				if raw_depth[y,x] != 0:
-					if self.raw_depth_to_meters(raw_depth[y,x]) <= 6:
-						p = self.raw_depth_to_world(x,y,raw_depth[y,x])
-						p_w.append(p)
-
+				try:
+					if raw_depth[y,x] != 0:
+						if self.raw_depth_to_meters(raw_depth[y,x]) <= 6:
+							p = self.raw_depth_to_world(x,y,raw_depth[y,x])
+							p_w.append(p)
+				except:
+					pdb.set_trace()
 		if not p_w:
 			p_w = [[0, 0, 0],[0,0,0]]
 
