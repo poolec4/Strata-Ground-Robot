@@ -263,12 +263,13 @@ def getLocalGoal(global_start, global_goal, global_angle, world, local_start):
 def local2global(x_coords, y_coords, angles, global_start, global_start_angle, world):
     global_x_coords = []
     global_y_coords = []
+    global_angles = []
     global_start_angle -= math.pi/2.0
     for i in range(len(x_coords)):
         global_x_coords.append(x_coords[i]*math.cos(global_start_angle)+y_coords[i]*-math.sin(global_start_angle)+global_start[0])
         global_y_coords.append(x_coords[i]*math.sin(global_start_angle)+y_coords[i]*math.cos(global_start_angle)+global_start[1])
-        # pdb.set_trace()
-    return global_x_coords, global_y_coords
+        global_angles.append(angles[i]+global_start_angle)
+    return global_x_coords, global_y_coords, global_angles
 
 def plan(start, dest, depth_map, world_size): # Called to plan trajectory
     graph = Graph()
@@ -294,7 +295,7 @@ if __name__ == '__main__':
     depth_map = depth_map[0]
     global_start = [1, 1]
     global_dest = [2, 2]
-    global_angle = 4.0*math.pi/4.0 # -math.pi/2
+    global_angle = 3.0*math.pi/4.0 # -math.pi/2
     local_start = [5, 0]
     world_size = [11, 10]
     world = World(depth_map, world_size=world_size)
@@ -306,11 +307,11 @@ if __name__ == '__main__':
     t = time.time()
     # world = World(depth_map)
     x_coords, y_coords, angles, path, path_cost, world = plan(local_start, local_dest, depth_map, world_size)
-    global_x_coords, global_y_coords = local2global(x_coords, y_coords, angles, global_start, global_angle, world)
+    global_x_coords, global_y_coords, global_angles = local2global(x_coords, y_coords, angles, global_start, global_angle, world)
     print('Execution Time: ', time.time()-t)
     print(world.enc_world)
     print(path)
-    print(angles)
+    print(global_angles)
     print(x_coords[0:3])
     print(global_x_coords[0:3])
     print(y_coords[0:3])
