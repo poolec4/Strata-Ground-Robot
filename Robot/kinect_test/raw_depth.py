@@ -23,8 +23,15 @@ kinect = Kinect()
 
 #plt.ion()
 
-fig1 = plt.figure()
+# fig1 = plt.figure()
 #ax = fig.add_subplot(111, projection='3d')
+
+fig1 = plt.figure()
+ax1 = fig1.add_subplot(111)
+fig2 = plt.figure()
+ax2 = fig2.add_subplot(111)
+fig3 = plt.figure()
+ax3 = fig3.add_subplot(111)
 
 global_start = [1, 1]
 global_dest = [2, 2]
@@ -41,7 +48,7 @@ while 1:
     raw_depth = kinect.get_raw_depth()
     # raw_depth = np.random.rand(kinect.height,kinect.width)*2047
     # raw_depth = cv2.imread('test_depth6_640x480.png',0)*(2047.0/255.0)
-   
+
     pcl = kinect.get_point_cloud(raw_depth)
 
     #plt.imshow(raw_depth)
@@ -52,23 +59,17 @@ while 1:
     x_coords, y_coords, angles, path, path_cost, world = plan(local_start, local_dest, depth_map, world)
     global_x_coords, global_y_coords, global_angles = local2global(x_coords, y_coords, angles, global_start, global_angle, world)
 
-    ax1 = fig1.add_subplot(111)
+    ax1.cla()
+    ax2.cla()
+    ax3.cla()
     ax1.plot(x_coords, y_coords, 'o')
     ax1.set_xlim([-1, 1])
     ax1.set_ylim([-1, 1])
-    fig2 = plt.figure()
-    ax2 = fig2.add_subplot(111)
     ax2.plot(global_x_coords, global_y_coords, 'o')
     ax2.set_xlim([0, 2])
     ax2.set_ylim([0, 2])
-    # fig3 = plt.figure()
-    world_max = np.max(world.world)
-    print(np.transpose(world.world)*(1/world_max))
-    plt.imshow(np.transpose(world.world)*(1/world_max), cmap='gray')
+    ax3.matshow(np.transpose(world.world), cmap='gray')
     plt.show()
-    plt.pause(0.1)
-    ax1.cla()
-    ax2.cla()   
  #   ax.clear()
  #  ax.scatter(pcl[:,0], pcl[:,2], -pcl[:,1])
  #   ax.set_xlabel('X')
@@ -81,7 +82,7 @@ while 1:
 
  #   plt.pause(0.01)
  #   pdb.set_trace()
- #   cv2.imshow('Depth', raw_depth/2047.0) 
+ #   cv2.imshow('Depth', raw_depth/2047.0)
  #   if cv2.waitKey(10) == 27:
  #       break
 
