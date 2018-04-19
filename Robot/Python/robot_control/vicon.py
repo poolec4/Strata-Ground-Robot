@@ -1,6 +1,7 @@
 import socket
 import time
 import numpy as np
+from robot import quat_to_eangles
 
 def to_bytes(bytes_or_str):
 	if isinstance(bytes_or_str, str):
@@ -25,6 +26,8 @@ class Vicon:
 		self.x_v = np.zeros((3,1))
 		self.q_v = np.zeros((4,1))
 
+		self.th_r = None
+
 	def get_state(self):
 		s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 		s.connect((self.IP_ADDR, self.PORT_NUM))
@@ -41,4 +44,5 @@ class Vicon:
 			temp = data[i].split('=')
 			self.q_v[i-3] = float(temp[1])
 		s.close()
+		self.th_r = quat_to_eangles(self.q_v)[2]
 		return self.x_v, self.q_v

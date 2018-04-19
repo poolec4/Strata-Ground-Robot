@@ -1,11 +1,11 @@
 import math
 import freenect
-import cv2
+#import cv2
 import numpy as np
 import pdb
 
 class Kinect:
-	def __init__(self, dx=5, dy=10):
+	def __init__(self, dx=2, dy=10):
 		self.width = 640
 		self.height = 480
 		self.depth_lookup_table = np.empty([2048])
@@ -44,7 +44,7 @@ class Kinect:
 		for x in self.dx*np.array(range(self.width/self.dx)):
 			for y in self.dy*np.array(range(self.height/self.dy)):
 				if raw_depth[y,x] != 0:
-					if self.raw_depth_to_meters(raw_depth[y,x]) <= 6:
+					if self.raw_depth_to_meters(raw_depth[y,x]) <= 4:
 						p = self.raw_depth_to_world(x,y,raw_depth[y,x])
 						p_w.append(p)
 

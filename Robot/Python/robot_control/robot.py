@@ -24,6 +24,7 @@ class Robot:
 		self.x_g = None
 		self.y_g = None
 		self.th_g = None
+		self.th = None
 
 		self.t_old = time.time()
 		self.p_sum = 0
@@ -77,15 +78,15 @@ class Robot:
 
 	def P_control(self, x_v, q_v):
 		eangles = quat_to_eangles(q_v)
-		th = eangles[2] 
+		self.th = eangles[2] 
 		dx = self.x_g - x_v[0]
 		dy = self.y_g - x_v[1]
 		print("xv=" + str(x_v[0]) + "yv=" + str(x_v[1]))
-		print("dx=" + str(dx) + ", dy=" + str(dy) + ", th=" + str(th))
+		print("dx=" + str(dx) + ", dy=" + str(dy) + ", th=" + str(self.th))
 		
 		self.p = math.sqrt(dx**2 + dy**2)
-		a = -th + math.atan2(dy,dx)
-		b = -th - a + self.th_g
+		a = -self.th + math.atan2(dy,dx)
+		b = -self.th - a + self.th_g
 
 		a = remap_angle(a)
 		b = remap_angle(b)
@@ -112,15 +113,15 @@ class Robot:
 		dt = time.time() - self.t_old
 
 		eangles = quat_to_eangles(q_v)
-		th = eangles[2] 
+		self.th = eangles[2] 
 		dx = self.x_g - x_v[0]
 		dy = self.y_g - x_v[1]
 		print("xv=" + str(x_v[0]) + "yv=" + str(x_v[1]))
-		print("dx=" + str(dx) + ", dy=" + str(dy) + ", th=" + str(th))
+		print("dx=" + str(dx) + ", dy=" + str(dy) + ", th=" + str(self.th))
 		
 		self.p = math.sqrt(dx**2 + dy**2)
-		a = -th + math.atan2(dy,dx)
-		b = -th - a + self.th_g
+		a = -self.th + math.atan2(dy,dx)
+		b = -self.th - a + self.th_g
 
 		self.p_sum = rolloff_fac*self.p_sum + self.p*dt
 		self.a_sum = rolloff_fac*self.a_sum + a*dt

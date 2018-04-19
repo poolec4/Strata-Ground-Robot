@@ -272,7 +272,7 @@ def getAngles(path, world):
     return angles
 
 def getLocalGoal(global_start, global_goal, global_angle, world, local_start):
-    global_angle -= math.pi/2
+    global_angle = global_angle - math.pi/2
     dist_to_goal = [abs(global_goal[0]-global_start[0]), abs(global_goal[1]-global_start[1])]
     if dist_to_goal[0] <= world.bounds[0, 1] and dist_to_goal[1] <= world.bounds[1, 1]: # goal in current world
         R_gl = [[math.cos(global_angle), math.sin(global_angle)], [-math.sin(global_angle), math.cos(global_angle)]]
