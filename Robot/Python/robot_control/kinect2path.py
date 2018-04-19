@@ -17,7 +17,11 @@ class World:
         bounds = np.asarray(getBounds(depth_map))
         print('bounds: ', bounds)
         self.grid_size = self.gridSize(world_size, bounds)
+        print('grid size: ', self.grid_size)
         self.world = self.addObstacles(depth_map, bounds, world_size)
+        print(self.world)
+        self.world = self.addBuffer()
+        print(self.world)
         self.neighbors = self.findNeighbors()
         self.bounds = bounds
 
@@ -52,6 +56,7 @@ class World:
             # print('index: ', index)
             if z > self.world[index[0], index[1]]:
                 self.world[index[0], index[1]] = z
+                # print('added object')
             else:
                 dones[index[0], index[1]] = 0
                 if np.max(dones) == 0:
@@ -109,8 +114,23 @@ class World:
             move_cost += 1.2
         return move_cost
 
-    def addBuffer(self, depth_map): # Adds buffer around obstacle
-        return 0
+    def addBuffer(self): # Adds buffer around obstacle
+        threshold = 0.15
+        new_world = self.world
+        buff_width = int(0.25/self.grid_size[0]) # half of robot's width in grids
+        print('buff_width: ', buff_width)
+        for i in range(self.world_size[0]):
+            for j in range(self.world_size[1]):
+                if self.world[i, j] > threshold: # object here
+                    height = self.world[i, j]
+                    for k in range(-buff_width, buff_width):
+                        for m in range(j, self.world_size[1]):
+                            if k+i >= 0 and k+i < self.world_size[0]:
+                                if height > self.world[k+i, m] and self.world[k+i, m] < threshold:
+                                    new_world[k, m] = height
+                                    # print('adding buffer')
+
+        return new_world
 
 class Graph(object):
     def __init__(self):
@@ -289,15 +309,15 @@ def plan(start, dest, depth_map, world_size): # Called to plan trajectory
 
 if __name__ == '__main__':
     # depth_map = np.asarray([1.0, 2.0, 3.0, 4.0, 5.0, 6.0]).reshape(2, 3)
-    depth_map = np.asarray([2.*np.random.rand(300000, 1)-1, np.zeros([300000, 1]) ,np.random.rand(300000, 1)])
+    depth_map = np.asarray([2.*np.random.rand(100, 1)-1, np.random.rand(100, 1) ,np.random.rand(100, 1)])
     print(depth_map.shape)
     depth_map = np.swapaxes(depth_map, 0, 2)
     depth_map = depth_map[0]
     global_start = [1, 1]
     global_dest = [2, 2]
-    global_angle = 3.0*math.pi/4.0 # -math.pi/2
+    global_angle = 2.0*math.pi/4.0 # -math.pi/2
     local_start = [5, 0]
-    world_size = [11, 10]
+    world_size = [100, 100]
     world = World(depth_map, world_size=world_size)
     # print('depth map: ', depth_map)
     depth_map = coordTransform(depth_map)
@@ -326,6 +346,8 @@ if __name__ == '__main__':
     ax2.plot(global_x_coords, global_y_coords, 'o')
     ax2.set_xlim([0, 2])
     ax2.set_ylim([0, 2])
+    # fig3 = plt.figure()
+    plt.imshow(np.transpose(world.world), cmap='gray')
     plt.show()
     # print(world.dones)
     # print(world.world)
