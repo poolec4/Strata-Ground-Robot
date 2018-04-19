@@ -291,7 +291,7 @@ def local2global(x_coords, y_coords, angles, global_start, global_start_angle, w
         global_angles.append(angles[i]+global_start_angle)
     return global_x_coords, global_y_coords, global_angles
 
-def plan(start, dest, depth_map, world_size): # Called to plan trajectory
+def plan(start, dest, depth_map, world): # Called to plan trajectory
     graph = Graph()
     graph = graph.add_nodes_and_edges(world)
     # start_enc = coords2enc(start, world)
@@ -326,7 +326,7 @@ if __name__ == '__main__':
     # print('sorted: ', depth_map)
     t = time.time()
     # world = World(depth_map)
-    x_coords, y_coords, angles, path, path_cost, world = plan(local_start, local_dest, depth_map, world_size)
+    x_coords, y_coords, angles, path, path_cost, world = plan(local_start, local_dest, depth_map, world)
     global_x_coords, global_y_coords, global_angles = local2global(x_coords, y_coords, angles, global_start, global_angle, world)
     print('Execution Time: ', time.time()-t)
     print(world.enc_world)
