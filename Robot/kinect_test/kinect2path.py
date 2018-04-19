@@ -20,8 +20,8 @@ class World:
         print('grid size: ', self.grid_size)
         self.world = self.addObstacles(depth_map, bounds, world_size)
         print(self.world)
-        self.world = self.addBuffer()
-        print(self.world)
+        # self.world = self.addBuffer()
+        # print(self.world)
         self.neighbors = self.findNeighbors()
         self.bounds = bounds
 
@@ -55,6 +55,7 @@ class World:
             index = self.coords2grid(x, y)
             # print('index: ', index)
             if z > self.world[index[0], index[1]]:
+		print('object placed at: ', index)
                 self.world[index[0], index[1]] = z
                 # print('added object')
             else:
@@ -107,7 +108,7 @@ class World:
             return True
 
     def cost(self, current, destination):
-        move_cost = self.world[destination[0], destination[1]]
+        move_cost = 10*self.world[destination[0], destination[1]]
         if current[0]-destination[0] == 0 or current[1]-destination[1] == 0:
             move_cost += 1
         else:
@@ -310,10 +311,10 @@ def plan(start, dest, depth_map, world): # Called to plan trajectory
 if __name__ == '__main__':
     # depth_map = np.asarray([1.0, 2.0, 3.0, 4.0, 5.0, 6.0]).reshape(2, 3)
     depth_map = np.asarray([2.*np.random.rand(100, 1)-1, np.random.rand(100, 1) ,np.random.rand(100, 1)])
-    print(depth_map.shape)
     depth_map = np.swapaxes(depth_map, 0, 2)
     depth_map = depth_map[0]
     global_start = [1, 1]
+    print(depth_map.shape)
     global_dest = [2, 2]
     global_angle = 2.0*math.pi/4.0 # -math.pi/2
     local_start = [5, 0]

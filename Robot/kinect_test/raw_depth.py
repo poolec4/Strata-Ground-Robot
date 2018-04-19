@@ -36,8 +36,8 @@ ax3 = fig3.add_subplot(111)
 global_start = [1, 1]
 global_dest = [2, 2]
 global_angle = 2.0*math.pi/4.0 # -math.pi/2
-local_start = [5, 0]
-world_size = [30, 30]
+world_size = [30, 15]
+local_start = [int(world_size[0]/2.0), 0]
 
 for i in range(5):
     raw_depth = kinect.get_raw_depth()
@@ -68,7 +68,7 @@ while 1:
     ax2.plot(global_x_coords, global_y_coords, 'o')
     ax2.set_xlim([0, 2])
     ax2.set_ylim([0, 2])
-    ax3.matshow(np.transpose(world.world), cmap='gray')
+    ax3.matshow(world.world, cmap='gray')
     plt.show()
  #   ax.clear()
  #  ax.scatter(pcl[:,0], pcl[:,2], -pcl[:,1])
