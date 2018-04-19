@@ -164,9 +164,9 @@ class Graph(object):
 
 # Depth Map Functions
 def coordTransform(depth_map):
-    # depth_map[:, 1] *= -1 # Uncomment for execution
-    depth_map = np.asarray(depth_map[depth_map[:,1].argsort()]) # Sort by y column
-    depth_map = depth_map[::-1] # Flip Order (High to Low)
+    depth_map[:, 1] *= -1 # Uncomment for execution
+    # depth_map = np.asarray(depth_map[depth_map[:,1].argsort()]) # Sort by y column
+    # depth_map = depth_map[::-1] # Flip Order (High to Low)
     return depth_map
 
 def getBounds(depth_map): # Translates to robot's frame
