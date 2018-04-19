@@ -1,6 +1,6 @@
 import math
 import freenect
-import cv2
+#import cv2
 import numpy as np
 import pdb
 
