@@ -266,7 +266,7 @@ def getAngles(path, world):
     for i in range(len(path)-1):
         current_coords = world.decode(path[i])
         next_coords = world.decode(path[i+1])
-        theta = math.atan2(next_coords[1]-current_coords[1], next_coords[0]-current_coords[0]) # numpy grid flips x and y coords
+        theta = math.atan2(next_coords[1]-current_coords[1], next_coords[0]-current_coords[0])
         angles.append(theta)
     angles.append(0.0)
     return angles
@@ -295,7 +295,7 @@ def local2global(x_coords, y_coords, angles, global_start, global_start_angle, w
     global_x_coords = []
     global_y_coords = []
     global_angles = []
-    global_start_angle -= math.pi/2.0
+    # global_start_angle -= math.pi/2.0
     for i in range(len(x_coords)):
         global_x_coords.append(x_coords[i]*math.cos(global_start_angle)+y_coords[i]*-math.sin(global_start_angle)+global_start[0])
         global_y_coords.append(x_coords[i]*math.sin(global_start_angle)+y_coords[i]*math.cos(global_start_angle)+global_start[1])

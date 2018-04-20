@@ -82,13 +82,8 @@ class World:
         y_factor = (bounds[1, 1] - bounds[1, 0])/world_size[1]
         return  x_factor, y_factor
 
-    def coords2grid(self, x, y, local_start=[0,0]):
-    	x = int(x/self.grid_size[0]-0.5)+local_start[0]
-	y = int(y/self.grid_size[1]-0.5)
-	return  x, y
-
-    def coords2grid2(self, x, y):
-	x = x/self.grid_size[0]-0.49
+    def coords2grid(self, x, y):
+        x = x/self.grid_size[0]-0.49
         y = y/self.grid_size[1]-0.49
         if x > self.world_size[0]-1:
             x_index = int(x)
@@ -244,17 +239,17 @@ def shortest_path(graph, origin, destination):
     return visited[destination], list(full_path)
 
 # Path Planning Functions
-def coords2enc(coords, world, local_goal=[0,0]): # returns encoded grid value
-    print('coordinates: ',coords)
-    grid_coords = world.coords2grid(coords[0], coords[1], local_goal)
+def coords2enc(coords, world): # returns encoded grid value
+    print(coords)
+    grid_coords = world.coords2grid(coords[0], coords[1])
     grid_enc = world.enc_world[grid_coords[0]][grid_coords[1]]
-    print('encoded: ', grid_enc)
+    print('grid_enc ', grid_enc)
     return grid_enc
 
 def coords2dist(grid_coords, grid_size, local_start): # returns coordinates in meters
     coords = []
     for i in range(len(grid_coords)):
-        coords.append(grid_size[i]*(grid_coords[i]+0.5-local_start[i]))
+        coords.append(grid_size[i]*(grid_coords[i]+0.5)-local_start[i]))
     return coords
 
 def path2coords(path, world, grid_size, local_start):
@@ -275,7 +270,7 @@ def getAngles(path, world):
         next_coords = world.decode(path[i+1])
         theta = math.atan2(next_coords[1]-current_coords[1], next_coords[0]-current_coords[0]) # numpy grid flips x and y coords
         angles.append(theta)
-    angles.append(math.pi/2.0)
+    angles.append(0.0)
     return angles
 
 def getLocalGoal(global_start, global_goal, global_angle, world, local_start):
@@ -285,15 +280,12 @@ def getLocalGoal(global_start, global_goal, global_angle, world, local_start):
         R_gl = [[math.cos(global_angle), math.sin(global_angle)], [-math.sin(global_angle), math.cos(global_angle)]]
         P_g = [[global_goal[0]], [global_goal[1]]]
         P_v = [[global_start[0]], [global_start[1]]]
-	# offset = coords2dist(local_start)
-	# print(offset)
         print('Goal in grid')
-	P_diff = np.asarray(P_g)-np.asarray(P_v)
-	print('P_diff: ', P_diff)
-        local_coords = np.matmul(R_gl, P_diff)  #-np.matmul(R_gl, P_g)).flatten()  #-global_start
+	P_diff = np.asarray(P_v)-np.asarray(P_g)
+
+	        local_coords = np.matmul(R_gl, P_diff)  #-np.matmul(R_gl, P_g)).flatten()  #-global_start
 	print('local goal coords', local_coords)
 	print('local start coords ', local_start)
-	print('local start dist: ', coords2dist(local_start, world.grid_size, local_start))
         # print('local coords ', local_coords)
         # local_coords = [(global_goal[0]-global_start[0]-local_start[0]*world.grid_size[0], global_goal[1]-global_start[1]]
         # local_coords = coords2enc(local_goal, world)
@@ -301,7 +293,7 @@ def getLocalGoal(global_start, global_goal, global_angle, world, local_start):
         print('out of bounds')
         shortest_path_angle = math.atan2(global_goal[1]-global_start[1], global_goal[0]-global_start[0])  - global_angle # local angle to shortest path
         print('shortest path angle: ', shortest_path_angle)
-        local_coords = [(world.bounds[0, 1]-world.bounds[0, 0])*math.cos(shortest_path_angle), (world.bounds[1, 1]-world.bounds[1, 0])*math.sin(shortest_path_angle)]
+        local_coords = [0.5*(world.bounds[0, 1]-world.bounds[0, 0])*math.cos(shortest_path_angle)+local_start[0]*world.grid_size[0], (world.bounds[1, 1]-world.bounds[1, 0])*math.sin(shortest_path_angle)]
         print('local coords ', local_coords)
     return local_coords
 
@@ -322,8 +314,7 @@ def plan(start, dest, depth_map, world): # Called to plan trajectory
     # start_enc = coords2enc(start, world)
     start_enc = world.enc_world[start[0], start[1]]
     print('start_enc ', start_enc)
-    dest_enc = coords2enc(dest, world, start)
-    print('local dest: ', dest)
+    dest_enc = coords2enc(dest, world)
     print('dest enc ', dest_enc)
     path_obj = shortest_path(graph, start_enc, dest_enc)
     path_cost = path_obj[0]

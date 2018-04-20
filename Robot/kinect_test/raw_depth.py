@@ -33,9 +33,9 @@ ax2 = fig2.add_subplot(111)
 fig3 = plt.figure()
 ax3 = fig3.add_subplot(111)
 
-global_start = [-1, -1]
-global_dest = [1, 1]
-global_angle = 1.0*math.pi/4.0 # -math.pi/2
+global_start = [1, -1]
+global_dest = [0, 0]
+global_angle = 3.0*math.pi/4.0 # -math.pi/2
 world_size = [30, 15]
 local_start = [int(world_size[0]/2.0), 0]
 
