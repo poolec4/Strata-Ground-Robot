@@ -16,14 +16,14 @@ TCP_IP = '192.168.10.26'
 TCP_PORT = 50000
 BUFFER_SIZE = 1024
 
-PLAN_TIME = 10.0;
+PLAN_TIME = 100.0;
 
 x_g = [0.0, 0.0] # Goal in global coordinates
-th_g = 0.0* math.pi/2.0 # Goal in global coordinates (+CCW)
+th_g = 2.0* math.pi/2.0 # Goal in global coordinates (+CCW)
 
 vicon = Vicon(TCP_IP, TCP_PORT, BUFFER_SIZE)
 kinect = Kinect()
-robot = Robot(min_motor_speed=90)
+robot = Robot(min_motor_speed=110)
 
 robot.open('/dev/ttyTHS2', 19200)
 robot.write_motors() # Writes initial value (0) to motors
@@ -33,7 +33,7 @@ traj_count = 0
 t_init = time.time()
 t_plan = t_init
 
-world_size = [11, 10]
+world_size = [51,25]
 local_start = [int(world_size[0]/2.0), 0]
 
 for i in range(5):

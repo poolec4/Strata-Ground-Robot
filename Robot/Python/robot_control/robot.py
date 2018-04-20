@@ -10,11 +10,11 @@ class Robot:
 		self.max_motor_speed = max_motor_speed
 		self.low_motor_cutoff = motor_cutoff
 
-		self.kp = 5 # kp>0
-		self.ka = 20 # kb<0
+		self.kp = 20 # kp>0
+		self.ka = 50 # kb<0
 		self.kb = -5 # ka-kb>0
-		self.kpi = 3 # kp>0
-		self.kai = 0 # kb<0
+		self.kpi = 1 # kp>0
+		self.kai = 1 # kb<0
 		self.kbi = 0 # ka-kb>0
 
 		self.R = 0.0508 # wheel radius in meters
