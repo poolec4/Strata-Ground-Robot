@@ -4,21 +4,21 @@ import math
 import numpy as np
 
 class Robot:
-	def __init__(self, min_motor_speed=40, max_motor_speed=220, motor_cutoff=1):
+	def __init__(self, min_motor_speed=20, max_motor_speed=180, motor_cutoff=1):
 		self.motor_vals = np.zeros(6)
 		self.min_motor_speed = min_motor_speed
 		self.max_motor_speed = max_motor_speed
 		self.low_motor_cutoff = motor_cutoff
 
-		self.kp = 20 # kp>0
-		self.ka = 70 # kb<0
+		self.kp = 15 # kp>0
+		self.ka = 35 # kb<0
 		self.kb = -2 # ka-kb>0
-		self.kpi = 3 # kp>0
-		self.kai = -5 # kb<0
-		self.kbi = 0 # ka-kb>0
+		self.kpi = 3 # kpi>0
+		self.kai = 0 # kai<0
+		self.kbi = 0 # kbi doesn't work
 
 		self.R = 0.0508 # wheel radius in meters
-		self.L = 0.42 # wheelbase width in meters
+		self.L = 0.442 # wheelbase width in meters
 
 		self.ardu_ser = None
 		self.x_g = None
@@ -126,10 +126,14 @@ class Robot:
 		self.a_sum = rolloff_fac*self.a_sum + a*dt
 		self.b_sum = rolloff_fac*self.b_sum + b*dt
 		
-		if abs(a) < 0.2:
-			a_sum = 0
-		if abs(b) < 0.2:
-			b_sum = 0
+#		if abs(a) < 0.1:
+#			self.a_sum = 0 
+#		if self.a_sum > math.pi:
+#			self.a_sum = math.pi
+#		if self.a_sum < -math.pi:
+#			self.a_sum = -math.pi
+#		if abs(b) < 0.1:
+#			self.b_sum = 0
 		
 		a = remap_angle(a)
 		b = remap_angle(b)
@@ -162,8 +166,6 @@ class Robot:
 
 	def integral_reset(self):
 		self.p_sum = self.p_sum*0.5
-		self.a_sum = self.a_sum*0.5
-		self.b_sum = self.b_sum*0.5
 		return self
 
 	def write_motors(self):

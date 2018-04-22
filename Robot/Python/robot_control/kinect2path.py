@@ -133,7 +133,7 @@ class World:
     def addBuffer(self): # Adds buffer around obstacle
         threshold = 0.0
         new_world = np.copy(self.world)
-        buff_width = int(round(0.3/self.grid_size[0])) # half of robot's width in grids
+        buff_width = int(round(0.35/self.grid_size[0])) # half of robot's width in grids
         print('buff_width: ', buff_width)
 	time.sleep(0.5)
         for i in range(self.world_size[0]):

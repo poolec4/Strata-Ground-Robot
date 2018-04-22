@@ -18,7 +18,7 @@ BUFFER_SIZE = 1024
 
 PLAN_TIME = 100.0;
 
-x_g = [0.0, 0.0] # Goal in global coordinates
+x_g = [0.0, 1.5] # Goal in global coordinates
 th_g = 2.0* math.pi/2.0 # Goal in global coordinates (+CCW)
 
 vicon = Vicon(TCP_IP, TCP_PORT, BUFFER_SIZE)
@@ -28,7 +28,7 @@ robot = Robot()
 robot.open('/dev/ttyTHS2', 19200)
 robot.write_motors() # Writes initial value (0) to motors
 
-traj_count = 0
+traj_count = 1
 
 t_init = time.time()
 t_plan = t_init
@@ -108,21 +108,23 @@ try:
 		robot = robot.PI_control(vicon.x_v, vicon.q_v, 1)
 		robot = robot.write_motors()
 		t_send = time.time()		
-		print('goal coordinates: ', x_traj[traj_count], y_traj[traj_count])
+		print('goal coordinates: ', x_traj[traj_count], y_traj[traj_count], th_traj[traj_count])
 
-		if robot.p < 0.05:
+		if robot.p < 0.1:
 			print('Reached waypoint')
 			time.sleep(0.1)
 			traj_count = traj_count + 1
-			robot.integral_reset()
+	
+		robot.integral_reset()
 
 		g_err = math.sqrt((x_g[0]-vicon.x_v[0])**2 + (x_g[1]-vicon.x_v[1])**2)
 
-	 	if g_err < 0.05:
+	 	if g_err < 0.1:
 	 		RUN_ROBOT = False
 
 		print("traj_count: " + str(traj_count))
 		if traj_count == traj_length:
+			print("Reached max traj_count")
 			RUN_ROBOT = False
 
 except KeyboardInterrupt:
