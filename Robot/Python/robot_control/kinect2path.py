@@ -133,14 +133,15 @@ class World:
     def addBuffer(self): # Adds buffer around obstacle
         threshold = 0.0
         new_world = np.copy(self.world)
-        buff_width = int(0.25/self.grid_size[0]) # half of robot's width in grids
-        # print('buff_width: ', buff_width)
+        buff_width = int(round(0.3/self.grid_size[0])) # half of robot's width in grids
+        print('buff_width: ', buff_width)
+	time.sleep(0.5)
         for i in range(self.world_size[0]):
             for j in range(self.world_size[1]):
                 if self.world[i, j] > threshold: # object here
                     height = self.world[i, j]
                     for k in range(i-buff_width, i+buff_width):
-                        for m in range(j, self.world_size[1]):
+                        for m in range(j-1, self.world_size[1]):
                             if k >= 0 and k < self.world_size[0]:
                                 if height > self.world[k, m] and self.world[k, m] < height:
                                     new_world[k, m] = height
@@ -281,8 +282,10 @@ def getAngles(path, world):
 def getLocalGoal(global_start, global_goal, global_angle, world, local_start):
     global_angle -= math.pi/2
     dist_to_goal = [abs(global_goal[0]-global_start[0]), abs(global_goal[1]-global_start[1])]
+    R_gl = [[math.cos(global_angle), math.sin(global_angle)], [-math.sin(global_angle), math.cos(global_angle)]]
+    dist_to_goal =  np.matmul(R_gl, dist_to_goal)
     if dist_to_goal[0] <= world.bounds[0, 1] and dist_to_goal[1] <= world.bounds[1, 1]: # goal in current world
-        R_gl = [[math.cos(global_angle), math.sin(global_angle)], [-math.sin(global_angle), math.cos(global_angle)]]
+        # R_gl = [[math.cos(global_angle), math.sin(global_angle)], [-math.sin(global_angle), math.cos(global_angle)]]
         P_g = [[global_goal[0]], [global_goal[1]]]
         P_v = [[global_start[0]], [global_start[1]]]
 	# offset = coords2dist(local_start)
