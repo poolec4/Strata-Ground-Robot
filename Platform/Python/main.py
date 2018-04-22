@@ -133,7 +133,7 @@ while run_controller == True:
         orientation = np.asarray([e_angles[1]-init_eangles[1], e_angles[2]-init_eangles[2], -(e_angles[0]-init_eangles[0])]) # whats the order?
         print('Platform Orientation: ')
         print(orientation)
-        if np.max(abs(orientation)) > dead_zone:
+        if np.max(abs(orientation[0:1])) > dead_zone:
             controller = controller.step(orientation, np.asarray([0.0, 0.0, 0.0]), t)
             servo_angles = np.asarray([controller.theta[0], controller.theta[1], controller.theta[2], controller.theta[3], controller.theta[4], controller.theta[5]]) # This will be returned in degrees
             servo_data[int(count-1), :] = servo_angles.reshape(6)
