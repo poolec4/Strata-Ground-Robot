@@ -12,7 +12,7 @@ from kinect2path import plan, World, coordTransform, getLocalGoal, local2global
 
 # from matplotlib import pyplot as plt
 
-TCP_IP = '192.168.10.26'
+TCP_IP = '192.168.10.7'
 TCP_PORT = 50000
 BUFFER_SIZE = 1024
 
@@ -23,7 +23,7 @@ th_g = 2.0* math.pi/2.0 # Goal in global coordinates (+CCW)
 
 vicon = Vicon(TCP_IP, TCP_PORT, BUFFER_SIZE)
 kinect = Kinect()
-robot = Robot(min_motor_speed=110)
+robot = Robot()
 
 robot.open('/dev/ttyTHS2', 19200)
 robot.write_motors() # Writes initial value (0) to motors
@@ -105,11 +105,12 @@ try:
 
 		## CONTROL ROBOT
 		robot.set_goal([x_traj[traj_count],y_traj[traj_count]], th_traj[traj_count])
-		robot = robot.PI_control(vicon.x_v, vicon.q_v, 1-0.01)
+		robot = robot.PI_control(vicon.x_v, vicon.q_v, 1)
 		robot = robot.write_motors()
 		t_send = time.time()		
 		print('goal coordinates: ', x_traj[traj_count], y_traj[traj_count])
-		if robot.p < 0.1:
+
+		if robot.p < 0.05:
 			print('Reached waypoint')
 			time.sleep(0.1)
 			traj_count = traj_count + 1
@@ -117,7 +118,7 @@ try:
 
 		g_err = math.sqrt((x_g[0]-vicon.x_v[0])**2 + (x_g[1]-vicon.x_v[1])**2)
 
-	 	if g_err < 0.1:
+	 	if g_err < 0.05:
 	 		RUN_ROBOT = False
 
 		print("traj_count: " + str(traj_count))

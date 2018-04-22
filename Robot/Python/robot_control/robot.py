@@ -4,17 +4,17 @@ import math
 import numpy as np
 
 class Robot:
-	def __init__(self, min_motor_speed=10, max_motor_speed=180, motor_cutoff=1):
+	def __init__(self, min_motor_speed=40, max_motor_speed=220, motor_cutoff=1):
 		self.motor_vals = np.zeros(6)
 		self.min_motor_speed = min_motor_speed
 		self.max_motor_speed = max_motor_speed
 		self.low_motor_cutoff = motor_cutoff
 
 		self.kp = 20 # kp>0
-		self.ka = 50 # kb<0
-		self.kb = -5 # ka-kb>0
-		self.kpi = 1 # kp>0
-		self.kai = 1 # kb<0
+		self.ka = 70 # kb<0
+		self.kb = -2 # ka-kb>0
+		self.kpi = 3 # kp>0
+		self.kai = -5 # kb<0
 		self.kbi = 0 # ka-kb>0
 
 		self.R = 0.0508 # wheel radius in meters
@@ -121,11 +121,16 @@ class Robot:
 		self.p = math.sqrt(dx**2 + dy**2)
 		a = -th + math.atan2(dy,dx)
 		b = -th - a + self.th_g
-
+		
 		self.p_sum = rolloff_fac*self.p_sum + self.p*dt
 		self.a_sum = rolloff_fac*self.a_sum + a*dt
 		self.b_sum = rolloff_fac*self.b_sum + b*dt
-
+		
+		if abs(a) < 0.2:
+			a_sum = 0
+		if abs(b) < 0.2:
+			b_sum = 0
+		
 		a = remap_angle(a)
 		b = remap_angle(b)
 		self.a_sum = remap_angle(self.a_sum)
