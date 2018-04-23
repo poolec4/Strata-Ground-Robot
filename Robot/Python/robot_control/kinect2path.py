@@ -141,7 +141,7 @@ class World:
 			for j in range(self.world_size[1]):
 				if self.world[i, j] > threshold:  # object here
 					height = self.world[i, j]
-					for k in range(i-buff_width, i+buff_width):
+					for k in range(i-outer_buff_width, i+outer_buff_width):
 						for m in range(j-1, self.world_size[1]):
 							if k >= 0 and k < self.world_size[0]:
 								if abs(k-i) <= inner_buff_width:

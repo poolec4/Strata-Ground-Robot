@@ -44,7 +44,7 @@ class Kinect:
 		for x in self.dx*np.array(range(self.width/self.dx)):
 			for y in self.dy*np.array(range(self.height/self.dy)):
 				if raw_depth[y,x] != 0:
-					if self.raw_depth_to_meters(raw_depth[y,x]) <= 6:
+					if self.raw_depth_to_meters(raw_depth[y,x]) <= 8:
 						p = self.raw_depth_to_world(x,y,raw_depth[y,x])
 						p_w.append(p)
 

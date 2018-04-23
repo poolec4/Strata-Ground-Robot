@@ -9,13 +9,13 @@ TCP_IP = '192.168.10.7'
 TCP_PORT = 50000
 BUFFER_SIZE = 1024
 
-x_g = [2, 2]
-th_g = 0
+x_g = [-2, 0.1]
+th_g = math.pi
 
 vicon = Vicon(TCP_IP, TCP_PORT, BUFFER_SIZE)
-robot = Robot()
+robot = Robot(max_motor_speed=110)
 
-robot.open('/dev/serial0', 19200)
+robot.open('/dev/ttyTHS2', 19200)
 robot.write_motors()
 
 traj_length = 5

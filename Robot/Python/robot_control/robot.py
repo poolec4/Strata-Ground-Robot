@@ -4,18 +4,26 @@ import math
 import numpy as np
 
 class Robot:
-	def __init__(self, min_motor_speed=20, max_motor_speed=180, motor_cutoff=1):
+	def __init__(self, obstacle_avoid=False, min_motor_speed=90, max_motor_speed=200, motor_cutoff=1):
 		self.motor_vals = np.zeros(6)
 		self.min_motor_speed = min_motor_speed
 		self.max_motor_speed = max_motor_speed
 		self.low_motor_cutoff = motor_cutoff
-
-		self.kp = 15 # kp>0
-		self.ka = 35 # kb<0
-		self.kb = -2 # ka-kb>0
-		self.kpi = 3 # kpi>0
-		self.kai = 0 # kai<0
-		self.kbi = 0 # kbi doesn't work
+		
+		if obstacle_avoid == True:
+			self.kp = 15 # kp>0
+			self.ka = 35 # kb<0
+			self.kb = -2 # ka-kb>0
+			self.kpi = 3 # kpi>0
+			self.kai = 0 # kai<0
+			self.kbi = 0 # kbi doesn't work
+		else:
+			self.kp = 20 # kp>0
+                	self.ka = 25 # kb<0
+                	self.kb = -2 # ka-kb>0
+                	self.kpi = 15 # kpi>0
+                	self.kai = 0 # kai<0
+                	self.kbi = 0 # kbi doesn't work
 
 		self.R = 0.0508 # wheel radius in meters
 		self.L = 0.442 # wheelbase width in meters

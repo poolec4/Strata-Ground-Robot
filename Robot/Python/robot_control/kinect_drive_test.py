@@ -18,12 +18,12 @@ BUFFER_SIZE = 1024
 
 PLAN_TIME = 100.0;
 
-x_g = [0.0, 0.0] # Goal in global coordinates
-th_g = 2.0* math.pi/2.0 # Goal in global coordinates (+CCW)
+x_g = [-1.5, 1.5] # Goal in global coordinates
+th_g = 3.0* math.pi/4.0 # Goal in global coordinates (+CCW)
 
 vicon = Vicon(TCP_IP, TCP_PORT, BUFFER_SIZE)
 kinect = Kinect()
-robot = Robot()
+robot = Robot(obstacle_avoid=True,min_motor_speed=20,max_motor_speed=180)
 
 robot.open('/dev/ttyTHS2', 19200)
 robot.write_motors() # Writes initial value (0) to motors
@@ -75,8 +75,11 @@ try:
 				local_dest = getLocalGoal(global_start, x_g, vicon.th_r, world, local_start)
 				x_coords, y_coords, angles, path, path_cost, world, grid_coords = plan(local_start, local_dest,depth_map, world)
 				x_traj, y_traj, th_traj = local2global(x_coords, y_coords, angles,vicon.x_v[0:2], vicon.th_r, world)
-				print('Trajectory:')
+				print('Local Trajectory:')
 				print('Index, X-Coord, Y-Coord, Angle')
+				for i in range(len(x_traj)):
+					print(i, x_coords[i], y_coords[i], angles[i])
+				print('Global Trajectory')
 				for i in range(len(x_traj)):
 					print(i, x_traj[i], y_traj[i], th_traj[i])
 				# time.sleep(5)
@@ -106,7 +109,7 @@ try:
 		t_send = time.time()
 		print('goal coordinates: ', x_traj[traj_count], y_traj[traj_count], th_traj[traj_count])
 
-		if robot.p < 0.1:
+		if robot.p < 0.15:
 			print('Reached waypoint')
 			time.sleep(0.1)
 			traj_count = traj_count + 1
