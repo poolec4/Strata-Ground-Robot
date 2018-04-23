@@ -11,10 +11,10 @@ class Robot:
 		self.low_motor_cutoff = motor_cutoff
 		
 		if obstacle_avoid == True:
-			self.kp = 15 # kp>0
+			self.kp = 17 # kp>0
 			self.ka = 35 # kb<0
 			self.kb = -2 # ka-kb>0
-			self.kpi = 3 # kpi>0
+			self.kpi = 4 # kpi>0
 			self.kai = 0 # kai<0
 			self.kbi = 0 # kbi doesn't work
 		else:

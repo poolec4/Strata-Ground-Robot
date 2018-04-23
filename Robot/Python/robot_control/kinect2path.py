@@ -271,7 +271,7 @@ def path2coords(path, world, grid_size, local_start, global_goal):
 		print(grid_coords)
 		coords = coords2dist(grid_coords, grid_size, local_start)
 		x_coords.append(coords[0])
-		y_coords.append(coords[1])
+		y_coords.append(coords[1]-.19)
 	x_coords.append(global_goal[0])
 	y_coords.append(global_goal[1])
 	return x_coords, y_coords, grid_coords
