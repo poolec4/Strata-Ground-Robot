@@ -28,8 +28,12 @@ class World:
 		# plt.show()
 		# plt.ioff()
 		self.world = self.addBuffer()
-		for i in ([-1, 1]):
-			self.world[local_start[0]+i, 0] = 10000
+		for i in range(world_size[0]):
+			self.world[i, 0] = 10000
+			# self.world[i, world_size[1]] = 10000
+		for i in range(world_size[1]):
+			self.world[0, i] = 10000
+			self.world[world_size[0], i] = 10000
 		# print(self.world)
 		self.neighbors = self.findNeighbors()
 		self.bounds = bounds
