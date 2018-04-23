@@ -8,7 +8,7 @@ import serial
 import time
 import math
 import numpy as np
-from matplotlib import pyplot as plt
+# from matplotlib import pyplot as plt
 from tools import is_number
 
 # Import our Controller
@@ -22,7 +22,7 @@ run_controller = True
 
 init_angle = 135.0 # in degrees
 servo_angles = init_angle*np.asarray([1,-1,1,-1,1,-1])
-dead_zone = 2 # Angle in degrees
+dead_zone = 0.2 # Angle in degrees
 
 # Init controller
 controller = controller(init_angle=init_angle, version='v1.0', bounds=(105, 170))
@@ -50,7 +50,7 @@ time.sleep(2)
 
 # Transformation order: first yaw then pitch then roll.
 
-max_count = 400
+max_count = 10000
 servo_data = np.empty([max_count+1, 6])
 accel_data = np.empty([max_count+1, 3])
 t_data = np.empty(max_count+1)
@@ -133,7 +133,8 @@ while run_controller == True:
         orientation = np.asarray([e_angles[1]-init_eangles[1], e_angles[2]-init_eangles[2], -(e_angles[0]-init_eangles[0])]) # whats the order?
         print('Platform Orientation: ')
         print(orientation)
-        if np.max(abs(orientation[0:1])) > dead_zone:
+        # if np.max(abs(orientation[0:1])) > dead_zone:
+	if abs(orientation[0]) > dead_zone and abs(orientation[1]+180) > dead_zone:
             controller = controller.step(orientation, np.asarray([0.0, 0.0, 0.0]), t)
             servo_angles = np.asarray([controller.theta[0], controller.theta[1], controller.theta[2], controller.theta[3], controller.theta[4], controller.theta[5]]) # This will be returned in degrees
             # print('Controller Angles: ')
@@ -172,8 +173,8 @@ for i in range(0,count):
     else:
         accel_data[i,1] = (180+accel_data[i,1])
 
-plt.plot(t_data[3:], accel_data[3:,0], t_data[3:], accel_data[3:,1])
-plt.show()
+# plt.plot(t_data[3:], accel_data[3:,0], t_data[3:], accel_data[3:,1])
+# plt.show()
 init_angle = 135.0 # in degrees
 servo_angles = init_angle*np.asarray([1,-1,1,-1,1,-1])
 buffer = 'A='+str(servo_angles[0])+'&B='+str(-servo_angles[1])+'&C='+str(servo_angles[2])+'&D='+str(-servo_angles[3])+'&E='+str(servo_angles[4])+'&F='+str(-servo_angles[5])+'\n'

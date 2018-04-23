@@ -18,7 +18,7 @@ BUFFER_SIZE = 1024
 
 PLAN_TIME = 100.0;
 
-x_g = [0.0, 1.5] # Goal in global coordinates
+x_g = [0.0, 0.0] # Goal in global coordinates
 th_g = 2.0* math.pi/2.0 # Goal in global coordinates (+CCW)
 
 vicon = Vicon(TCP_IP, TCP_PORT, BUFFER_SIZE)
