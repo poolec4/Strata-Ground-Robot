@@ -28,7 +28,7 @@ dead_zone = 2 # Angle in degrees
 controller = controller(init_angle=init_angle, version='v1.0', bounds=(105, 170))
 
 # Init Arduino serial connection
-ardu_ser = serial.Serial('/dev/ttyACM0', 19200)
+ardu_ser = serial.Serial('/dev/ttyUSB1', 19200)
 print(ardu_ser)
 buffer = 'A='+str(servo_angles[0])+'&B='+str(-servo_angles[1])+'&C='+str(servo_angles[2])+'&D='+str(-servo_angles[3])+'&E='+str(servo_angles[4])+'&F='+str(-servo_angles[5])+'\n'
 ardu_ser.write(buffer)
@@ -136,9 +136,6 @@ while run_controller == True:
         if np.max(abs(orientation[0:1])) > dead_zone:
             controller = controller.step(orientation, np.asarray([0.0, 0.0, 0.0]), t)
             servo_angles = np.asarray([controller.theta[0], controller.theta[1], controller.theta[2], controller.theta[3], controller.theta[4], controller.theta[5]]) # This will be returned in degrees
-            servo_data[int(count-1), :] = servo_angles.reshape(6)
-            accel_data[int(count-1)] = orientation.reshape(3)
-            t_data[count-1] = time.time()-t_init
             # print('Controller Angles: ')
             # print(controller.theta)
             # print('Servo Angles: ')
@@ -158,6 +155,11 @@ while run_controller == True:
             print(buffer)
             print("Time Elapsed: " + str(time.time()-tic))
             print(count)
+        else:
+            controller.t_old = t
+        servo_data[int(count-1), :] = servo_angles.reshape(6)
+        accel_data[int(count-1)] = orientation.reshape(3)
+        t_data[count-1] = time.time()-t_init
 ##Traceback (most recent call last):
 ##  File "main.py", line 71, in <module>
 ##  if (is_number(temp[0]) == True and is_number(temp[1]) == True and is_number(temp[2]) == True):
