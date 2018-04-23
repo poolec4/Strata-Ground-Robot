@@ -37,7 +37,7 @@ ardu_ser.write(buffer)
 imu_ser = serial.Serial('/dev/ttyUSB0', 57600)
 print(imu_ser)
 
-time.sleep(2)
+time.sleep(5)
 
 # Axis definition (differs from definition printed on the board!):
 #   X axis pointing forward (towards the short edge with the connector holes)
