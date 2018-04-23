@@ -68,13 +68,13 @@ try:
 			print("Planning...")
 			raw_depth = kinect.get_raw_depth()
 			pcl = kinect.get_point_cloud(raw_depth) # list of points that has to go into path planner
-				depth_map = coordTransform(pcl)
-				world = World(depth_map, local_start, world_size=world_size)
-				if world.bounds[1, 0] > -1:
+			depth_map = coordTransform(pcl)
+			world = World(depth_map, local_start, world_size=world_size)
+			if world.bounds[1, 0] > -1:
 				global_start = np.asarray(vicon.x_v[0:2]).flatten()
-					local_dest = getLocalGoal(global_start, x_g, vicon.th_r, world, local_start)
-					x_coords, y_coords, angles, path, path_cost, world, grid_coords = plan(local_start, local_dest,depth_map, world)
-					x_traj, y_traj, th_traj = local2global(x_coords, y_coords, angles,vicon.x_v[0:2], vicon.th_r, world)
+				local_dest = getLocalGoal(global_start, x_g, vicon.th_r, world, local_start)
+				x_coords, y_coords, angles, path, path_cost, world, grid_coords = plan(local_start, local_dest,depth_map, world)
+				x_traj, y_traj, th_traj = local2global(x_coords, y_coords, angles,vicon.x_v[0:2], vicon.th_r, world)
 				print('Trajectory:')
 				print('Index, X-Coord, Y-Coord, Angle')
 				for i in range(len(x_traj)):
