@@ -4,6 +4,7 @@ import math
 import freenect
 import pdb
 
+import scipy.io
 import numpy as np
 from vicon import Vicon
 from kinect import Kinect
@@ -126,13 +127,14 @@ try:
 			print("Reached max traj_count")
 			RUN_ROBOT = False
 
-print('Saving Data')			
-traj_data = [x_traj, y_traj, th_traj]
-scipy.io.savemat('pcl.mat', mdict={'pcl': pcl})
-scipy.io.savemat('traj.mat', mdict={'traj': traj})
-scipy.io.savemat('vicon_data.mat', mdict={'vicon_data': vicon_data})
-scipy.io.savemat('world.mat', mdict={'world': world.world})
-scipy.io.savemat('init_world.mat', mdict={'init_world': world.old_world})
+	print('Saving Data')			
+	traj_data = [x_traj, y_traj, th_traj]
+	scipy.io.savemat('pcl.mat', mdict={'pcl': pcl})
+	scipy.io.savemat('traj.mat', mdict={'traj': traj_data})
+	scipy.io.savemat('vicon_data.mat', mdict={'vicon_data': vicon_data})
+	scipy.io.savemat('world.mat', mdict={'world': world.world})
+	scipy.io.savemat('init_world.mat', mdict={'init_world': world.old_world})
+
 except KeyboardInterrupt:
 	robot.stop_robot()
 	print("Robot stopped.. hopefully")
