@@ -20,7 +20,7 @@ class World:
 		self.grid_size = self.gridSize(world_size, bounds)
 		print('grid size: ', self.grid_size)
 		self.world = self.addObstacles(depth_map, bounds, world_size)
-		self.old_world = self.world
+		self.old_world = np.copy(self.world)
 		# plt.ion()
 		# fig = plt.figure()
 		# ax = fig.add_subplot(111)

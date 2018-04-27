@@ -5,6 +5,7 @@ import freenect
 import pdb
 
 import numpy as np
+import scipy.io
 from vicon import Vicon
 from kinect import Kinect
 from robot import Robot
@@ -16,7 +17,7 @@ TCP_IP = '192.168.10.7'
 TCP_PORT = 50000
 BUFFER_SIZE = 1024
 
-PLAN_TIME = 100.0;
+PLAN_TIME = 100.0
 
 x_g = [-1.5, 0] # Goal in global coordinates
 th_g = 3.0* math.pi/4.0 # Goal in global coordinates (+CCW)
@@ -45,14 +46,13 @@ for i in range(10):
 
 RUN_ROBOT = True
 FIRST_LOOP = True
-
+vicon_data = []
 # fig1 = plt.figure()
 # ax1 = fig1.add_subplot(111)
 # fig2 = plt.figure()
 # ax2 = fig2.add_subplot(111)
 # fig3 = plt.figure()
 # ax3 = fig3.add_subplot(111)
-
 try:
 	while RUN_ROBOT:
 		print("\n")
@@ -62,7 +62,7 @@ try:
 		print('vicon start position: ', vicon.x_v[0:2])
 		print('vicon start angle: ', vicon.th_r)
 		t_vicon = time.time()
-
+		vicon_data.append([vicon.x_v[0], vicon.x_v[1], vicon.th_r, t_vicon])
 		## GET KINECT DATA AND REPLAN PATH
 		if time.time() - t_plan >= PLAN_TIME or FIRST_LOOP == True:
 			print("Planning...")
@@ -125,6 +125,14 @@ try:
 		if traj_count == traj_length:
 			print("Reached max traj_count")
 			RUN_ROBOT = False
+
+
+traj_data = [x_traj, y_traj, th_traj]
+scipy.io.savemat('pcl.mat', mdict={'pcl': pcl})
+scipy.io.savemat('traj.mat', mdict={'traj': traj})
+scipy.io.savemat('vicon_data.mat', mdict={'vicon_data': vicon_data})
+scipy.io.savemat('world.mat', mdict={'world': world.world})
+scipy.io.savemat('init_world.mat', mdict={'init_world': world.old_world})
 
 except KeyboardInterrupt:
 	robot.stop_robot()
