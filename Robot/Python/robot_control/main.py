@@ -13,7 +13,7 @@ x_g = [-2, 0.1]
 th_g = math.pi
 
 vicon = Vicon(TCP_IP, TCP_PORT, BUFFER_SIZE)
-robot = Robot(max_motor_speed=110)
+robot = Robot(max_motor_speed=105)
 
 robot.open('/dev/ttyTHS2', 19200)
 robot.write_motors()

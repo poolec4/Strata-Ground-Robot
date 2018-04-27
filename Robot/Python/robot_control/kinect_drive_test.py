@@ -12,13 +12,13 @@ from kinect2path import plan, World, coordTransform, getLocalGoal, local2global
 
 # from matplotlib import pyplot as plt
 
-TCP_IP = '192.168.10.7'
+TCP_IP = '192.168.10.26'
 TCP_PORT = 50000
 BUFFER_SIZE = 1024
 
 PLAN_TIME = 100.0;
 
-x_g = [-1.5,0] # Goal in global coordinates
+x_g = [0,0] # Goal in global coordinates
 th_g = 3.0* math.pi/4.0 # Goal in global coordinates (+CCW)
 
 vicon = Vicon(TCP_IP, TCP_PORT, BUFFER_SIZE)
