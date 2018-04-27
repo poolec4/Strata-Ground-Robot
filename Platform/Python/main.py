@@ -10,7 +10,7 @@ import math
 import numpy as np
 # from matplotlib import pyplot as plt
 from tools import is_number
-
+import scipy.io
 # Import our Controller
 from control import controller
 run_controller = True
@@ -50,7 +50,7 @@ time.sleep(5)
 
 # Transformation order: first yaw then pitch then roll.
 
-max_count = 10000
+max_count = 500
 servo_data = np.empty([max_count+1, 6])
 accel_data = np.empty([max_count+1, 3])
 t_data = np.empty(max_count+1)
@@ -181,3 +181,6 @@ buffer = 'A='+str(servo_angles[0])+'&B='+str(-servo_angles[1])+'&C='+str(servo_a
 ardu_ser.write(buffer);
 ardu_ser.close();
 imu_ser.close();
+platform_data = [np.asarray(servo_data), np.asarray(accel_data)]
+scipy.io.savemat('ramp_platform_off_data.mat', mdict={'platform_data': platform_data})
+

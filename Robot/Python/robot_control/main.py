@@ -4,16 +4,17 @@ import math
 import numpy as np
 from vicon import Vicon
 from robot import Robot
+import scipy.io
 
-TCP_IP = '192.168.10.7'
+TCP_IP = '192.168.10.26'
 TCP_PORT = 50000
 BUFFER_SIZE = 1024
 
-x_g = [-2, 0.1]
+x_g = [-1.5, 0.1]
 th_g = math.pi
 
 vicon = Vicon(TCP_IP, TCP_PORT, BUFFER_SIZE)
-robot = Robot(max_motor_speed=105)
+robot = Robot()
 
 robot.open('/dev/ttyTHS2', 19200)
 robot.write_motors()
@@ -29,6 +30,7 @@ t_vicon = 0
 t_send = 0
 
 RUN_ROBOT = True
+vicon_data = []
 
 try:
 	while RUN_ROBOT:
@@ -37,7 +39,7 @@ try:
 		#if (time.time() - t_vicon) > 0.1:
 		vicon.get_state()
 		t_vicon = time.time()
-
+		vicon_data.append(vicon.x_v)
 #		robot = robot.set_goal([x_traj[traj_count],y_traj[traj_count]], th_traj[traj_count])
 		robot = robot.PI_control(vicon.x_v, vicon.q_v, 1-0.01)
 		
@@ -53,6 +55,8 @@ try:
 			RUN_ROBOT = False
 
 #		time.sleep(1);
+
+	scipy.io.savemat('ramp_trajectory.mat', mdict={'vicon_data': vicon_data})
 
 except KeyboardInterrupt:
 	robot.stop_robot()

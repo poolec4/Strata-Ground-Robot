@@ -4,7 +4,7 @@ import math
 import numpy as np
 
 class Robot:
-	def __init__(self, obstacle_avoid=False, min_motor_speed=90, max_motor_speed=200, motor_cutoff=1):
+	def __init__(self, obstacle_avoid=False, min_motor_speed=50, max_motor_speed=130, motor_cutoff=1):
 		self.motor_vals = np.zeros(6)
 		self.min_motor_speed = min_motor_speed
 		self.max_motor_speed = max_motor_speed
